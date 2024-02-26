@@ -123,14 +123,13 @@ CREATE TABLE IF NOT EXISTS `cinema`.`schedule` (
   `id` INT NOT NULL,
   `date` DATE NULL,
   `hall_id` INT NOT NULL,
-  `movie_id` INT NOT NULL,
   `time_id` INT NOT NULL,
-  `movie_id1` INT NOT NULL,
   `is_deleted` BIT(1) NULL DEFAULT 0,
+  `movie_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_schedule_hall1_idx` (`hall_id` ASC) VISIBLE,
   INDEX `fk_schedule_time1_idx` (`time_id` ASC) VISIBLE,
-  INDEX `fk_schedule_movie1_idx` (`movie_id1` ASC) VISIBLE,
+  INDEX `fk_schedule_movie1_idx` (`movie_id` ASC) VISIBLE,
   CONSTRAINT `fk_schedule_hall1`
     FOREIGN KEY (`hall_id`)
     REFERENCES `cinema`.`hall` (`id`)
@@ -142,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `cinema`.`schedule` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_schedule_movie1`
-    FOREIGN KEY (`movie_id1`)
+    FOREIGN KEY (`movie_id`)
     REFERENCES `cinema`.`movie` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
