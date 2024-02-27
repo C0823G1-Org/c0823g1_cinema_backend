@@ -12,6 +12,8 @@ public class Movie {
     private Long id;
     @OneToMany(mappedBy = "movie")
     Set<MovieHasGenre> genres;
+    @OneToMany(mappedBy = "movie")
+    Set<Schedule> schedules;
     private String name;
     private LocalDate startDate;
     private String actor;
@@ -26,6 +28,14 @@ public class Movie {
     private Boolean isDeleted = false;
 
     public Movie() {
+    }
+
+    public Set<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(Set<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
     public Long getId() {
