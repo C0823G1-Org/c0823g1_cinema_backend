@@ -12,20 +12,40 @@ public class Movie {
     private Long id;
     @OneToMany(mappedBy = "movie")
     Set<MovieHasGenre> genres;
+    @OneToMany(mappedBy = "movie")
+    Set<Schedule> schedules;
     private String name;
     private LocalDate startDate;
     private String actor;
     private String director;
-    private String producer;
+    private String publisher;
     private Integer duration;
     private String trailer;
     private String country;
     private String description;
     private String poster;
     private Integer ticketPrice;
+    @OneToMany(mappedBy = "movie")
+    private Set<MovieHasVersion> version;
     private Boolean isDeleted = false;
 
     public Movie() {
+    }
+
+    public Set<MovieHasVersion> getVersion() {
+        return version;
+    }
+
+    public void setVersion(Set<MovieHasVersion> version) {
+        this.version = version;
+    }
+
+    public Set<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(Set<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
     public Long getId() {
@@ -76,12 +96,12 @@ public class Movie {
         this.director = director;
     }
 
-    public String getProducer() {
-        return producer;
+    public String getPublisher() {
+        return publisher;
     }
 
-    public void setProducer(String producer) {
-        this.producer = producer;
+    public void setPublisher(String producer) {
+        this.publisher = producer;
     }
 
     public Integer getDuration() {
