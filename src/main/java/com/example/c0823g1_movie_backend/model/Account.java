@@ -35,6 +35,47 @@ public class Account {
     public Account() {
     }
 
+    public Account(Long id, String accountName, String fullName, Role role, String password, String facebookId, String googleId, String idNumber, String profilePicture, LocalDate birthday, String phoneNumber, Boolean gender, String email, String address, String memberCode, Integer point, Set<Booking> bookings, Boolean isDeleted) {
+        this.id = id;
+        this.accountName = accountName;
+        this.fullName = fullName;
+        this.role = role;
+        this.password = password;
+        this.facebookId = facebookId;
+        this.googleId = googleId;
+        this.idNumber = idNumber;
+        this.profilePicture = profilePicture;
+        this.birthday = birthday;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.email = email;
+        this.address = address;
+        this.memberCode = memberCode;
+        this.point = point;
+        this.bookings = bookings;
+        this.isDeleted = isDeleted;
+    }
+
+    public Account(String fullName, String facebookId, String profilePicture, String email) {
+        this.fullName = fullName;
+        this.facebookId = facebookId;
+        this.profilePicture = profilePicture;
+        this.email = email;
+    }
+
+    public Account(String accountName, String password) {
+        this.accountName = accountName;
+        this.password = password;
+    }
+
+    public Account(String fullName, String googleId, String profilePicture, String phoneNumber, String email) {
+        this.fullName = fullName;
+        this.googleId = googleId;
+        this.profilePicture = profilePicture;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
     }
