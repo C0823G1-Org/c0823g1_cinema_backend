@@ -17,6 +17,11 @@ import java.util.List;
 @Repository
 @Transactional
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of movies that have the highest revenue
+     */
     @Query(value = "SELECT m.name AS movie_name, COUNT(b.id) AS ticket_count " +
             "FROM movie m " +
             "JOIN schedule s ON m.id = s.movie_id " +
