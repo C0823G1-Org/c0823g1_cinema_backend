@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,5 +94,10 @@ public class AccountService implements IAccountService {
     @Override
     public Optional<IAccountDTO> findByGoogleID(String googleId) {
         return accountRepository.findByAccountNameDTOGG(googleId);
+    }
+
+    @Override
+    public List<Account> getAccountStatistic() {
+        return null;
     }
 }
