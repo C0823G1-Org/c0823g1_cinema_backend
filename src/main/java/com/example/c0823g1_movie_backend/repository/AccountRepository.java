@@ -3,6 +3,8 @@ package com.example.c0823g1_movie_backend.repository;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -124,5 +126,17 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " role.name as role from account join role on account.role_id = role.id " +
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
+
+    @Query(value = "SELECT a.accountName, SUM(t.ticketPrice) " +
+            "FROM Account a " +
+            "JOIN Booking b ON a.id = b.accountId " +
+            "JOIN Ticket t ON b.id = t.bookingId " +
+            "JOIN Schedule s ON t.scheduleId = s.id " +
+            "JOIN Movie m ON m.id = s.movieId " +
+            "WHERE a.isDeleted = 0 AND b.isDeleted = 0 AND t.isDeleted = 0 AND s.isDeleted = 0 AND m.isDeleted = 0 " +
+            "GROUP BY a.id " +
+            "ORDER BY SUM(t.ticketPrice) DESC " +
+            "LIMIT 50", nativeQuery = true)
+    Page<Account> getTop50Account(Pageable pageable);
 
 }
