@@ -1,5 +1,7 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
+import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
@@ -26,8 +28,8 @@ public class RestScheduleController {
      * Return: HttpStatus.BAD_REQUEST if date not found/ HttpStatus.OK and date list
      */
     @GetMapping("/date")
-    public ResponseEntity<List<LocalDate>> findDateByMovieId(@RequestParam Long movieId){
-         List<LocalDate> dateList = scheduleService.findDateByMovieId(movieId);
+    public ResponseEntity<List<ScheduleDTO>> findDateByMovieId(@RequestParam Long movieId){
+         List<ScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
          if(dateList == null){
              return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
          }
@@ -40,9 +42,9 @@ public class RestScheduleController {
      * Return: HttpStatus.BAD_REQUEST if schedule time not found/ HttpStatus.OK and schedule time list
      */
     @GetMapping("/time")
-    public ResponseEntity<List<ScheduleTime>> findScheduleTimeByMovieAndDate(@RequestParam Long movieId,
+    public ResponseEntity<List<IScheduleTimeDTO>> findScheduleTimeByMovieAndDate(@RequestParam Long movieId,
                                                                              @RequestParam LocalDate date){
-        List<ScheduleTime> scheduleTimes = scheduleService.findScheduleTimeByMovieAndDate(movieId,date);
+        List<IScheduleTimeDTO> scheduleTimes = scheduleService.findScheduleTimeByMovieAndDate(movieId,date);
         if(scheduleTimes == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -60,7 +62,7 @@ public class RestScheduleController {
                                                                                  @RequestParam Long scheduleTimeId){
         Schedule schedule = scheduleService.getScheduleByMovieIdAndDateAndScheduleTimeId(movieId,date,scheduleTimeId);
         if(schedule == null){
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(schedule,HttpStatus.OK);
     }
@@ -74,7 +76,7 @@ public class RestScheduleController {
     public ResponseEntity<Hall> getHallByScheduleId(@RequestParam Long scheduleId){
         Hall hall = scheduleService.getHallByScheduleId(scheduleId);
         if(hall == null){
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(hall,HttpStatus.OK);
     }

@@ -1,9 +1,16 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
+import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.model.Schedule;
+import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ScheduleService implements IScheduleService {
@@ -18,5 +25,24 @@ public class ScheduleService implements IScheduleService {
     @Override
     public Schedule create(Schedule schedule) {
         return null;
+    }
+    @Override
+    public List<ScheduleDTO> findDateByMovieId(Long movieId) {
+        return scheduleRepository.findDateByMovieId(movieId);
+    }
+
+    @Override
+    public List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(Long movieId, LocalDate date) {
+        return scheduleRepository.findScheduleTimeByMovieAndDate(movieId,date);
+    }
+
+    @Override
+    public Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(Long movieId, LocalDate date, Long scheduleTimeId) {
+        return scheduleRepository.getScheduleByMovieIdAndDateAndScheduleTimeId(movieId, date, scheduleTimeId);
+    }
+
+    @Override
+    public Hall getHallByScheduleId(Long scheduleId) {
+        return scheduleRepository.getHallByScheduleId(scheduleId);
     }
 }
