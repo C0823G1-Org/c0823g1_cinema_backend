@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.AccountStatisicDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
@@ -227,8 +228,8 @@ public class AccountRestController {
      * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    private ResponseEntity<Page<Account>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
-        Page<Account> accountList = iAccountService.getAccountStatistic(pageable);
+    private ResponseEntity<Page<AccountStatisicDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<AccountStatisicDTO> accountList = iAccountService.getAccountStatistic(pageable);
         if (accountList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
