@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface IMovieService extends IGeneralService {
 
     Movie create(Movie movie);
 
-    Page<Movie> getMovieStatistic(Pageable pageable);
+    Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable);
 
     List<MovieDTO> getAllMovieHot();
 
