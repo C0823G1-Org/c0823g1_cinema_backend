@@ -60,5 +60,14 @@ public class MovieRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
+
+
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@RequestBody Movie movie) {
+        System.out.println(movie.toString());
+        if (movie.getId() == null) {
+            movieService.createMovie(movie);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

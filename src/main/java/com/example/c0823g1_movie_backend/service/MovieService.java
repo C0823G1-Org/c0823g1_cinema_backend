@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Date;
 
 @Service
 public class MovieService implements IMovieService {
@@ -30,6 +31,7 @@ public class MovieService implements IMovieService {
         return movieRepository.findAll();
     }
 
+
     @Override
     public Movie save(Movie movie) {
         return null;
@@ -38,5 +40,25 @@ public class MovieService implements IMovieService {
     @Override
     public Movie create(Movie movie) {
         return null;
+    }
+
+    @Override
+    public void createMovie(Movie movie) {
+        movieRepository.createMovie(movie);
+    }
+
+    @Override
+    public Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, Pageable pageable) {
+        return movieRepository.searchMovieByNameAndPublisher("%" + name + "%", "%" + publisher + "%", pageable);
+    }
+
+    @Override
+    public Page<Movie> searchMovieByStartDate(Date startDate, Pageable pageable) {
+        return movieRepository.searchMovieByStartDate(startDate, pageable);
+    }
+
+    @Override
+    public void deleteMovieById(long id) {
+
     }
 }

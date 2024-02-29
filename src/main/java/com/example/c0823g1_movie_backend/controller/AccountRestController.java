@@ -23,7 +23,7 @@ public class AccountRestController {
     @Autowired
     private IAccountService iAccountService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody Account account) {
         String accessToken = "";
         String roleUser = "";
@@ -67,6 +67,10 @@ public class AccountRestController {
                     httpStatus = HttpStatus.BAD_REQUEST;
                     return new ResponseEntity<>(httpStatus);
                 }
+                if (iAccountDTO.get().getIsDeleted()){
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    return new ResponseEntity<>(httpStatus);
+                }
                 loginSuccess = new LoginSuccess(accessToken, roleUser, iAccountDTO.get());
                 httpStatus = HttpStatus.OK;
                 return new ResponseEntity<LoginSuccess>(loginSuccess, httpStatus);
@@ -93,6 +97,10 @@ public class AccountRestController {
                 accessToken = jwtService.generateTokenLogin(account.getAccountName());
                 Optional<IAccountDTO> iAccountDTO = iAccountService.findByGoogleID(account.getGoogleId());
                 if (!iAccountDTO.isPresent()){
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    return new ResponseEntity<>(httpStatus);
+                }
+                if (iAccountDTO.get().getIsDeleted()){
                     httpStatus = HttpStatus.BAD_REQUEST;
                     return new ResponseEntity<>(httpStatus);
                 }
@@ -125,4 +133,5 @@ public class AccountRestController {
             iAccountService.save(account);
         }
     }
+
 }
