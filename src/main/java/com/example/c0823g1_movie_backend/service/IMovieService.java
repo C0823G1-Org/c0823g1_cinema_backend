@@ -10,17 +10,17 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
+import java.util.Optional;
 
 public interface IMovieService extends IGeneralService<Movie> {
     List<MovieDTO> getAllMovieHot();
+
 
     Page<MovieDTO> searchMovie(@Param("name") String value, Pageable pageable);
 
     List<MovieDTO> getAllMovieCurrent();
 
-    Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, Pageable pageable);
-
-    Page<Movie> searchMovieByStartDate(Date startDate, Pageable pageable);
 
     void deleteMovieById(long id);
 
@@ -29,4 +29,10 @@ public interface IMovieService extends IGeneralService<Movie> {
     Movie findById(Long id);
 
 
+
+    Page<Movie> searchMovieByNameAndPublisher(String name, String publisher
+            , LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+
+    Movie findMovieById(long id);
 }

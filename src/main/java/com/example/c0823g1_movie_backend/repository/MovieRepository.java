@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -49,13 +51,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "group by m.name\n", nativeQuery = true)
     List<MovieDTO> getAllMovieCurrent();
 
-    @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie where name like :name or publisher like :publisher ;", nativeQuery = true)
-    Page<Movie> searchMovieByNameAndPublisher(@Param("name") String name, @Param("publisher") String publisher, Pageable pageable);
 
-    @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie where start_date  =:startDate;", nativeQuery = true)
-    Page<Movie> searchMovieByStartDate(@Param("startDate") Date startDate, Pageable pageable);
+    @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
+            "where (name like :name or publisher like :publisher) and start_date BETWEEN :startDate AND :endDate and is_deleted = 0 ", nativeQuery = true)
+    Page<Movie> searchMovieByNameAndPublisher(@Param("name") String name, @Param("publisher") String publisher
+            , @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, Pageable pageable);
 
-    @Query(value = "delete from movie where id :=id;", nativeQuery = true)
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE movie SET is_deleted = 1 where id  =:id", nativeQuery = true)
     void deleteMovieById(@Param("id") long id);
 
     @Modifying
@@ -68,4 +72,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 
 
+
+    @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
+            "where id  =:id and is_deleted =0", nativeQuery = true)
+    Movie findMovieById(@Param("id") Long id);
 }
