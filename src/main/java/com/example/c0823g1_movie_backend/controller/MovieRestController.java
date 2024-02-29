@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
@@ -10,10 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
 @CrossOrigin("*")
@@ -62,4 +62,11 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("find/{id}")
+    public ResponseEntity<Movie> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
+    }
+
+
 }
