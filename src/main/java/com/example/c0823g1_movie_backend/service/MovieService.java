@@ -40,7 +40,11 @@ public class MovieService implements IMovieService {
     public Movie create(Movie movie) {
         return null;
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of movies that have the highest revenue
+     */
     @Override
     public Page<Movie> getMovieStatistic(Pageable pageable) {
         return movieRepository.findTop20MoviesByRevenue(pageable);
