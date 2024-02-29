@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
+import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -61,6 +66,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query(value = "insert into movie(director,actor)" +
             "values (:#{#movie.director},:#{#movie.actor})", nativeQuery = true)
     void createMovie(@Param("movie") Movie movie);
+
+    @Query(value = "SELECT m FROM Movie m WHERE m.id = :id")
+    Optional<Movie> findByIdMovie(Long id);
+
+
+
 
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
             "where id  =:id and is_deleted =0", nativeQuery = true)
