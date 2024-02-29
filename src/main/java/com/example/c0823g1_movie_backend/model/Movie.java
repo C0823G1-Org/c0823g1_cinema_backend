@@ -36,6 +36,7 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     @JsonBackReference
     private Set<MovieHasVersion> version;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Movie() {
