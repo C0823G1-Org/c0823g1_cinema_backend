@@ -113,10 +113,16 @@ public class AccountService implements IAccountService {
         return accountRepository.findByAccountNameDTOGG(googleId);
     }
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     */
     @Override
     public Page<Account> getAccountStatistic(Pageable pageable) {
         return accountRepository.getTop50Account(pageable);
     }
+
     public Optional<IAccountDTO> findByEmail(String email) {
         return accountRepository.findByEmail(email);
     }
@@ -125,14 +131,14 @@ public class AccountService implements IAccountService {
     public void updatePasswordAndSendMail(Long id, String newPassword) {
         Optional<IAccountDTO> account = accountRepository.findByIdAccountDTO(id);
         if (account.isPresent()) {
-            accountRepository.updateAccountPassword(id,passwordEncoder.encode(newPassword));
+            accountRepository.updateAccountPassword(id, passwordEncoder.encode(newPassword));
             String to = account.get().getEmail();
             String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
             String templateName = "email-template";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("fullName", account.get().getFullName());
             context.setVariable("password", newPassword);
-            sendEmailWithHtmlTemplate(to,subject,templateName,context);
+            sendEmailWithHtmlTemplate(to, subject, templateName, context);
         }
     }
 
