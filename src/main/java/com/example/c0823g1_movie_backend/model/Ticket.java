@@ -14,6 +14,7 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private Schedule schedule;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Ticket() {

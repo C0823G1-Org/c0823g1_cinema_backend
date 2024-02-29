@@ -22,6 +22,7 @@ public class Schedule {
     private Movie movie;
     @OneToMany(mappedBy = "schedule")
     private Set<Ticket> tickets;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Schedule() {
