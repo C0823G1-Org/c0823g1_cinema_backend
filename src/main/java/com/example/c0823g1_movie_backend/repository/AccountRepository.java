@@ -59,4 +59,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id where account.google_id = :googleId", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOGG(@Param("googleId") String googleId);
+
+    
 }
