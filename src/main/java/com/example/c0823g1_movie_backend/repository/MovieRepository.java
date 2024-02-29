@@ -20,4 +20,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(value = "delete from movie where id :=id;", nativeQuery = true)
     void deleteMovieById(@Param("id") long id);
+
+    @Query(value = "insert into movie(name,start_date,actor,director)" +
+                   "values (:movie.name,:movie.startDate,:movie.actor,:movie.director)", nativeQuery = true)
+    Movie createMovie(@Param("movie") Movie movie);
 }
