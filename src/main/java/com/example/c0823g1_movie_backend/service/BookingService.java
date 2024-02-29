@@ -24,4 +24,9 @@ public class BookingService implements IBookingService{
     public Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time , Pageable pageable) {
         return bookingRepository.searchBookingTicketWithParameterSearch(search,time,pageable);
     }
+
+    @Override
+    public IBookingDTO findBookingTicketById(Integer id) {
+        return bookingRepository.findBookingTicketById(id);
+    }
 }

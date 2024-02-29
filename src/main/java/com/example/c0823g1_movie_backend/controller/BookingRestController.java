@@ -52,10 +52,20 @@ public class BookingRestController {
     }
 
     @GetMapping("/export/{idBookingTicket}")
-    public ResponseEntity<Page<IBookingDTO>> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
-        System.out.println(id);
+    public ResponseEntity<IBookingDTO> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
+        IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
+        if (iBookingDTO == null){
+            return  new ResponseEntity<>( HttpStatus.NOT_FOUND);
+        } else {
+            if (iBookingDTO.getPrintStatus()){
+                return  new ResponseEntity<>( HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(iBookingDTO, HttpStatus.OK);
+            }
 
-        return null;
+
+        }
+
     }
 
 }

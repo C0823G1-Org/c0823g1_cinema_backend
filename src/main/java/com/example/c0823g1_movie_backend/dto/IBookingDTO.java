@@ -12,5 +12,6 @@ public interface IBookingDTO {
     LocalDateTime getDateBooking();
     String getNameMovie();
     LocalDate getScheduleTime();
+    Boolean getPrintStatus();
 
 }

@@ -11,4 +11,6 @@ public interface IBookingService {
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time);
 
     Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time,Pageable pageable);
+
+    IBookingDTO findBookingTicketById(Integer id);
 }
