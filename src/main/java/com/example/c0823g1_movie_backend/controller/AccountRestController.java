@@ -8,6 +8,9 @@ import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -137,8 +140,8 @@ public class AccountRestController {
     }
 
     @GetMapping("/statistics")
-    private ResponseEntity<List<Account>> movieStatistics() {
-        List<Account> accountList = iAccountService.getAccountStatistic();
+    private ResponseEntity<Page<Account>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<Account> accountList = iAccountService.getAccountStatistic(pageable);
         if (accountList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
