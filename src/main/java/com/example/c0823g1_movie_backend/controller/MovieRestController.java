@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,23 +32,16 @@ public class MovieRestController {
     }
 
     @GetMapping("/movie/current")
-    public ResponseEntity<List<Movie>> getAllMovieCurrent() {
+    public ResponseEntity<List<MovieDTO>> getAllMovieCurrent() {
         LocalDate localDate = LocalDate.now();
         System.out.println(localDate);
-        List<Movie> list = movieService.getAll();
+        List<MovieDTO> list = movieService.getAllMovieCurrent();
         System.out.println(list.size());
-        List<Movie> newList = new ArrayList<>();
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        for (Movie movie : list) {
-            if (movie.getStartDate().plusDays(7).isAfter(localDate) == true || movie.getStartDate() == localDate) {
-                newList.add(movie);
-            }
-        }
-        return new ResponseEntity<>(newList, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
 
     @GetMapping("/search")
     public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "search", defaultValue = "a") String value,

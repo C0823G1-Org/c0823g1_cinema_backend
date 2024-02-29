@@ -36,11 +36,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<MovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
-    @Query(value = "select m.name as tenphim,\n" +
-            "m.description as description\n" +
-            ", m.poster as poster\n" +
-            "from movie m", nativeQuery = true)
-    List<MovieDTO> getAll();
+    @Query(value = "select count(m.id) as movieId,max(m.name) as name,\n" +
+            "max(m.description) as description\n" +
+            ", max(m.poster) as poster\n" +
+            "from movie m \n" +
+            "join schedule sc on m.id = sc.movie_id\n" +
+            "where sc.`date` = current_date\n" +
+            "group by m.name\n", nativeQuery = true)
+    List<MovieDTO> getAllMovieCurrent();
+
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie where name like :name or publisher like :publisher ;", nativeQuery = true)
     Page<Movie> searchMovieByNameAndPublisher(@Param("name") String name, @Param("publisher") String publisher, Pageable pageable);
 
@@ -52,6 +56,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Modifying
     @Query(value = "insert into movie(director,actor)" +
-                   "values (:#{#movie.director},:#{#movie.actor})", nativeQuery = true)
+            "values (:#{#movie.director},:#{#movie.actor})", nativeQuery = true)
     void createMovie(@Param("movie") Movie movie);
 }
