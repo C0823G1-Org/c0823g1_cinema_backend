@@ -23,6 +23,6 @@ public class MovieService implements IMovieService{
 
     @Override
     public List<Movie> getMovieStatistic() {
-        return null;
+        return movieRepository.findTop20MoviesByRevenue();
     }
 }
