@@ -22,11 +22,9 @@ public class BookingRestController {
     @Autowired
     private IBookingService iBookingService;
 
-    /* Create by: BaoNDT
+    /* Create by: DoLV
      * Date created: 29/02/2024
-     * Function: Receive account information (accountName and password) and check account information
-     * @return HttpStatus.BAD_REQUEST if account not found/ access token,role user, account information and HttpStatus.OK if account information is accurate/
-     * HttpStatus.INTERNAL_SERVER_ERROR if server error
+     * Function: Displays the list and pagination of ticket bookings with a time from the current time about 1 week
      */
     @GetMapping("/")
     public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@RequestParam(defaultValue = "0") int page){
@@ -36,6 +34,10 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
+    /* Create by: DoLV
+     * Date created: 29/02/2024
+     * Function: Displays list and pagination of ticket booking with search action
+     */
     @GetMapping("/search/{search}")
     public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search")String search,@RequestParam(defaultValue = "0") int page){
         LocalDateTime time = LocalDateTime.now();
