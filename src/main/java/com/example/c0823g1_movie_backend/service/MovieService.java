@@ -21,7 +21,6 @@ public class MovieService implements IMovieService{
         return null;
     }
 
-
     @Override
     public List<Movie> getMovieStatistic() {
         return null;
