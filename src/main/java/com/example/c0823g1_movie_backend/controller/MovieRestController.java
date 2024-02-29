@@ -26,7 +26,7 @@ public class MovieRestController {
     @GetMapping
     public ResponseEntity<List<MovieDTO>> getAllMovieHot() {
         List<MovieDTO> list = movieService.getAllMovieHot();
-        if (list == null){
+        if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -60,7 +60,7 @@ public class MovieRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
-
+    }
 
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Movie movie) {
