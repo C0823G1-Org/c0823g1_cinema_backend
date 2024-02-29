@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 public interface IAccountDTO {
     Integer getId();
-
+    @NotBlank(message = "Tài Khoản không được để rỗng")
+    @Size(min = 6,max = 20)
     String getAccountName();
     String getAddress();
     LocalDate getBirthday();
