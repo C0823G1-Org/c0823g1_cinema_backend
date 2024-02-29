@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class MovieService implements IMovieService {
      * Function: Get a list of movies that have the highest revenue
      */
     @Override
-    public Page<Movie> getMovieStatistic(Pageable pageable) {
+    public Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable) {
         return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 
