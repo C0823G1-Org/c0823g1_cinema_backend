@@ -3,6 +3,7 @@ package com.example.c0823g1_movie_backend.repository;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
+import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
+import java.util.List;
+
 import java.util.List;
 
 @Repository
@@ -36,4 +39,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "where id =:scheduleId)", nativeQuery = true)
     Hall getHallByScheduleId(@Param("scheduleId") Long scheduleId);
 
+    @Query(value = "select * from schedule where date>=current_date and hall_id=:id", nativeQuery = true)
+    List<ScheduleDTO> getScheduleByHallId(@Param("id") Long id);
 }

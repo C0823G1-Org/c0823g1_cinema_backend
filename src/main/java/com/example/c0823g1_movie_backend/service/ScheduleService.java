@@ -3,6 +3,7 @@ package com.example.c0823g1_movie_backend.service;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
+import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import java.util.List;
 
 @Service
@@ -44,5 +47,10 @@ public class ScheduleService implements IScheduleService {
     @Override
     public Hall getHallByScheduleId(Long scheduleId) {
         return scheduleRepository.getHallByScheduleId(scheduleId);
+    }
+
+    @Override
+    public List<ScheduleDTO> getScheduleByHallId(Long id) {
+        return scheduleRepository.getScheduleByHallId(id);
     }
 }

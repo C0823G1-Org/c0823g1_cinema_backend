@@ -8,6 +8,7 @@ import java.util.Set;
 
 public interface MovieDTO {
     Long getAccountId();
+    Long getMovieId();
     String getName();
     String getDescription();
     String getPoster();
