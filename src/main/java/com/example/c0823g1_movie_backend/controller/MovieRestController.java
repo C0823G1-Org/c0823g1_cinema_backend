@@ -67,7 +67,7 @@ public class MovieRestController {
      *     Function: Search movie name and pagination
      *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
      * */
-    @GetMapping("/search/{name}")
+    @GetMapping("/search")
     public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                        @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 8);
