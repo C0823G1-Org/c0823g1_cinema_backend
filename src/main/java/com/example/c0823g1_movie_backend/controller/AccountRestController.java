@@ -173,7 +173,7 @@ public class AccountRestController {
     /* Create by: TuanTA
      * Date created: 29/02/2024
      * Function: Show Detail User Account
-     *  When the customer logs in, the customer's information will be displayed
+     * @Return HttpStatus.NO_CONTENT if userName of User is Null , @Return HttpStatus.OK if userName of User is not Null
      */
     @GetMapping("/detailUser")
     public ResponseEntity<Account> detailAccountUser(Principal principal){
@@ -186,11 +186,20 @@ public class AccountRestController {
     /* Create by: TuanTA
      * Date created: 29/02/2024
      * Function: Change Password
-     *
+     * @Return HttpStatus.BAD_REQUEST If the current password is not the same as the current password input and If the new password is not the same as confirming the password
+     * HttpStatus.OK if the current password is the same as the current password in the input field and the new password is the same as the new password confirmation
      */
-    @PatchMapping("/changePassword")
-    public ResponseEntity<Account> changePassword(Principal principal){
-
-
+    @PatchMapping("/changePassword/{currenPass}/{newPass}/{confirmNewPass}")
+    public ResponseEntity<Account> changePassword(Principal principal,@PathVariable String currenPass,@PathVariable String newPass , @PathVariable String confirmNewPass){
+     Account account = iAccountService.getAllInfoUser(principal.getName());
+     if (!passwordEncoder.matches(account.getPassword(),currenPass)){
+          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+     }
+     if (!newPass.equals(confirmNewPass)){
+         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+     }
+     String encoder = passwordEncoder.encode(newPass);
+     account.setPassword(encoder);
+     return new ResponseEntity<>(HttpStatus.OK);
     }
 }
