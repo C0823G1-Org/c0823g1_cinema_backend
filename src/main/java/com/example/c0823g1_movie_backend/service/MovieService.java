@@ -21,7 +21,12 @@ public class MovieService implements IMovieService {
 
     @Override
     public Movie create(Movie movie) {
-        return movieRepository.createMovie(movie);
+        return null;
+    }
+
+    @Override
+    public void createMovie(Movie movie) {
+        movieRepository.createMovie(movie);
     }
 
     @Override

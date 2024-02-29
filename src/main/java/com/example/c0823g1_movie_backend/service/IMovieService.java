@@ -12,4 +12,6 @@ public interface IMovieService extends IGeneralService<Movie> {
 Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, Pageable pageable);
 Page<Movie> searchMovieByStartDate(Date startDate, Pageable pageable);
 void deleteMovieById(long id);
+
+    void createMovie(Movie movie);
 }

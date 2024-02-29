@@ -15,14 +15,11 @@ public class MovieRestController {
     IMovieService movieService;
 
     @PostMapping("/save")
-    public ResponseEntity<Movie> save(@RequestBody Movie movie) {
+    public ResponseEntity<?> save(@RequestBody Movie movie) {
         System.out.println(movie.toString());
-        Movie result;
         if (movie.getId() == null) {
-            result = movieService.create(movie);
-        } else {
-            result = movieService.save(movie);
+            movieService.createMovie(movie);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
