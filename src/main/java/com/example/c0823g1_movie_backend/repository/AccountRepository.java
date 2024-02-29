@@ -2,7 +2,9 @@ package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -59,5 +61,68 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id where account.google_id = :googleId", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOGG(@Param("googleId") String googleId);
+
+    @Query(value = " select account.id as id,\n" +
+            " account.account_name as accountName, \n" +
+            " account.address as address, \n" +
+            " account.birthday as birthday, \n" +
+            " account.email as email,\n" +
+            " account.facebook_id as facebookId,\n" +
+            " account.full_name as fullName,\n" +
+            " account.gender as gender,\n" +
+            " account.google_id as googleId,\n" +
+            " account.id_number as idNumber,\n" +
+            " account.is_deleted as isDeleted,\n" +
+            " account.member_code as memberCode,\n" +
+            " account.password as password,\n" +
+            " role.name as role from account join role on account.role_id = role.id " +
+            " where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
+    Optional<IAccountDTO> findByEmail(@Param("email") String email);
+    @Query(value = "select account.id as id,\n" +
+            " account.account_name as accountName, \n" +
+            " account.address as address, \n" +
+            " account.birthday as birthday, \n" +
+            " account.email as email,\n" +
+            " account.facebook_id as facebookId,\n" +
+            " account.full_name as fullName,\n" +
+            " account.gender as gender,\n" +
+            " account.google_id as googleId,\n" +
+            " account.id_number as idNumber,\n" +
+            " account.is_deleted as isDeleted,\n" +
+            " account.member_code as memberCode,\n" +
+            " account.password as password,\n" +
+            " role.name as role from account join role on account.role_id = role.id " +
+            "where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
+    Optional<IAccountDTO> findByAccountNameDTOEmail(@Param("email") String email);
+
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO account (account_name, full_name, phone_number, address, gender, password, role_id, facebook_id, google_id, id_number, profile_picture, birthday, email, member_code, point, is_deleted)\n" +
+            "VALUES (:#{#account.accountName}, :#{#account.fullName}, :#{#account.phoneNumber}, :#{#account.address}, :#{#account.gender}, :#{#account.password}, :role, :#{#account.facebookId}, :#{#account.googleId}, :#{#account.idNumber}, :#{#account.profilePicture}, :#{#account.birthday}, :#{#account.email}, :#{#account.memberCode}, 0, 0)", nativeQuery = true)
+    void register(@Param("account") Account account, @Param("role") Long role);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update account \n" +
+            "set account.password = :password " +
+            "where account.id = :id" , nativeQuery = true)
+    void updateAccountPassword(@Param("id") Long id, @Param("password") String password);
+
+    @Query(value = "select account.id as id,\n" +
+            " account.account_name as accountName, \n" +
+            " account.address as address, \n" +
+            " account.birthday as birthday, \n" +
+            " account.email as email,\n" +
+            " account.facebook_id as facebookId,\n" +
+            " account.full_name as fullName,\n" +
+            " account.gender as gender,\n" +
+            " account.google_id as googleId,\n" +
+            " account.id_number as idNumber,\n" +
+            " account.is_deleted as isDeleted,\n" +
+            " account.member_code as memberCode,\n" +
+            " account.password as password,\n" +
+            " role.name as role from account join role on account.role_id = role.id " +
+            "where account.id = :id", nativeQuery = true)
+    Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
 
 }
