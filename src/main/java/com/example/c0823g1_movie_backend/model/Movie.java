@@ -14,9 +14,6 @@ public class Movie {
     private Long id;
     @OneToMany(mappedBy = "movie")
     @JsonIgnore
-    Set<MovieHasGenre> genres;
-    @OneToMany(mappedBy = "movie")
-    @JsonIgnore
     @JsonBackReference
     Set<MovieHasGenre> genres;
     @OneToMany(mappedBy = "movie")

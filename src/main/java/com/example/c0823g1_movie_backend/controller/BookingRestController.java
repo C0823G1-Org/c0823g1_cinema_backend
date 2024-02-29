@@ -1,4 +1,5 @@
 package com.example.c0823g1_movie_backend.controller;
+
 import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.IBookingDTO;
 import com.example.c0823g1_movie_backend.service.IBookingService;
@@ -21,23 +22,43 @@ public class BookingRestController {
     @GetMapping("historyBooking/{id}")
     public ResponseEntity<Iterable<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
         return new ResponseEntity<>(iBookingService.historyBooking(id), HttpStatus.OK);
+    }
+
+    /*
+     * Create by TuanNM
+     * Date create: 29/02/2024
+     * Method: Display ticket booking history
+     * @Param Account ID
+     * @Return A list of booking history
+     */
+
     @GetMapping("/")
-    public ResponseEntity<List<IBookingDTO>> listBookingTicket(){
+    public ResponseEntity<List<IBookingDTO>> listBookingTicket() {
         LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO>   listBookingTicket = iBookingService.findAllBookingTicket(time);
+        List<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(time);
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
     @GetMapping("/search/{search}")
-    public ResponseEntity<List<IBookingDTO>> searchBookingTicket(@PathVariable("search")String search){
+    public ResponseEntity<List<IBookingDTO>> searchBookingTicket(@PathVariable("search") String search) {
         LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search,time);
+        List<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, time);
         System.out.println(listBookingTicket.size() + " search");
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
+
 
     @GetMapping("searchMovieBooking/{start}/{end}")
     public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable LocalDateTime startDate, @PathVariable LocalDateTime endDate) {
         return new ResponseEntity<>(iBookingService.searchBookingByDate(startDate, endDate), HttpStatus.OK);
     }
+    /**
+     * Create by TuanNM
+     * Date create: 29/02/2024
+     * Method: Search by start date and end date
+     * @param startDate is the starting date
+     * @param endDate is the end date
+     * @return a search list
+     */
+
 }
