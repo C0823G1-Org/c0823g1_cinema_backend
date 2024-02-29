@@ -129,6 +129,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     */
     @Query(value = "SELECT a.accountName, SUM(t.ticketPrice) " +
             "FROM Account a " +
             "JOIN Booking b ON a.id = b.accountId " +
