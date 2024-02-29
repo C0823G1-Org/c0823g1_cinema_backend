@@ -27,7 +27,7 @@ public class AccountRestController {
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information (accountName and password) and check account information
-     * @return HttpStatus.BAD_REQUEST if account not found/ access token and role user and HttpStatus.OK if account information is accurate/
+     * @return HttpStatus.BAD_REQUEST if account not found/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login")
@@ -62,7 +62,7 @@ public class AccountRestController {
      * Date created: 29/02/2024
      * Function: Receive account information (fullName, facebookId, profilePicture, email) and check account information.
      * If account not found create new account.
-     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token and role user and HttpStatus.OK if account information is accurate/
+     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login-by-fb")
@@ -102,7 +102,7 @@ public class AccountRestController {
      * Date created: 29/02/2024
      * Function: Receive account information (fullName, googleId, profilePicture, email, phoneNumber) and check account information.
      * If account not found create new account.
-     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token and role user and HttpStatus.OK if account information is accurate/
+     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login-by-gg")
@@ -159,7 +159,7 @@ public class AccountRestController {
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information (email and password) and check account information
-     * @return HttpStatus.BAD_REQUEST if account not found/ access token and role user and HttpStatus.OK if account information is accurate/
+     * @return HttpStatus.BAD_REQUEST if account not found/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login-email")
