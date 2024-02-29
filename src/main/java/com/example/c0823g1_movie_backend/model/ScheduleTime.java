@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ public class ScheduleTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     LocalTime scheduleTime;
+    @JsonBackReference
     @OneToMany(mappedBy = "scheduleTime")
     Set<Schedule> schedules;
 

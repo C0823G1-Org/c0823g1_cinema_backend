@@ -16,7 +16,13 @@ import java.util.List;
 public class RestTicketController {
     @Autowired
     ITicketService ticketService;
-    @GetMapping("/date")
+    /**
+     * Create by HuuPT
+     * Date create: 29/02/2024
+     * Function: to find list ticket by schedule id
+     * Return: HttpStatus.BAD_REQUEST if ticket not found/ HttpStatus.OK and date list
+     */
+    @GetMapping("/ticket")
     public ResponseEntity<List<Ticket>> findAllTicketByScheduleId(@RequestParam Long scheduleId){
         List<Ticket> ticketList = ticketService.findAllTicketByScheduleId(scheduleId);
         if(ticketList == null){

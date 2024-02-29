@@ -28,4 +28,5 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "select * from hall join schedule hall_id=(select hall_id from schedule " +
             "where id =:scheduleId)", nativeQuery = true)
     Hall getHallByScheduleId(@Param("scheduleId") Long scheduleId);
+
 }
