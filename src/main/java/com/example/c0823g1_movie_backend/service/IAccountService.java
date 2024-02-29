@@ -18,9 +18,19 @@ public interface IAccountService extends IGeneralService<Account>{
     boolean checkLoginByGg(Account account);
     String getRoleUserGG(Account account);
 
+    void register(Account account);
+
     Optional<IAccountDTO> findByFacebookId(String facebookId);
 
     Optional<IAccountDTO> findByAccountName(String accountName);
 
     Optional<IAccountDTO> findByGoogleID(String googleId);
+
+    Optional<IAccountDTO> findByEmail(String email);
+
+    void updatePasswordAndSendMail(Long id, String newPassword);
+
+    boolean checkLoginByEmail(Account account);
+
+    String getRoleUserEmail(Account account);
 }
