@@ -4,7 +4,9 @@ import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,11 @@ public class MovieRestController {
     private IMovieService movieService;
 
     @GetMapping("/statistics")
-    private ResponseEntity<MovieStatisticDTO> movieStatistics() {
-//        List<MovieStatisticDTO> statisticDTOList = movieService.
-        return  null;
+    private ResponseEntity<List<Movie>> movieStatistics() {
+        List<Movie> movieList = movieService.getMovieStatistic();
+        if (movieList == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
 }
