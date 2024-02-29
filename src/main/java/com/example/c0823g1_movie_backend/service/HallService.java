@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.repository.HallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,12 @@ public class HallService implements IHallService{
         return null;
     }
 
-    @Override
     public Hall create(Hall hall) {
         return null;
+    }
+
+    @Override
+    public HallDTO findById(Long id) {
+        return hallRepository.findHallById(id);
     }
 }
