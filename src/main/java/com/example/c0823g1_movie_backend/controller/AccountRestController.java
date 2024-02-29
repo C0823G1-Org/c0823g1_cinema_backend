@@ -220,7 +220,12 @@ public class AccountRestController {
             iAccountService.register(account);
         }
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
+     */
     @GetMapping("/statistics")
     private ResponseEntity<Page<Account>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
         Page<Account> accountList = iAccountService.getAccountStatistic(pageable);
