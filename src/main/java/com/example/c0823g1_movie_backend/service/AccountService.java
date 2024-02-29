@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,27 @@ public class AccountService implements IAccountService {
     public Account save(Account account) {
         return null;
     }
+
+    @Override
+    public Account getLastUser() {
+        return accountRepository.getLastUser();
+    }
+
+    @Override
+    public Account getAllInfoUser(String name) {
+        return accountRepository.getAllInforUser('%'+name+'%');
+    }
+
+    @Override
+    public List<Account> getAllAccountName() {
+        return accountRepository.getAllAccountName();
+    }
+
+    @Override
+    public void register(Account account, Long role) {
+        accountRepository.register(account,role);
+    }
+
 
     @Override
     public Account create(Account account) {
