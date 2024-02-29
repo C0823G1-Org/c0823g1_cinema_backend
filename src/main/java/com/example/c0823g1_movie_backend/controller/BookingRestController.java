@@ -51,14 +51,24 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
+    /* Created by: DoLV
+     * Date created: February 29, 2024
+     * Function: Select a booking ticket. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is not yet, it returns the booking ticket object to be printed.
+     */
+
     @GetMapping("/export/{idBookingTicket}")
-    public ResponseEntity<IBookingDTO> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
+    public ResponseEntity<?> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
+        LocalDateTime time = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+
         if (iBookingDTO == null){
-            return  new ResponseEntity<>( HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
         } else {
             if (iBookingDTO.getPrintStatus()){
-                return  new ResponseEntity<>( HttpStatus.NO_CONTENT);
+
+                return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(iBookingDTO, HttpStatus.OK);
             }
@@ -67,5 +77,7 @@ public class BookingRestController {
         }
 
     }
+
+
 
 }
