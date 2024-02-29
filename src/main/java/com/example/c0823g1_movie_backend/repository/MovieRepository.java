@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "GROUP BY m.name " +
             "ORDER BY ticket_count DESC " +
             "LIMIT 20", nativeQuery = true)
-    Page<Movie> findTop20MoviesByRevenue(Pageable pageable);
+    Page<MovieStatisticDTO> findTop20MoviesByRevenue(Pageable pageable);
     @Query(value = "select count(b.account_id) as accountId,m.name as name, " +
             "max(m.description )as description," +
             "max(m.poster) as poster\n" +
