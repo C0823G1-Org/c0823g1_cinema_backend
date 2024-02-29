@@ -3,6 +3,7 @@ package com.example.c0823g1_movie_backend.controller;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
+import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -132,5 +134,14 @@ public class AccountRestController {
            }
             iAccountService.save(account);
         }
+    }
+
+    @GetMapping("/statistics")
+    private ResponseEntity<List<Account>> movieStatistics() {
+        List<Account> accountList = iAccountService.getAccountStatistic();
+        if (accountList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(accountList, HttpStatus.OK);
     }
 }
