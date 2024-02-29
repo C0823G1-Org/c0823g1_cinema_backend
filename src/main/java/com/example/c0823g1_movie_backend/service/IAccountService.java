@@ -3,9 +3,14 @@ package com.example.c0823g1_movie_backend.service;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IAccountService extends IGeneralService<Account>{
+    Account getLastUser();
+    Account getAllInfoUser(String name);
+    List<Account> getAllAccountName();
+    void register (Account account,Long role);
     boolean checkLogin(Account account);
     boolean checkLoginByFB(Account account);
     String getRoleUser(Account account);

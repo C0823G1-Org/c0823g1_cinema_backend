@@ -1,16 +1,24 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.AccountDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
+import com.example.c0823g1_movie_backend.model.Role;
 import com.example.c0823g1_movie_backend.service.IAccountService;
+import com.example.c0823g1_movie_backend.service.IRoleService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,6 +30,8 @@ public class AccountRestController {
     private JwtService jwtService;
     @Autowired
     private IAccountService iAccountService;
+    @Autowired
+    private IRoleService iRoleService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody Account account) {
@@ -133,5 +143,28 @@ public class AccountRestController {
             iAccountService.save(account);
         }
     }
+    @PostMapping("/register")
+    public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            Account account = new Account();
+            BeanUtils.copyProperties(accountDTO,account);
+            Account account1 = iAccountService.getLastUser();
+            account.setPoint(0);
+            int randomMemberCode = 1;
+            account.setMemberCode("TV-" + account1.getMemberCode());
+            iAccountService.register(account, 2L);
+            System.out.println("Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+    }
+    @GetMapping("/detailUser")
+    public ResponseEntity<Account> detailAccountUser(){
+        Account account1 = iAccountService.getAllInfoUser("tuan12345");
+        return new ResponseEntity<>(account1,HttpStatus.OK);
+    }
+
 
 }

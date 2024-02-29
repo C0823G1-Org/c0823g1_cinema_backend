@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +31,27 @@ public class AccountService implements IAccountService {
         }
         return accountRepository.save(account);
     }
+
+    @Override
+    public Account getLastUser() {
+        return accountRepository.getLastUser();
+    }
+
+    @Override
+    public Account getAllInfoUser(String name) {
+        return accountRepository.getAllInforUser('%'+name+'%');
+    }
+
+    @Override
+    public List<Account> getAllAccountName() {
+        return accountRepository.getAllAccountName();
+    }
+
+    @Override
+    public void register(Account account, Long role) {
+        accountRepository.register(account,role);
+    }
+
 
     @Override
     public Account create(Account account) {
