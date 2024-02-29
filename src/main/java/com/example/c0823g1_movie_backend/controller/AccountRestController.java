@@ -7,14 +7,12 @@ import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Random;
 
 @RestController
@@ -26,6 +24,12 @@ public class AccountRestController {
     @Autowired
     private IAccountService iAccountService;
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information (accountName and password) and check account information
+     * @return HttpStatus.BAD_REQUEST if account not found/ access token and role user and HttpStatus.OK if account information is accurate/
+     * HttpStatus.INTERNAL_SERVER_ERROR if server error
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody Account account) {
         String accessToken = "";
@@ -54,7 +58,13 @@ public class AccountRestController {
         return new ResponseEntity<>(httpStatus);
     }
 
-    //
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information (fullName, facebookId, profilePicture, email) and check account information.
+     * If account not found create new account.
+     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token and role user and HttpStatus.OK if account information is accurate/
+     * HttpStatus.INTERNAL_SERVER_ERROR if server error
+     */
     @PostMapping("/login-by-fb")
     public ResponseEntity<LoginSuccess> loginByFacebook(HttpServletRequest request, @RequestBody Account account) {
         String accessToken = "";
@@ -88,6 +98,13 @@ public class AccountRestController {
         return new ResponseEntity<>(httpStatus);
     }
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information (fullName, googleId, profilePicture, email, phoneNumber) and check account information.
+     * If account not found create new account.
+     * @return HttpStatus.BAD_REQUEST if account has been locked/ access token and role user and HttpStatus.OK if account information is accurate/
+     * HttpStatus.INTERNAL_SERVER_ERROR if server error
+     */
     @PostMapping("/login-by-gg")
     public ResponseEntity<LoginSuccess> loginByGoogle(HttpServletRequest request, @RequestBody Account account) {
         String accessToken = "";
@@ -121,6 +138,12 @@ public class AccountRestController {
         return new ResponseEntity<>(httpStatus);
     }
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information (email) and check account information.
+     * If account found create an automatic password and update the account then send a notification email to the user.
+     * @return HttpStatus.BAD_REQUEST if account not found/ HttpStatus.OK if account is found
+     */
     @PostMapping("/forget-password")
     public ResponseEntity<?> forgetPassword(HttpServletRequest request, @RequestBody Account account) {
         System.out.println(account.getEmail());
@@ -133,6 +156,12 @@ public class AccountRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information (email and password) and check account information
+     * @return HttpStatus.BAD_REQUEST if account not found/ access token and role user and HttpStatus.OK if account information is accurate/
+     * HttpStatus.INTERNAL_SERVER_ERROR if server error
+     */
     @PostMapping("/login-email")
     public ResponseEntity<LoginSuccess> loginByEmail(HttpServletRequest request, @RequestBody Account account) {
         String accessToken = "";
@@ -161,6 +190,11 @@ public class AccountRestController {
         return new ResponseEntity<>(httpStatus);
     }
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information and check account information
+     * If account not found create new account.
+     */
     private void createAccountGG(Account account) {
         if (!iAccountService.checkLoginByGg(account)) {
             account.setAccountName(account.getEmail());
@@ -168,6 +202,11 @@ public class AccountRestController {
         }
     }
 
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: Receive account information and check account information
+     * If account not found create new account.
+     */
     private void createAccountFB(Account account) {
         if (!iAccountService.checkLoginByFB(account)) {
             if (Objects.equals(account.getEmail(), "")) {
@@ -178,6 +217,11 @@ public class AccountRestController {
             iAccountService.register(account);
         }
     }
+
+    /* Create by: BaoNDT
+     * Date created: 29/02/2024
+     * Function: generated random new password
+     */
     private String generateRandomString() {
         String characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder randomString = new StringBuilder();
