@@ -3,6 +3,8 @@ package com.example.c0823g1_movie_backend.service;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class MovieService implements IMovieService{
     }
 
     @Override
-    public List<Movie> getMovieStatistic() {
-        return movieRepository.findTop20MoviesByRevenue();
+    public Page<Movie> getMovieStatistic(Pageable pageable) {
+        return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 }
