@@ -6,6 +6,10 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
+@Table(name = "schedule", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"movie_id", "date", "schedule_time_id"}),
+        @UniqueConstraint(columnNames = {"movie_id", "date", "schedule_time_id","hall_id"})
+})
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
