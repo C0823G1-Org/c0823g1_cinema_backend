@@ -124,4 +124,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " role.name as role from account join role on account.role_id = role.id " +
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
+
 }
