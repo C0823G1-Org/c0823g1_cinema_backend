@@ -1,24 +1,29 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
-import com.example.c0823g1_movie_backend.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import com.example.c0823g1_movie_backend.dto.MovieDTO;
+
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/home")
+@RequestMapping("/movie")
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
@@ -32,24 +37,17 @@ public class MovieRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/movie/current")
-    public ResponseEntity<List<Movie>> getAllMovieCurrent() {
+    @GetMapping("/current")
+    public ResponseEntity<List<MovieDTO>> getAllMovieCurrent() {
         LocalDate localDate = LocalDate.now();
         System.out.println(localDate);
-        List<Movie> list = movieService.getAll();
+        List<MovieDTO> list = movieService.getAllMovieCurrent();
         System.out.println(list.size());
-        List<Movie> newList = new ArrayList<>();
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        for (Movie movie : list) {
-            if (movie.getStartDate().plusDays(7).isAfter(localDate) == true || movie.getStartDate() == localDate) {
-                newList.add(movie);
-            }
-        }
-        return new ResponseEntity<>(newList, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
 
     @GetMapping("/search")
     public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "search", defaultValue = "a") String value,
@@ -69,5 +67,37 @@ public class MovieRestController {
             movieService.createMovie(movie);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<Movie> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<Movie>> findAllMovie(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "") String publisher,
+                                                    @RequestParam(defaultValue = "") String name,
+                                                    @RequestParam(defaultValue = "1990-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                    @RequestParam(defaultValue = "3000-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
+                .and(Sort.by("name").ascending()));
+        Page<Movie> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
+        if (moviePage.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(moviePage, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
+        Movie movie = movieService.findMovieById(id);
+        if (movie == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        movieService.deleteMovieById(id);
+        return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 }
