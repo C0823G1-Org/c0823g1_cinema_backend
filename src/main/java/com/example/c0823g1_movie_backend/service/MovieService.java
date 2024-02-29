@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MovieService implements IMovieService {
@@ -30,6 +33,13 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    public Movie findById(Long id) {
+        return movieRepository.findByIdMovie(id).get();
+    }
+
+
+
+    @Override
     public Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, Pageable pageable) {
         return movieRepository.searchMovieByNameAndPublisher("%" + name + "%", "%" + publisher + "%", pageable);
     }
@@ -43,4 +53,6 @@ public class MovieService implements IMovieService {
     public void deleteMovieById(long id) {
 
     }
+
+
 }

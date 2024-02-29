@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,8 +12,10 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "movie")
+    @JsonIgnore
     Set<MovieHasGenre> genres;
     @OneToMany(mappedBy = "movie")
+    @JsonIgnore
     Set<Schedule> schedules;
     private String name;
     private LocalDate startDate;
