@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import com.example.c0823g1_movie_backend.dto.MovieDTO;
+
 
 @RestController
 @CrossOrigin("*")
@@ -24,6 +25,47 @@ public class MovieRestController {
     private IMovieService movieService;
 
     @GetMapping
+    public ResponseEntity<List<MovieDTO>> getAllMovieHot() {
+        List<MovieDTO> list = movieService.getAllMovieHot();
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<List<MovieDTO>> getAllMovieCurrent() {
+        LocalDate localDate = LocalDate.now();
+        System.out.println(localDate);
+        List<MovieDTO> list = movieService.getAllMovieCurrent();
+        System.out.println(list.size());
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "search", defaultValue = "a") String value,
+                                                       @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<MovieDTO> searchMovies = movieService.searchMovie(value, pageable);
+        if (searchMovies == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(searchMovies, HttpStatus.OK);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@RequestBody Movie movie) {
+        System.out.println(movie.toString());
+        if (movie.getId() == null) {
+            movieService.createMovie(movie);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
     public ResponseEntity<Page<Movie>> findAllMovie(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "") String publisher,
                                                     @RequestParam(defaultValue = "") String name,
@@ -38,7 +80,7 @@ public class MovieRestController {
         return new ResponseEntity<>(moviePage, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
         if (movie == null) {
