@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScheduleService implements IScheduleService{
+public class ScheduleService implements IScheduleService {
     @Autowired
     ScheduleRepository scheduleRepository;
+
     @Override
     public Schedule save(Schedule schedule) {
         return null;
