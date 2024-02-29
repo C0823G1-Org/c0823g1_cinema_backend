@@ -14,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,7 @@ public class AccountRestController {
     private IAccountService iAccountService;
     @Autowired
     private IRoleService iRoleService;
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody Account account) {
@@ -143,15 +146,21 @@ public class AccountRestController {
             iAccountService.save(account);
         }
     }
-    
 
+    /* Create by: TuanTA
+     * Date created: 29/02/2024
+     * Function: Register New account
+     * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
+     */
     @PostMapping("/register")
     public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
+            String encodedPassword = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
+            account.setPassword(encodedPassword);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
             account.setMemberCode("TV-" + account1.getMemberCode());
@@ -161,9 +170,27 @@ public class AccountRestController {
         }
 
     }
+    /* Create by: TuanTA
+     * Date created: 29/02/2024
+     * Function: Show Detail User Account
+     *  When the customer logs in, the customer's information will be displayed
+     */
     @GetMapping("/detailUser")
     public ResponseEntity<Account> detailAccountUser(Principal principal){
+        if (principal.getName() == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
+    }
+    /* Create by: TuanTA
+     * Date created: 29/02/2024
+     * Function: Change Password
+     *
+     */
+    @PatchMapping("/changePassword")
+    public ResponseEntity<Account> changePassword(Principal principal){
+
+
     }
 }
