@@ -2,6 +2,8 @@ package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IBookingDTO;
 import com.example.c0823g1_movie_backend.model.Booking;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +26,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
             "  left join movie on movie.id = schedule.movie_id\n" +
             "  group by booking.id", nativeQuery = true)
-    List<IBookingDTO> findAllBookingTicket(LocalDateTime time);
+    Page<IBookingDTO> findAllBookingTicket(Pageable pageable,LocalDateTime time);
 
 
     @Query(value =
@@ -39,5 +41,5 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
                     "  left join movie on movie.id = schedule.movie_id\n" +
                     " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and booking.date_booking >= %:dateNow% - INTERVAL 7 DAY" +
                     "  group by booking.id", nativeQuery = true)
-    List<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow);
+    Page<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow,Pageable pageable);
 }
