@@ -1,37 +1,20 @@
 
 package com.example.c0823g1_movie_backend.controller;
 
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
-import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.service.IMovieService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
-import com.example.c0823g1_movie_backend.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 
 @RestController
