@@ -6,6 +6,8 @@ import com.example.c0823g1_movie_backend.model.Role;
 import com.example.c0823g1_movie_backend.repository.AccountRepository;
 import com.example.c0823g1_movie_backend.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,7 +99,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public List<Account> getAccountStatistic() {
+    public Page<Account> getAccountStatistic(Pageable pageable) {
         return null;
     }
 }
