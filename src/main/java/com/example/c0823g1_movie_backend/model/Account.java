@@ -20,6 +20,7 @@ public class Account {
     private String facebookId;
     private String googleId;
     private String idNumber;
+    @Column(columnDefinition = "LONGTEXT")
     private String profilePicture;
     private LocalDate birthday;
     private String phoneNumber;
