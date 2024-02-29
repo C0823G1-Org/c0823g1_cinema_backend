@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
+import com.example.c0823g1_movie_backend.dto.AccountStatisicDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import jakarta.transaction.Transactional;
@@ -134,7 +135,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * Date Created: 29/02/2024
      * Function: Get a list of accounts that have the highest amount of money spent
      */
-    @Query(value = "SELECT a.accountName, SUM(t.ticketPrice) " +
+    @Query(value = "SELECT a.accountName AS account_name, SUM(t.ticketPrice) " +
             "FROM Account a " +
             "JOIN Booking b ON a.id = b.accountId " +
             "JOIN Ticket t ON b.id = t.bookingId " +
@@ -144,6 +145,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "GROUP BY a.id " +
             "ORDER BY SUM(t.ticketPrice) DESC " +
             "LIMIT 50", nativeQuery = true)
-    Page<Account> getTop50Account(Pageable pageable);
+    Page<AccountStatisicDTO> getTop50Account(Pageable pageable);
 
 }
