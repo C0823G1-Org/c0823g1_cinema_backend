@@ -2,6 +2,7 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class MovieRestController {
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    private ResponseEntity<Page<Movie>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
-        Page<Movie> movieList = movieService.getMovieStatistic(pageable);
+    private ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
