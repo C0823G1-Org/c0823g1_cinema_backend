@@ -19,4 +19,5 @@ public interface IAccountDTO {
     String getRole();
     String getFacebookId();
     String getGoogleId();
+    String getPhoneNumber();
 }

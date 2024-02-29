@@ -10,6 +10,7 @@
  */
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -47,13 +50,20 @@ public class EmployeeController {
      * @param id the ID of the employee to delete
      * @return a ResponseEntity with an HTTP status indicating success or failure of the operation
      */
-    @DeleteMapping("/employee/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
-        Account account = employeeService.getEmployeeById(id);
+
+//    @GetMapping("/employee/{id}")
+//    public ResponseEntity<Optional<IAccountDTO>> findById(@PathVariable Long id) {
+//        Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
+//        return new ResponseEntity<>(account,HttpStatus.OK);
+//    }
+
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
         if (account == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        employeeService.deleteById(id);
+        employeeService.deleteEmployee(account.get().getId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
