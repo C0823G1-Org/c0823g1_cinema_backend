@@ -25,7 +25,7 @@ public class MovieRestController {
     @GetMapping("/statistics")
     private ResponseEntity<List<Movie>> movieStatistics() {
         List<Movie> movieList = movieService.getMovieStatistic();
-        if (movieList == null) {
+        if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
