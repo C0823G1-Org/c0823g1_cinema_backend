@@ -13,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -67,6 +70,10 @@ public class MovieRestController {
     public ResponseEntity<Movie> findById(@PathVariable Long id) {
         return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
     }
-
-
+    /**
+     * Create by TuanNM
+     * Date create: 29/02/2024
+     * Method: See details of the movie
+     * @Param id movie
+     * @Return movie information*/
 }
