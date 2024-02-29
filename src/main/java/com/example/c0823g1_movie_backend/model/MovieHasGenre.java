@@ -13,7 +13,6 @@ public class MovieHasGenre {
     @ManyToOne
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     Genre genre;
-    private Boolean isDeleted = false;
 
     public MovieHasGenre() {
     }
@@ -42,11 +41,4 @@ public class MovieHasGenre {
         this.genre = genre;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
 }
