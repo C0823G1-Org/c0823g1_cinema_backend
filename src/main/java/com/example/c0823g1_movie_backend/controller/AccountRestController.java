@@ -143,6 +143,8 @@ public class AccountRestController {
             iAccountService.save(account);
         }
     }
+    
+
     @PostMapping("/register")
     public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
         if (bindingResult.hasFieldErrors()){
@@ -152,7 +154,6 @@ public class AccountRestController {
             BeanUtils.copyProperties(accountDTO,account);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
-            int randomMemberCode = 1;
             account.setMemberCode("TV-" + account1.getMemberCode());
             iAccountService.register(account, 2L);
             System.out.println("Success");
@@ -161,10 +162,8 @@ public class AccountRestController {
 
     }
     @GetMapping("/detailUser")
-    public ResponseEntity<Account> detailAccountUser(){
-        Account account1 = iAccountService.getAllInfoUser("tuan12345");
+    public ResponseEntity<Account> detailAccountUser(Principal principal){
+        Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
     }
-
-
 }
