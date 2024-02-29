@@ -13,6 +13,7 @@ public class Hall {
     private Integer totalSeat;
     @OneToMany(mappedBy = "hall")
     private Set<Schedule> schedules;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Hall() {
