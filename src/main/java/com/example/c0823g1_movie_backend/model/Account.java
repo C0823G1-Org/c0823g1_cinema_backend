@@ -31,6 +31,7 @@ public class Account {
     private Integer point;
     @OneToMany(mappedBy = "account")
     private Set<Booking> bookings;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Account() {
@@ -67,6 +68,10 @@ public class Account {
     public Account(String accountName, String password) {
         this.accountName = accountName;
         this.password = password;
+    }
+
+    public Account(String email) {
+        this.email = email;
     }
 
     public Account(String fullName, String googleId, String profilePicture, String phoneNumber, String email) {
