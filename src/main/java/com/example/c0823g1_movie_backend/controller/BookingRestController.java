@@ -43,6 +43,10 @@ public class BookingRestController {
         LocalDateTime time = LocalDateTime.now();
         Pageable pageable = PageRequest.of(page, 2);
         Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search,time,pageable);
+        if (listBookingTicket.isEmpty()){
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,time);
+            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+        }
         System.out.println(listBookingTicket.getSize() + " search");
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
