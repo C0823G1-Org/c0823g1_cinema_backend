@@ -21,6 +21,11 @@ import java.util.List;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get a list of movies with many views
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
 
     @GetMapping
     public ResponseEntity<List<MovieDTO>> getAllMovieHot() {
@@ -31,6 +36,11 @@ public class MovieRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get the list of movies showing today
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
     @GetMapping("/movie/current")
     public ResponseEntity<List<MovieDTO>> getAllMovieCurrent() {
         LocalDate localDate = LocalDate.now();
@@ -43,13 +53,18 @@ public class MovieRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "search", defaultValue = "a") String value,
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Search movie name and pagination
+     *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
+     * */
+    @GetMapping("/search/{name}")
+    public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                        @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 8);
         Page<MovieDTO> searchMovies = movieService.searchMovie(value, pageable);
         if (searchMovies == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
     }
