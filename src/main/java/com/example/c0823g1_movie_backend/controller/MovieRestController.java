@@ -24,6 +24,12 @@ public class MovieRestController {
     @Autowired
     private IMovieService movieService;
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of movies that have the highest revenue
+     * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
+     */
     @GetMapping("/statistics")
     private ResponseEntity<Page<Movie>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
         Page<Movie> movieList = movieService.getMovieStatistic(pageable);
