@@ -48,6 +48,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id where account.facebook_id = :facebookId", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOFB(@Param("facebookId") String facebookId);
+
     @Query(value = " select account.id as id,\n" +
             " account.account_name as accountName, \n" +
             " account.address as address, \n" +
@@ -80,6 +81,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " role.name as role from account join role on account.role_id = role.id " +
             " where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
     Optional<IAccountDTO> findByEmail(@Param("email") String email);
+
     @Query(value = "select account.id as id,\n" +
             " account.account_name as accountName, \n" +
             " account.address as address, \n" +
@@ -107,7 +109,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Modifying
     @Query(value = "update account \n" +
             "set account.password = :password " +
-            "where account.id = :id" , nativeQuery = true)
+            "where account.id = :id", nativeQuery = true)
     void updateAccountPassword(@Param("id") Long id, @Param("password") String password);
 
     @Query(value = "select account.id as id,\n" +
