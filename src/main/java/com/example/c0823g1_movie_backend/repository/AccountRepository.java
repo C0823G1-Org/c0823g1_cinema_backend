@@ -135,16 +135,38 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * Date Created: 29/02/2024
      * Function: Get a list of accounts that have the highest amount of money spent
      */
-    @Query(value = "SELECT a.accountName AS account_name, SUM(t.ticketPrice) " +
-            "FROM Account a " +
-            "JOIN Booking b ON a.id = b.accountId " +
-            "JOIN Ticket t ON b.id = t.bookingId " +
-            "JOIN Schedule s ON t.scheduleId = s.id " +
-            "JOIN Movie m ON m.id = s.movieId " +
-            "WHERE a.isDeleted = 0 AND b.isDeleted = 0 AND t.isDeleted = 0 AND s.isDeleted = 0 AND m.isDeleted = 0 " +
-            "GROUP BY a.id " +
-            "ORDER BY SUM(t.ticketPrice) DESC " +
-            "LIMIT 50", nativeQuery = true)
+    @Query(value = "SELECT a.id as ma_thanh_vien, a.account_name as ten_thanh_vien, " +
+            "COUNT(t.id) as so_luong_ve, " +
+            "SUM(t.ticket_price) as tong_tien, " +
+            "SUM(a.point) as diem_tich_luy " +
+            "FROM account a " +
+            "JOIN ( " +
+            "   SELECT b.account_id, " +
+            "   COUNT(t.id) AS ticket_count, " +
+            "   SUM(ticket_price) AS total_ticket_price " +
+            "   FROM booking b " +
+            "   JOIN ticket t ON b.id = t.booking_id " +
+            "   JOIN schedule s ON t.schedule_id = s.id " +
+            "   JOIN movie m ON m.id = s.movie_id " +
+            "   WHERE b.is_deleted = 0 AND t.is_deleted = 0 AND s.is_deleted = 0 AND m.is_deleted = 0 " +
+            "   GROUP BY b.account_id " +
+            ") t ON a.id = t.account_id " +
+            "WHERE a.is_deleted = 0 " +
+            "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            countQuery = "SELECT COUNT(*) FROM (SELECT DISTINCT a.id " +
+                    "FROM account a " +
+                    "JOIN ( " +
+                    "   SELECT b.account_id " +
+                    "   FROM booking b " +
+                    "   JOIN ticket t ON b.id = t.booking_id " +
+                    "   JOIN schedule s ON t.schedule_id = s.id " +
+                    "   JOIN movie m ON m.id = s.movie_id " +
+                    "   WHERE b.is_deleted = 0 AND t.is_deleted = 0 AND s.is_deleted = 0 AND m.is_deleted = 0 " +
+                    "   GROUP BY b.account_id " +
+                    ") t ON a.id = t.account_id " +
+                    "WHERE a.is_deleted = 0) AS countQuery",
+            nativeQuery = true)
     Page<AccountStatisicDTO> getTop50Account(Pageable pageable);
 
 }
