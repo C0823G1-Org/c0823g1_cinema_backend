@@ -72,6 +72,10 @@ public class Account {
         this.password = password;
     }
 
+    public Account(String email) {
+        this.email = email;
+    }
+
     public Account(String fullName, String googleId, String profilePicture, String phoneNumber, String email) {
         this.fullName = fullName;
         this.googleId = googleId;
