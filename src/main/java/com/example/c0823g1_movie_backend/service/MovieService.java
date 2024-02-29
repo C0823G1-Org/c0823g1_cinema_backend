@@ -12,16 +12,21 @@ import java.util.Date;
 @Service
 public class MovieService implements IMovieService {
     @Autowired
-    private MovieRepository movieRepository;
+    MovieRepository movieRepository;
 
     @Override
-    public Object save(Object o) {
+    public Movie save(Movie movie) {
         return null;
     }
 
     @Override
-    public Object create(Object o) {
+    public Movie create(Movie movie) {
         return null;
+    }
+
+    @Override
+    public void createMovie(Movie movie) {
+        movieRepository.createMovie(movie);
     }
 
     @Override
