@@ -51,4 +51,11 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
+    @GetMapping("/export/{idBookingTicket}")
+    public ResponseEntity<Page<IBookingDTO>> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
+        System.out.println(id);
+
+        return null;
+    }
+
 }
