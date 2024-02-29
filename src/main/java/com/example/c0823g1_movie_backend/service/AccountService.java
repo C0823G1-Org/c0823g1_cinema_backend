@@ -115,7 +115,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public Page<Account> getAccountStatistic(Pageable pageable) {
-        return null;
+        return accountRepository.getTop50Account(pageable);
     }
     public Optional<IAccountDTO> findByEmail(String email) {
         return accountRepository.findByEmail(email);
