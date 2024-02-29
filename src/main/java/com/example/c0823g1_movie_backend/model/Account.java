@@ -34,6 +34,7 @@ public class Account {
     @JsonBackReference
     @OneToMany(mappedBy = "account")
     private Set<Booking> bookings;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Account() {
