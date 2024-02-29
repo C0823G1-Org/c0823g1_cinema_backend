@@ -74,7 +74,14 @@ public class MovieRestController {
         return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
     }
 
-
+    /**
+     * Created by: ThuanTM
+     * Date created: 29/2/2024
+     * Function:
+     * Display movie list combined with search and pagination
+     *
+     * @return HTTPStatus.OK if have list movie and HTTPStatus.NO_CONTENT if list movie null
+     */
 
     @GetMapping("/list")
     public ResponseEntity<Page<Movie>> findAllMovie(@RequestParam(defaultValue = "0") int page,
@@ -90,7 +97,13 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(moviePage, HttpStatus.OK);
     }
-
+    /**
+     * Created by: ThuanTM
+     * Date created: 29/2/2024
+     * Function: delete movie by id
+     *
+     * @return HTTPStatus.OK if movie delete and HTTPStatus.NOT_FOUND if  movie not found
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
