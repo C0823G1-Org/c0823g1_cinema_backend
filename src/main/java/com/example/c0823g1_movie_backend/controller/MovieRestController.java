@@ -130,7 +130,7 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if movie delete and HTTPStatus.NOT_FOUND if  movie not found
      */
-    @DeleteMapping("/delete/{id}")
+    @PatchMapping("/delete/{id}")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
         if (movie == null) {
