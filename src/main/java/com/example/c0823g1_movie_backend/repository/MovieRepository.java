@@ -1,7 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
-import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,14 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
-import java.util.Optional;
-
-import java.util.List;
 
 @Repository
 @Transactional
@@ -34,12 +28,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "group by m.name\n" +
             "order by count(b.account_id) desc\n" +
             "limit 8", nativeQuery = true)
-    List<MovieDTO> getAllMovieHot();
+    List<IMovieDTO> getAllMovieHot();
 
-    @Query(value = "select m.name as name,m.description as description, m.poster as poster\n" +
+    @Query(value = "select m.name as name," +
+            "m.description as description," +
+            "m.poster as poster\n" +
             "from movie m\n" +
             "where m.name like :title", nativeQuery = true)
-    Page<MovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
+    Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
     @Query(value = "select count(m.id) as movieId,max(m.name) as name,\n" +
@@ -49,7 +45,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "join schedule sc on m.id = sc.movie_id\n" +
             "where sc.`date` = current_date\n" +
             "group by m.name\n", nativeQuery = true)
-    List<MovieDTO> getAllMovieCurrent();
+    List<IMovieDTO> getAllMovieCurrent();
 
 
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +

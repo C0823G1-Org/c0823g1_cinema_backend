@@ -1,25 +1,21 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
-import java.util.Optional;
 
 public interface IMovieService extends IGeneralService<Movie> {
-    List<MovieDTO> getAllMovieHot();
+    List<IMovieDTO> getAllMovieHot();
 
 
-    Page<MovieDTO> searchMovie(@Param("name") String value, Pageable pageable);
+    Page<IMovieDTO> searchMovie(@Param("name") String value, Pageable pageable);
 
-    List<MovieDTO> getAllMovieCurrent();
+    List<IMovieDTO> getAllMovieCurrent();
 
 
     void deleteMovieById(long id);
