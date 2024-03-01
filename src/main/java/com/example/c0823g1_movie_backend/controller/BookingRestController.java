@@ -181,19 +181,91 @@ public class BookingRestController {
         for (Integer seat : checkoutDTO.getSeatNumber()) {
             ticketService.saveTicket(seat,id,scheduleId);
         }
+        Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
         Account account = accountService.findAccountById(checkoutDTO.getAccountId());
         String email = account.getEmail();
+        String seat = "";
+
+
+        for (Integer s: checkoutDTO.getSeatNumber()) {
+            String result = "";
+            String ss = s.toString();
+            if (s<=10){
+                result = "A" + s;
+            }else if (s<=20){
+                if (s==20){
+                    result = "B10";
+                }else {
+                    result = "B" + ss.charAt(ss.length()-1);
+                }
+
+            }else if (s<=30){
+                if (s==30){
+                    result = "C10";
+                }else {
+                    result = "C" + ss.charAt(ss.length()-1);
+                }
+            }else if (s<=40){
+                if (s==40){
+                    result = "D10";
+                }else {
+                    result = "D" + ss.charAt(ss.length()-1);
+                }
+            }else if (s<=50){
+                if (s==50){
+                    result = "E10";
+                }else {
+                    result = "E" + ss.charAt(ss.length()-1);
+                }
+            }
+
+            seat += result;
+        }
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
+        mailMessage.setTo(email);
         mailMessage.setSubject("Bạn đã đặt vé xem phim thành công");
-        String content = "Tên phim: \n" +
-                "Ngày chiếu: \n" +
-                "Phòng chiếu: \n" +
-                "Giờ: \n" +
-                "Ghế: \n" +
-                "Vui lòng đến trước 30 phút để nhận vé \n" +
-                "Chúc bạn xem phim vui vẻ";
+        String content = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>Document</title>\n" +
+                "</head>\n" +
+                "\n" +
+                "<body style=\"width: 80%;;margin-left: 10%;\">\n" +
+                "    <img style=\"width: 50%;height: 30%;margin-left: 25%;\"\n" +
+                "        src=\""+ schedule.getMovie().getPoster() +"\" alt=\"Madame Web\n" +
+                "    \n" +
+                "    Xem thêm tại: https://www.galaxycine.vn/\">\n" +
+                "    <table style=\"width: 100%;padding-left: 20%;\">\n" +
+                "        <tr>\n" +
+                "            <td>Phòng chiếu</th>\n" +
+                "            <td>"+schedule.getHall().getName()+"</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "            <td>Ngày chiếu</th>\n" +
+                "            <td>"+schedule.getDate()+"</td>\n" +
+                "        </tr>\n" +
+                "\n" +
+                "        <tr>\n" +
+                "            <td>Giờ chiếu</th>\n" +
+                "            <td>"+ schedule.getScheduleTime().getScheduleTime()+"</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "            <td>Ghế </th>\n" +
+                "            <td>"+
+                seat
+                +"</td>\n" +
+                "        </tr>\n" +
+                "    </table>\n" +
+                "    <img style=\"width: 30%;height: 30%;margin-left: 35%;\"\n" +
+                "        src=\"https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSh-wrQu254qFaRcoYktJ5QmUhmuUedlbeMaQeaozAVD4lh4ICsGdBNubZ8UlMvWjKC\"\n" +
+                "        alt=\"\">\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>";
         mailMessage.setText(content);
         mailConfig.getJavaMailSender().send(mailMessage);
 
