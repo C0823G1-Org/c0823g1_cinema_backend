@@ -133,9 +133,6 @@ public class BookingRestController {
     }
 
 
-
-
-
     /* Created by: DoLV
      * Date created: February 29, 2024
      * Function: Support for printing pdf files with the function of adding content and background images.
