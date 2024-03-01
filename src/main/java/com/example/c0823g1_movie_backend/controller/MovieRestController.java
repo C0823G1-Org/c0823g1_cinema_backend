@@ -1,6 +1,9 @@
+
 package com.example.c0823g1_movie_backend.controller;
 
+
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +33,20 @@ public class MovieRestController {
      *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
      * */
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of movies that have the highest revenue
+     * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
+     */
+    @GetMapping("/statistics")
+    private ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(pageable);
+        if (movieList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();

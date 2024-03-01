@@ -1,6 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.AccountDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Role;
@@ -8,9 +8,9 @@ import com.example.c0823g1_movie_backend.repository.AccountRepository;
 import com.example.c0823g1_movie_backend.repository.RolesRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -136,7 +136,16 @@ public class AccountService implements IAccountService {
         return accountRepository.findByAccountNameDTOGG(googleId);
     }
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     */
     @Override
+    public Page<AccountStatisticDTO> getAccountStatistic(Pageable pageable) {
+        return accountRepository.getTop50Account(pageable);
+    }
+
     public Optional<IAccountDTO> findByEmail(String email) {
         return accountRepository.findByEmail(email);
     }
@@ -145,14 +154,14 @@ public class AccountService implements IAccountService {
     public void updatePasswordAndSendMail(Long id, String newPassword) {
         Optional<IAccountDTO> account = accountRepository.findByIdAccountDTO(id);
         if (account.isPresent()) {
-            accountRepository.updateAccountPassword(id,passwordEncoder.encode(newPassword));
+            accountRepository.updateAccountPassword(id, passwordEncoder.encode(newPassword));
             String to = account.get().getEmail();
             String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
             String templateName = "email-template";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("fullName", account.get().getFullName());
             context.setVariable("password", newPassword);
-            sendEmailWithHtmlTemplate(to,subject,templateName,context);
+            sendEmailWithHtmlTemplate(to, subject, templateName, context);
         }
     }
 //    public void registerAndSendMail(AccountDTO accountDTO){

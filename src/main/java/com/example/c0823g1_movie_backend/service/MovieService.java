@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ public class MovieService implements IMovieService {
         return movieRepository.getAllMovieCurrent();
     }
 
-
     @Override
     public Movie save(Movie movie) {
         return null;
@@ -41,8 +41,16 @@ public class MovieService implements IMovieService {
     public Movie create(Movie movie) {
         return null;
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of movies that have the highest revenue
+     */
     @Override
+    public Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable) {
+        return movieRepository.findTop20MoviesByRevenue(pageable);
+    }
+
     public void createMovie(Movie movie) {
         movieRepository.createMovie(movie);
     }
@@ -70,4 +78,6 @@ public class MovieService implements IMovieService {
     public Movie findMovieById(long id) {
         return movieRepository.findMovieById(id);
     }
+
+
 }

@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.c0823g1_movie_backend.model.Movie;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface IBookingService {
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time);

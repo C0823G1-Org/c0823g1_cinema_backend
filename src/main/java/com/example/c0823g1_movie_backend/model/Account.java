@@ -1,7 +1,7 @@
 package com.example.c0823g1_movie_backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Set;
 

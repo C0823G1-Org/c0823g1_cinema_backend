@@ -1,10 +1,10 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.AccountDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
-import com.example.c0823g1_movie_backend.model.Role;
 import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.IRoleService;
 import com.example.c0823g1_movie_backend.service.JwtService;
@@ -13,15 +13,16 @@ import jakarta.validation.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -304,7 +305,20 @@ public class AccountRestController {
             iAccountService.register(account);
         }
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
+     */
+    @GetMapping("/statistics")
+    private ResponseEntity<Page<AccountStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<AccountStatisticDTO> accountList = iAccountService.getAccountStatistic(pageable);
+        if (accountList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(accountList, HttpStatus.OK);
+    }
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: generated random new password
