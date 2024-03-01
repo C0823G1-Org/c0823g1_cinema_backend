@@ -20,7 +20,8 @@ public class BookingService implements IBookingService{
 
     @Override
     public Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time) {
-        return bookingRepository.findAllBookingTicket(pageable,time);
+        return bookingRepository.findAllBookingTicket(pageable, time);
+    }
     public List<HistoryBookingDTO> historyBooking(Long id) {
         return bookingRepository.getListMovieByHistoryBooking(id);
     }
@@ -29,9 +30,9 @@ public class BookingService implements IBookingService{
     public List<HistoryBookingDTO> searchBookingByDate(LocalDateTime startDate, LocalDateTime endDate) {
         return bookingRepository.searchMovieBookingByDate(startDate, endDate);
     }
-    public List<IBookingDTO> findAllBookingTicket(LocalDateTime time) {
-        return bookingRepository.findAllBookingTicket(time);
-    }
+
+
+
 
     @Override
     public Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time , Pageable pageable) {
@@ -58,5 +59,6 @@ public class BookingService implements IBookingService{
     public Integer getBooking() {
         return bookingRepository.getBooking();
     }
+
 
 }

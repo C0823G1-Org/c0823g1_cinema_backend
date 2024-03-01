@@ -83,7 +83,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     " GROUP BY booking.id, booking.print_status, account.id, account.full_name, account.id_number, account.phone_number, movie.ticket_price, booking.date_booking, ticket.seat_number;",
             nativeQuery = true)
     List<IBookingDTO> listBookingTicketDetail(@Param("idBook") Integer idBook);
-    List<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow);
+
     @Modifying
     @Query(value = "INSERT INTO booking(account_id,date_booking,print_status,is_deleted) VALUES (:accountId, :date,0,0)", nativeQuery = true)
     void saveBooking(@Param("accountId") Long id, @Param("date") LocalDateTime date);

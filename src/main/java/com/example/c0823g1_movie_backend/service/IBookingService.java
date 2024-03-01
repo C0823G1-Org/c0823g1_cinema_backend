@@ -22,11 +22,6 @@ public interface IBookingService {
 
     List<HistoryBookingDTO> searchBookingByDate(LocalDateTime startDate, LocalDateTime endDate);
 
-    List<IBookingDTO> findAllBookingTicket(LocalDateTime time);
-
-    List<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time);
-    
-
     void saveBooking(Long accountId, LocalDateTime date);
 
     Integer getBooking();

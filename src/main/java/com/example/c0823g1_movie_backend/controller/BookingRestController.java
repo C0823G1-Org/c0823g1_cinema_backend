@@ -43,20 +43,12 @@ import java.util.Optional;
 @RequestMapping("/booking")
 public class BookingRestController {
 
-    @Autowired
-    private IBookingService iBookingService;
 
     /* Create by: DoLV
      * Date created: 29/02/2024
      * Function: Displays the list and pagination of ticket bookings with a time from the current time about 1 week
      */
-    @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 2) Pageable pageable ){
-        LocalDateTime time = LocalDateTime.now();
-        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
-        if (listBookingTicket.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
     @Autowired
     private IScheduleService scheduleService;
 
@@ -75,6 +67,16 @@ public class BookingRestController {
     @Autowired
     private MailConfig mailConfig;
 
+    @GetMapping(value = {"/", "/list"})
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 2) Pageable pageable ) {
+        LocalDateTime time = LocalDateTime.now();
+        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
+        if (listBookingTicket.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(listBookingTicket,HttpStatus.OK);
+    }
+
     @GetMapping("historyBooking/{id}")
     public ResponseEntity<Iterable<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
         return new ResponseEntity<>(iBookingService.historyBooking(id), HttpStatus.OK);
@@ -88,12 +90,6 @@ public class BookingRestController {
      * @Return A list of booking history
      */
 
-    @GetMapping("/")
-    public ResponseEntity<List<IBookingDTO>> listBookingTicket() {
-        LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(time);
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
-    }
 
     /* Create by: DoLV
      * Date created: 29/02/2024
@@ -245,15 +241,6 @@ public class BookingRestController {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setBorder(Rectangle.NO_BORDER);
         return cell;
-    }
-
-
-
-    public ResponseEntity<List<IBookingDTO>> searchBookingTicket(@PathVariable("search") String search) {
-        LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, time);
-        System.out.println(listBookingTicket.size() + " search");
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
 
