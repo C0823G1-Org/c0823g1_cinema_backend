@@ -252,8 +252,6 @@ public class AccountRestController {
         Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
     }
-
-
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information and check account information
