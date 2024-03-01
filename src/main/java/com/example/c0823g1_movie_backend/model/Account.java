@@ -1,7 +1,7 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -13,7 +13,9 @@ public class Account {
     private Long id;
     private String accountName;
     private String fullName;
+    @JsonBackReference
     @ManyToOne
+
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
     private String password;
@@ -29,8 +31,10 @@ public class Account {
     private String address;
     private String memberCode;
     private Integer point;
+    @JsonBackReference
     @OneToMany(mappedBy = "account")
     private Set<Booking> bookings;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Account() {
@@ -67,6 +71,10 @@ public class Account {
     public Account(String accountName, String password) {
         this.accountName = accountName;
         this.password = password;
+    }
+
+    public Account(String email) {
+        this.email = email;
     }
 
     public Account(String fullName, String googleId, String profilePicture, String phoneNumber, String email) {

@@ -1,5 +1,7 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,8 +13,11 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "movie")
+    @JsonIgnore
+    @JsonBackReference
     Set<MovieHasGenre> genres;
     @OneToMany(mappedBy = "movie")
+    @JsonBackReference
     Set<Schedule> schedules;
     private String name;
     private LocalDate startDate;
@@ -26,7 +31,9 @@ public class Movie {
     private String poster;
     private Integer ticketPrice;
     @OneToMany(mappedBy = "movie")
+    @JsonBackReference
     private Set<MovieHasVersion> version;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Movie() {

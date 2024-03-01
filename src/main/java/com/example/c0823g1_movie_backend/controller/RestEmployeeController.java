@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/employee")
 
 public class RestEmployeeController {
     @Autowired
@@ -34,7 +34,7 @@ public class RestEmployeeController {
      * Add an employee with an auto_increment ID.
      * @return a ResponseEntity with an HTTP status indicating success or failure of the operation
      */
-    @PostMapping("/employee")
+    @PostMapping("/add")
     public ResponseEntity<?> save(@Valid @RequestBody Account account){
         if (account == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -49,8 +49,9 @@ public class RestEmployeeController {
      * @param id the ID of the employee to update
      * @return a ResponseEntity with an HTTP status indicating success or failure of the operation
      */
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@Param("id") Long id, @RequestBody Account account){
+
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Account account){
         Account account1 = employeeService.findAccountById(id);
         if (account1 == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
