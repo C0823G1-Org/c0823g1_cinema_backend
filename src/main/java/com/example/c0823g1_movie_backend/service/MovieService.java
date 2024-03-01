@@ -1,8 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleTimeDTO;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MovieService implements IMovieService {
@@ -56,9 +55,11 @@ public class MovieService implements IMovieService {
         return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 
-    public void createMovie(Movie movie, List<Schedule> schedules) {
-//        movieRepository.createMovie(movie);
-
+    public void createMovie(MovieDTO movie, Set<ScheduleDTO> schedules) {
+        movieRepository.create(movie);
+        for (ScheduleDTO schedule: schedules){
+            scheduleRepository.create(schedule);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
@@ -93,4 +94,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
                    "where id  =:id and is_deleted =0", nativeQuery = true)
     Movie findMovieById(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "insert into movie(actor, country, description, director, duration, name, poster, publisher, start_date, ticket_price, trailer) " +
+                   "values ()",nativeQuery = true)
+    void create(MovieDTO movie);
 }

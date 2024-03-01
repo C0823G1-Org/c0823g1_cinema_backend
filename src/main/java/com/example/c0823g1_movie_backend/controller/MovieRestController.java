@@ -1,9 +1,6 @@
 package com.example.c0823g1_movie_backend.controller;
 
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieRequestBodyDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -102,15 +100,9 @@ public class MovieRestController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody MovieRequestBodyDTO movieRequestBodyDTO) {
-        Movie newMovie = new Movie();
-        List<Schedule> newSchedules = new ArrayList<>();
-        BeanUtils.copyProperties(movieRequestBodyDTO.getMovieDTO(), newMovie);
-        for (ScheduleDTO scheduleDTO : movieRequestBodyDTO.getScheduleDTO()) {
-            Schedule newSchedule = new Schedule();
-            BeanUtils.copyProperties(scheduleDTO, newSchedule);
-            newSchedule.setMovie(newMovie);
-            newSchedules.add(newSchedule);
-        }
+        MovieDTO newMovie = movieRequestBodyDTO.getMovieDTO();
+        Set<ScheduleDTO> newSchedules = movieRequestBodyDTO.getScheduleDTO();
+        movieService.createMovie(newMovie,newSchedules);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

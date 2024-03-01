@@ -25,4 +25,5 @@ public class ScheduleDTO {
     private LocalDate date;
     private ScheduleTime scheduleTime;
     private Hall hall;
+    private Long movie;
 }
