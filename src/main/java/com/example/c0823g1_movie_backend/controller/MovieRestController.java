@@ -91,7 +91,21 @@ public class MovieRestController {
      */
     @GetMapping("/find/{id}")
     public ResponseEntity<Movie> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
+        String checkId = String.valueOf(id);
+        if (id == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (checkId.equals("")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Movie movie = movieService.findById(id);
+        if (movie == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (id == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 
 

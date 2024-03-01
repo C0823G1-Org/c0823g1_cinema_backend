@@ -45,8 +45,16 @@ public class BookingRestController {
     private MailConfig mailConfig;
 
     @GetMapping("historyBooking/{id}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
-        return new ResponseEntity<>(iBookingService.historyBooking(id), HttpStatus.OK);
+    public ResponseEntity<List<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
+        Account account = accountService.findAccountById(id);
+        if (account == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<HistoryBookingDTO> list = iBookingService.historyBooking(id);
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     /*
@@ -73,16 +81,23 @@ public class BookingRestController {
     }
 
 
-    @GetMapping("searchMovieBooking/{start}/{end}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable LocalDateTime startDate, @PathVariable LocalDateTime endDate) {
-        return new ResponseEntity<>(iBookingService.searchBookingByDate(startDate, endDate), HttpStatus.OK);
+    @GetMapping("searchMovieBooking/{id}/{start}/{end}")
+    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable("id") Long id, @PathVariable("start") LocalDateTime startDate, @PathVariable("end") LocalDateTime endDate) {
+        List<HistoryBookingDTO> list = iBookingService.searchBookingByDate(id, startDate, endDate);
+        if (list.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+
     /**
      * Create by TuanNM
      * Date create: 29/02/2024
      * Method: Search by start date and end date
+     *
      * @param startDate is the starting date
-     * @param endDate is the end date
+     * @param endDate   is the end date
      * @return a search list
      */
 
@@ -111,35 +126,35 @@ public class BookingRestController {
         LocalTime time = schedule.get().getScheduleTime().getScheduleTime();
         List<String> seat = new ArrayList<>();
 
-        for (Integer s: seatList) {
+        for (Integer s : seatList) {
             String result = "";
             String ss = s.toString();
-            if (s<=10){
+            if (s <= 10) {
                 result = "A" + s;
-            }else if (s<=20){
-                if (s==20){
+            } else if (s <= 20) {
+                if (s == 20) {
                     result = "B10";
-                }else {
-                    result = "B" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "B" + ss.charAt(ss.length() - 1);
                 }
 
-            }else if (s<=30){
-                if (s==30){
+            } else if (s <= 30) {
+                if (s == 30) {
                     result = "C10";
-                }else {
-                    result = "C" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "C" + ss.charAt(ss.length() - 1);
                 }
-            }else if (s<=40){
-                if (s==40){
+            } else if (s <= 40) {
+                if (s == 40) {
                     result = "D10";
-                }else {
-                    result = "D" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "D" + ss.charAt(ss.length() - 1);
                 }
-            }else if (s<=50){
-                if (s==50){
+            } else if (s <= 50) {
+                if (s == 50) {
                     result = "E10";
-                }else {
-                    result = "E" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "E" + ss.charAt(ss.length() - 1);
                 }
             }
 
@@ -150,15 +165,14 @@ public class BookingRestController {
 
         Long sum = (long) (seat.size() * price);
 
-        String timeStart = time.toString().substring(0,5);
+        String timeStart = time.toString().substring(0, 5);
         System.out.println(timeStart);
 
         Account account = accountService.findAccountById(ticket.getAccountId());
         String email = account.getEmail();
 
 
-        BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum,email);
-
+        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email);
 
 
         return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
@@ -172,14 +186,14 @@ public class BookingRestController {
      * @RequestBody checkoutDTO(accountId,scheduleId,seatList)
      * @Return status
      */
-    @PostMapping ("/checkout")
-    public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO){
+    @PostMapping("/checkout")
+    public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO) {
         LocalDateTime date = LocalDateTime.now();
-        iBookingService.saveBooking(checkoutDTO.getAccountId(),date);
+        iBookingService.saveBooking(checkoutDTO.getAccountId(), date);
         Integer id = iBookingService.getBooking();
         Long scheduleId = checkoutDTO.getScheduleId();
         for (Integer seat : checkoutDTO.getSeatNumber()) {
-            ticketService.saveTicket(seat,id,scheduleId);
+            ticketService.saveTicket(seat, id, scheduleId);
         }
         Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
         Account account = accountService.findAccountById(checkoutDTO.getAccountId());
@@ -187,35 +201,35 @@ public class BookingRestController {
         String seat = "";
 
 
-        for (Integer s: checkoutDTO.getSeatNumber()) {
+        for (Integer s : checkoutDTO.getSeatNumber()) {
             String result = "";
             String ss = s.toString();
-            if (s<=10){
+            if (s <= 10) {
                 result = "A" + s;
-            }else if (s<=20){
-                if (s==20){
+            } else if (s <= 20) {
+                if (s == 20) {
                     result = "B10";
-                }else {
-                    result = "B" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "B" + ss.charAt(ss.length() - 1);
                 }
 
-            }else if (s<=30){
-                if (s==30){
+            } else if (s <= 30) {
+                if (s == 30) {
                     result = "C10";
-                }else {
-                    result = "C" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "C" + ss.charAt(ss.length() - 1);
                 }
-            }else if (s<=40){
-                if (s==40){
+            } else if (s <= 40) {
+                if (s == 40) {
                     result = "D10";
-                }else {
-                    result = "D" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "D" + ss.charAt(ss.length() - 1);
                 }
-            }else if (s<=50){
-                if (s==50){
+            } else if (s <= 50) {
+                if (s == 50) {
                     result = "E10";
-                }else {
-                    result = "E" + ss.charAt(ss.length()-1);
+                } else {
+                    result = "E" + ss.charAt(ss.length() - 1);
                 }
             }
 
@@ -236,28 +250,28 @@ public class BookingRestController {
                 "\n" +
                 "<body style=\"width: 80%;;margin-left: 10%;\">\n" +
                 "    <img style=\"width: 50%;height: 30%;margin-left: 25%;\"\n" +
-                "        src=\""+ schedule.getMovie().getPoster() +"\" alt=\"Madame Web\n" +
+                "        src=\"" + schedule.getMovie().getPoster() + "\" alt=\"Madame Web\n" +
                 "    \n" +
                 "    Xem thêm tại: https://www.galaxycine.vn/\">\n" +
                 "    <table style=\"width: 100%;padding-left: 20%;\">\n" +
                 "        <tr>\n" +
                 "            <td>Phòng chiếu</th>\n" +
-                "            <td>"+schedule.getHall().getName()+"</td>\n" +
+                "            <td>" + schedule.getHall().getName() + "</td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
                 "            <td>Ngày chiếu</th>\n" +
-                "            <td>"+schedule.getDate()+"</td>\n" +
+                "            <td>" + schedule.getDate() + "</td>\n" +
                 "        </tr>\n" +
                 "\n" +
                 "        <tr>\n" +
                 "            <td>Giờ chiếu</th>\n" +
-                "            <td>"+ schedule.getScheduleTime().getScheduleTime()+"</td>\n" +
+                "            <td>" + schedule.getScheduleTime().getScheduleTime() + "</td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
                 "            <td>Ghế </th>\n" +
-                "            <td>"+
+                "            <td>" +
                 seat
-                +"</td>\n" +
+                + "</td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
                 "    <img style=\"width: 30%;height: 30%;margin-left: 35%;\"\n" +
