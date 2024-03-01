@@ -1,7 +1,10 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.AccountDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
+import org.springframework.data.repository.query.Param;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +38,10 @@ public interface IAccountService extends IGeneralService<Account>{
     String getRoleUserEmail(Account account);
 
     Account findAccountById(Long accountId);
+//    void registerAndSendMail(AccountDTO accountDTO);
+    List<Account> getAllAccount();
+    Account findAccountByAccountName(String accountName);
+    Account findAccountByPhone(String phone);
+    Account findAccountByEmail(String email);
+    void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context);
 }

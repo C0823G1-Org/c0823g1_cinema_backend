@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.AccountDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Role;
@@ -7,6 +8,7 @@ import com.example.c0823g1_movie_backend.repository.AccountRepository;
 import com.example.c0823g1_movie_backend.repository.RolesRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -153,6 +155,54 @@ public class AccountService implements IAccountService {
             sendEmailWithHtmlTemplate(to,subject,templateName,context);
         }
     }
+//    public void registerAndSendMail(AccountDTO accountDTO){
+//        String to = accountDTO.getEmail();
+//        String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
+//        String templateName = "email-register";
+//        org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
+//        String randomCode = RandomStringUtils.random(6,true,true);
+//        context.setVariable("fullName",accountDTO.getFullName());
+//        context.setVariable("account",accountDTO.getAccountName());
+//        context.setVariable("password",accountDTO.getPassword());
+//        context.setVariable("randomCode",randomCode);
+//        sendEmailWithHtmlTemplate(to,subject,templateName,context);
+//    }
+
+    @Override
+    public List<Account> getAllAccount() {
+        return accountRepository.getAllAccount();
+    }
+
+    @Override
+    public Account findAccountByAccountName(String accountName) {
+        return accountRepository.findAccountByAccountName(accountName);
+    }
+
+    @Override
+    public Account findAccountByPhone(String phone) {
+        return accountRepository.findAccountByPhone(phone);
+    }
+
+    @Override
+    public Account findAccountByEmail(String email) {
+        return accountRepository.findAccountByEmail(email);
+    }
+
+    @Override
+    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        try {
+            helper.setTo(to);
+            helper.setSubject(subject);
+            String htmlContent = templateEngine.process(templateName, context);
+            helper.setText(htmlContent, true);
+            emailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public boolean checkLoginByEmail(Account account) {
@@ -179,17 +229,17 @@ public class AccountService implements IAccountService {
         return accountRepository.findAccountById(accountId);
     }
 
-    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
-        MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-        try {
-            helper.setTo(to);
-            helper.setSubject(subject);
-            String htmlContent = templateEngine.process(templateName, context);
-            helper.setText(htmlContent, true);
-            emailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
+//        MimeMessage mimeMessage = emailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+//        try {
+//            helper.setTo(to);
+//            helper.setSubject(subject);
+//            String htmlContent = templateEngine.process(templateName, context);
+//            helper.setText(htmlContent, true);
+//            emailSender.send(mimeMessage);
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -18,19 +18,11 @@ public class Booking {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
     private LocalDateTime dateBooking;
-    @OneToMany(mappedBy = "booking")
-    private Set<Ticket> tickets;
 
     public Booking() {
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public Long getId() {
         return id;

@@ -13,9 +13,7 @@ public class Account {
     private Long id;
     private String accountName;
     private String fullName;
-    @JsonBackReference
     @ManyToOne
-
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
     private String password;
@@ -31,9 +29,6 @@ public class Account {
     private String address;
     private String memberCode;
     private Integer point;
-    @JsonBackReference
-    @OneToMany(mappedBy = "account")
-    private Set<Booking> bookings;
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
@@ -57,7 +52,6 @@ public class Account {
         this.address = address;
         this.memberCode = memberCode;
         this.point = point;
-        this.bookings = bookings;
         this.isDeleted = isDeleted;
     }
 
