@@ -2,9 +2,11 @@ package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
+import com.example.c0823g1_movie_backend.dto.ScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
+import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ import java.util.List;
 public class MovieService implements IMovieService {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -53,7 +57,8 @@ public class MovieService implements IMovieService {
     }
 
     public void createMovie(Movie movie, List<Schedule> schedules) {
-//        movieRepository.createMovie(movie, schedules);
+//        movieRepository.createMovie(movie);
+
     }
 
     @Override
