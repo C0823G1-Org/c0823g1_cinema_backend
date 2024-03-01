@@ -1,7 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
-import com.example.c0823g1_movie_backend.dto.AccountDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Role;
@@ -9,7 +8,6 @@ import com.example.c0823g1_movie_backend.repository.AccountRepository;
 import com.example.c0823g1_movie_backend.repository.RolesRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -5,10 +5,6 @@ import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.example.c0823g1_movie_backend.dto.AccountDTO;
-import com.example.c0823g1_movie_backend.dto.IAccountDTO;
-import com.example.c0823g1_movie_backend.model.Account;
-import org.springframework.data.repository.query.Param;
 import org.thymeleaf.context.Context;
 
 import java.util.List;

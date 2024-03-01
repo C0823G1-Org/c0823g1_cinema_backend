@@ -2,14 +2,12 @@ package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.IBookingDTO;
-import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingService implements IBookingService{

@@ -1,8 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -81,13 +79,5 @@ public class MovieService implements IMovieService {
         return movieRepository.findMovieById(id);
     }
 
-    @Override
-    public Object save(Object o) {
-        return null;
-    }
 
-    @Override
-    public Object create(Object o) {
-        return null;
-    }
 }
