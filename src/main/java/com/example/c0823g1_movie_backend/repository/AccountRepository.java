@@ -1,6 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
-import com.example.c0823g1_movie_backend.dto.AccountStatisicDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import jakarta.transaction.Transactional;
@@ -135,10 +135,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * Date Created: 29/02/2024
      * Function: Get a list of accounts that have the highest amount of money spent
      */
-    @Query(value = "SELECT a.id as ma_thanh_vien, a.account_name as ten_thanh_vien, " +
-            "COUNT(t.id) as so_luong_ve, " +
-            "SUM(t.ticket_price) as tong_tien, " +
-            "SUM(a.point) as diem_tich_luy " +
+    @Query(value = "SELECT a.id as account_id, a.account_name as account_name, " +
+            "COUNT(t.id) as ticket_count, " +
+            "SUM(t.ticket_price) as spent, " +
+            "SUM(a.point) as point " +
             "FROM account a " +
             "JOIN ( " +
             "   SELECT b.account_id, " +
@@ -167,6 +167,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                     ") t ON a.id = t.account_id " +
                     "WHERE a.is_deleted = 0) AS countQuery",
             nativeQuery = true)
-    Page<AccountStatisicDTO> getTop50Account(Pageable pageable);
+    Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
 }
