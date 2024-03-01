@@ -15,4 +15,8 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "select * from schedule where date>=current_date and hall_id=:id", nativeQuery = true)
     List<ScheduleDTO> getScheduleByHallId(@Param("id") Long id);
+
+    @Query(value = "select * from schedule where id=:id", nativeQuery = true)
+    Schedule getScheduleById(@Param("id") Long id);
+
 }

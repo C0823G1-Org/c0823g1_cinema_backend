@@ -1,17 +1,17 @@
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.config.MailConfig;
 import com.example.c0823g1_movie_backend.dto.BookingDTO;
 import com.example.c0823g1_movie_backend.dto.CheckoutDTO;
 import com.example.c0823g1_movie_backend.dto.TicketDTO;
+import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
-import com.example.c0823g1_movie_backend.repository.MovieRepository;
-import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
-import com.example.c0823g1_movie_backend.repository.TicketBookingRepository;
-import com.example.c0823g1_movie_backend.repository.TicketRepository;
+import com.example.c0823g1_movie_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -27,20 +27,28 @@ import java.util.Optional;
 @RequestMapping("/api/ticket/booking")
 public class TicketBookingRestController {
     @Autowired
-    private TicketRepository ticketRepository;
+    private IBookingService bookingService;
 
     @Autowired
-    private TicketBookingRepository ticketBookingRepository;
+    private IScheduleService scheduleService;
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
-    @Autowired
-    private MovieRepository movieRepository;
+    private IMovieService movieService;
 
-    @PostMapping("/test")
+    @Autowired
+    private ITicketService ticketService;
+
+    @Autowired
+    private IAccountService accountService;
+
+    @Autowired
+    private MailConfig mailConfig;
+
+    @PostMapping()
     public ResponseEntity<BookingDTO> returnInformationTicketBooking(@RequestBody TicketDTO ticket) {
-        Optional<Movie> movie = movieRepository.findByIdMovie(ticket.getIdMovie());
-        Optional<Schedule> schedule = scheduleRepository.findById(ticket.getScheduleId());
+        System.out.println("abc");
+        Optional<Movie> movie = Optional.ofNullable(movieService.findMovieById(ticket.getIdMovie()));
+        Optional<Schedule> schedule = scheduleService.getScheduleById(ticket.getScheduleId());
         List<Integer> seatList = ticket.getSeatList();
 
         String image = movie.get().getPoster();
@@ -94,8 +102,11 @@ public class TicketBookingRestController {
         String timeStart = time.toString().substring(0,5);
         System.out.println(timeStart);
 
+        Account account = accountService.findAccountById(ticket.getAccountId());
+        String email = account.getEmail();
 
-        BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum);
+
+        BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum,email);
 
 
 
@@ -106,18 +117,30 @@ public class TicketBookingRestController {
     @PostMapping ("/checkout")
     public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO){
         LocalDateTime date = LocalDateTime.now();
-        System.out.println("zzzzzzz");
-        System.out.println(checkoutDTO);
 
-        ticketBookingRepository.saveBooking(checkoutDTO.getAccountId(),date);
-        Integer id = ticketBookingRepository.getBooking();
-        System.out.println(id);
+        bookingService.saveBooking(checkoutDTO.getAccountId(),date);
+        Account account = accountService.findAccountById(checkoutDTO.getAccountId());
+        Integer id = bookingService.getBooking();
         Long scheduleId = checkoutDTO.getScheduleId();
 
-        for (Integer seat : checkoutDTO.getSeatNumber()) {
-            ticketRepository.saveTicket(seat,id,scheduleId);
-        }
+        
 
+        for (Integer seat : checkoutDTO.getSeatNumber()) {
+
+            ticketService.saveTicket(seat,id,scheduleId);
+        }
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("Bạn đã đặt vé xem phim thành công");
+        String content = "Tên phim: \n" +
+                "Ngày chiếu: \n" +
+                "Phòng chiếu: \n" +
+                "Giờ: \n" +
+                "Ghế: \n" +
+                "Vui lòng đến trước 30 phút để nhận vé \n" +
+                "Chúc bạn xem phim vui vẻ";
+        mailMessage.setText(content);
+        mailConfig.getJavaMailSender().send(mailMessage);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

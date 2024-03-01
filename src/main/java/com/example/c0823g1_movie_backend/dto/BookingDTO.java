@@ -12,6 +12,16 @@ public class BookingDTO {
     private Integer price;
     private Long sum;
 
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getImage() {
         return image;
     }
@@ -79,7 +89,7 @@ public class BookingDTO {
     public BookingDTO() {
     }
 
-    public BookingDTO(String image, String movieName, String screen, String date, String time, List<String> seat, Integer price, Long sum) {
+    public BookingDTO(String image, String movieName, String screen, String date, String time, List<String> seat, Integer price, Long sum, String email) {
         this.image = image;
         this.movieName = movieName;
         this.screen = screen;
@@ -88,5 +98,6 @@ public class BookingDTO {
         this.seat = seat;
         this.price = price;
         this.sum = sum;
+        this.email = email;
     }
 }

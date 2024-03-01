@@ -159,4 +159,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
 
+    @Query(value = "select email from account where id = :id",nativeQuery = true)
+    Account findAccountById(@Param("id") Long id);
 }
