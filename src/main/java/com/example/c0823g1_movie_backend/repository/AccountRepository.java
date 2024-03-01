@@ -161,4 +161,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query(value = "select * from account where id = :id",nativeQuery = true)
     Account findAccountById(@Param("id") Long id);
+    @Query(value = "select * from account",nativeQuery = true)
+    List<Account> getAllAccount();
+
+    @Query(value = "select a.* from account a where a.email like :email",nativeQuery = true)
+    Account findAccountByEmail(@Param("email") String email);
+    @Query(value = "select a.* from account a where a.phone_number like :phone",nativeQuery = true)
+    Account findAccountByPhone(@Param("phone") String phone);
+    @Query(value = "select a.* from account a where a.account_name like :accountName",nativeQuery = true)
+    Account findAccountByAccountName(@Param("accountName") String accountName);
 }

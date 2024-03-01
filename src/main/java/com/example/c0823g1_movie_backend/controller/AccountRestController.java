@@ -10,6 +10,7 @@ import com.example.c0823g1_movie_backend.service.IRoleService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @CrossOrigin("*")
@@ -35,6 +34,7 @@ public class AccountRestController {
     private IAccountService iAccountService;
     @Autowired
     private IRoleService iRoleService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     /* Create by: BaoNDT
@@ -225,17 +225,54 @@ public class AccountRestController {
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            String encodedPassword = passwordEncoder.encode(accountDTO.getPassword());
+//            List<Account> accountList = iAccountService.getAllAccount();
+//            for (int i = 0; i < accountList.size() ; i++) {
+//                if (accountList.get(i).getEmail().equals(accountDTO.getEmail()) || accountList.get(i).getAccountName().equals(accountDTO.getAccountName()) || accountList.get(i).getPhoneNumber().equals(accountDTO.getPhoneNumber())) {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//                }
+//            }
+            List<String> erorrList = new ArrayList<>();
+            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) == null){
+                      erorrList.add("Email Đã Tồn Tại");
+            } else if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) == null){
+                erorrList.add(" Số Điện Thoại Đã Tồn Tại ");
+            }else if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) == null){
+                erorrList.add("Tài Khoản Đã Tồn Tại");
+            }
+//            if (erorrList.size() > 0){
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+
+            String to = accountDTO.getEmail();
+            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
+            String templateName = "email-register";
+            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
+            String randomCode = RandomStringUtils.random(6,true,true);
+            System.out.println(randomCode);
+            context.setVariable("fullName",accountDTO.getFullName());
+            context.setVariable("account",accountDTO.getAccountName());
+            context.setVariable("password",accountDTO.getPassword());
+            context.setVariable("randomCode",randomCode);
+            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
+            if (accountDTO.getVerificationCode().equals("12345") == false){
+                erorrList.add("Mã Xác Nhận không đúng");
+            }
+            String c = "";
+            try{
+              c = passwordEncoder.encode(accountDTO.getPassword());
+            }catch (NullPointerException e){
+                System.out.println(c);
+            }
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
-            account.setPassword(encodedPassword);
+            account.setPassword(c);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
-            int randomMemberCode = 1;
-            account.setMemberCode("TV-" + account1.getMemberCode());
+//            int randomMemberCode = 1;
+            account.setMemberCode(account1.getMemberCode());
             iAccountService.register(account, 2L);
             System.out.println("Success");
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(account, HttpStatus.OK);
         }
 
     }

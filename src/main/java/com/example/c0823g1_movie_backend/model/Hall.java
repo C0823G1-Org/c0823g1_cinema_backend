@@ -11,21 +11,12 @@ public class Hall {
     private Long id;
     private String name;
     private Integer totalSeat;
-    @OneToMany(mappedBy = "hall")
-    private Set<Schedule> schedules;
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Hall() {
     }
 
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
-    }
 
     public Long getId() {
         return id;

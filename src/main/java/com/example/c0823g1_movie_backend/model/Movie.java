@@ -12,13 +12,8 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "movie")
-    @JsonIgnore
-    @JsonBackReference
-    Set<MovieHasGenre> genres;
-    @OneToMany(mappedBy = "movie")
-    @JsonBackReference
-    Set<Schedule> schedules;
+
+
     private String name;
     private LocalDate startDate;
     private String actor;
@@ -30,30 +25,12 @@ public class Movie {
     private String description;
     private String poster;
     private Integer ticketPrice;
-    @OneToMany(mappedBy = "movie")
-    @JsonBackReference
-    private Set<MovieHasVersion> version;
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Movie() {
     }
 
-    public Set<MovieHasVersion> getVersion() {
-        return version;
-    }
-
-    public void setVersion(Set<MovieHasVersion> version) {
-        this.version = version;
-    }
-
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
-    }
 
     public Long getId() {
         return id;
@@ -63,13 +40,7 @@ public class Movie {
         this.id = id;
     }
 
-    public Set<MovieHasGenre> getGenres() {
-        return genres;
-    }
 
-    public void setGenres(Set<MovieHasGenre> genres) {
-        this.genres = genres;
-    }
 
     public String getName() {
         return name;
