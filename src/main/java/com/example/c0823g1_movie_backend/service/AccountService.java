@@ -1,6 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.AccountStatisicDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Role;
@@ -120,7 +120,7 @@ public class AccountService implements IAccountService {
      * Function: Get a list of accounts that have the highest amount of money spent
      */
     @Override
-    public Page<AccountStatisicDTO> getAccountStatistic(Pageable pageable) {
+    public Page<AccountStatisticDTO> getAccountStatistic(Pageable pageable) {
         return accountRepository.getTop50Account(pageable);
     }
 
