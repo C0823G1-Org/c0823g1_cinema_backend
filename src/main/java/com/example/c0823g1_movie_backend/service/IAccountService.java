@@ -1,6 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.AccountStatisicDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ public interface IAccountService extends IGeneralService<Account>{
     Optional<IAccountDTO> findByAccountName(String accountName);
 
     Optional<IAccountDTO> findByGoogleID(String googleId);
-    Page<AccountStatisicDTO> getAccountStatistic(Pageable pageable);
+    Page<AccountStatisticDTO> getAccountStatistic(Pageable pageable);
 
     Optional<IAccountDTO> findByEmail(String email);
 
