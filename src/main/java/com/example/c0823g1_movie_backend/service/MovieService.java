@@ -3,6 +3,7 @@ package com.example.c0823g1_movie_backend.service;
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,8 +52,8 @@ public class MovieService implements IMovieService {
         return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 
-    public void createMovie(Movie movie) {
-        movieRepository.createMovie(movie);
+    public void createMovie(Movie movie, List<Schedule> schedules) {
+//        movieRepository.createMovie(movie, schedules);
     }
 
     @Override

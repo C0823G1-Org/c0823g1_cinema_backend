@@ -3,6 +3,7 @@ package com.example.c0823g1_movie_backend.repository;
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -84,11 +85,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Modifying
     @Query(value = "UPDATE movie SET is_deleted = 1 where id  =:id", nativeQuery = true)
     void deleteMovieById(@Param("id") long id);
-
-    @Modifying
-    @Query(value = "insert into movie(director,actor)" +
-            "values (:#{#movie.director},:#{#movie.actor})", nativeQuery = true)
-    void createMovie(@Param("movie") Movie movie);
 
     @Query(value = "SELECT m FROM Movie m WHERE m.id = :id")
     Optional<Movie> findByIdMovie(Long id);
