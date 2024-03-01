@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,13 @@ public class BookingRestController {
      * Date created: 29/02/2024
      * Function: Displays the list and pagination of ticket bookings with a time from the current time about 1 week
      */
-    @GetMapping("/")
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@RequestParam(defaultValue = "0") int page){
+    @GetMapping(value = {"/", "/list"})
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 2) Pageable pageable ){
         LocalDateTime time = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(page, 2);
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+        if (listBookingTicket.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
@@ -95,7 +98,7 @@ public class BookingRestController {
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
 
         if (iBookingDTO == null){
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
         } else {
             if (!iBookingDTO.getPrintStatus()){
                 return new ResponseEntity<>( HttpStatus.NO_CONTENT);
@@ -175,7 +178,7 @@ public class BookingRestController {
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
 
-        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovie(),font));
+        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDateTime = ticket.getStartTime().format(formatter);
         table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));

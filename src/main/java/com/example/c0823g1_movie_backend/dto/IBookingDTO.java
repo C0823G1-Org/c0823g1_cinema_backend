@@ -11,7 +11,7 @@ public interface IBookingDTO {
     String getIdNumber();
     String getPhoneNumber();
     LocalDateTime getDateBooking();
-    String getNameMovie();
+    String getNameMovieFilm();
     LocalTime getScheduleTime();
     Boolean getPrintStatus();
     Integer getTicketPrice();
