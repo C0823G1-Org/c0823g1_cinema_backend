@@ -10,18 +10,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "role")
-    private Set<Account> account;
 
     public Role() {
-    }
-
-    public Set<Account> getAccount() {
-        return account;
-    }
-
-    public void setAccount(Set<Account> account) {
-        this.account = account;
     }
 
     public Long getId() {

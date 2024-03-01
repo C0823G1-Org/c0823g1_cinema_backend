@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -19,7 +20,7 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     @Transactional
-    public void createEmployee( @Param("account") Account account) {
+    public void createEmployee(Account account) {
         employeeRepository.saveEmployee(account);
     }
 
@@ -30,8 +31,8 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     @Transactional
-    public void updateEmployee(@Param("id") Long id, @Param("account") Account account) {
-        employeeRepository.updateEmployee(id, account);
+    public void updateEmployee(Account account, Long id) {
+        employeeRepository.updateEmployee(account, id);
     }
 
     @Override

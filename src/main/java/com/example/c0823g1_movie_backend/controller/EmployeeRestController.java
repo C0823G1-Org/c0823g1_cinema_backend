@@ -10,23 +10,28 @@
  */
 package com.example.c0823g1_movie_backend.controller;
 
+import com.example.c0823g1_movie_backend.dto.AccountDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.service.EmployeeService;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-public class EmployeeController {
+public class EmployeeRestController {
 
     @Autowired
     private EmployeeService employeeService;
@@ -37,7 +42,7 @@ public class EmployeeController {
      * @param page the page number for pagination (default is 0)
      * @return a ResponseEntity containing the paginated list of employees and an HTTP status code
      */
-    @GetMapping("/employee")
+    @GetMapping("/employee/list")
     public ResponseEntity<Page<Account>> getPage(@RequestParam(defaultValue = "") String searchName,
                                                  @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
@@ -47,8 +52,8 @@ public class EmployeeController {
 
     /**
      * Deletes an employee with the specified ID.
-     * @param id the ID of the employee to delete
-     * @return a ResponseEntity with an HTTP status indicating success or failure of the operation
+     * @ param id the ID of the employee to delete
+     * @ return a ResponseEntity with an HTTP status indicating success or failure of the operation
      */
 
 //    @GetMapping("/employee/{id}")
@@ -57,7 +62,7 @@ public class EmployeeController {
 //        return new ResponseEntity<>(account,HttpStatus.OK);
 //    }
 
-    @GetMapping("/employee/{id}")
+    @DeleteMapping("/employee/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
         if (account == null) {
@@ -65,5 +70,37 @@ public class EmployeeController {
         }
         employeeService.deleteEmployee(account.get().getId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Add an employee with an auto_increment ID.
+     * @ return a ResponseEntity with an HTTP status indicating success or failure of the operation
+     */
+    @PostMapping(value = "/employee/add")
+    public ResponseEntity<Account> save(@Valid @RequestBody AccountDTO accountDTO, BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO,account);
+        employeeService.createEmployee(account);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Update an employee with the specified ID.
+     * @ param id the ID of the employee to update
+     * @ return a ResponseEntity with an HTTP status indicating success or failure of the operation
+     */
+
+    @PatchMapping(value = "/employee/edit/{id}")
+    public ResponseEntity<Account> edit(@Valid @PathVariable Long id, @RequestBody AccountDTO accountDTO, BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO, account);
+        employeeService.updateEmployee(account, id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

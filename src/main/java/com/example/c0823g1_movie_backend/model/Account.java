@@ -15,7 +15,6 @@ public class Account {
     private String fullName;
     @JsonBackReference
     @ManyToOne
-
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
     private String password;

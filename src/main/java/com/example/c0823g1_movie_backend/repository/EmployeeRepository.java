@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Account,Long> {
@@ -40,6 +41,6 @@ public interface EmployeeRepository extends JpaRepository<Account,Long> {
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "UPDATE account SET account_name=:accountName, address=:address, birthday=:birthday, email=:email, full_name=:fullName, gender=:gender, id_number=:idNumber, member_code=:memberCode, password=:password, phone_number=:phoneNumber, profile_picture=:profilePicture WHERE id=:id")
-    void updateEmployee(@Param("id") Long id, @Param("account") Account account);
+    @Query(nativeQuery = true, value = "UPDATE account SET account_name=:#{#account.accountName}, address=:#{#account.address}, birthday=:#{#account.birthday}, email=:#{#account.email}, full_name=:#{#account.fullName}, gender=:#{#account.gender}, id_number=:#{#account.idNumber}, member_code=:#{#account.memberCode}, password=:#{#account.password}, phone_number=:#{#account.phoneNumber}, profile_picture=:#{#account.profilePicture} WHERE id=:id")
+    void updateEmployee(@Param("account") Account account, Long id);
 }

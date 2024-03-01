@@ -6,14 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
 public interface IEmployeeService {
-    void createEmployee(@Param("account") Account account);
-    Account findAccountById(@Param("id") Long id);
+    void createEmployee(Account account);
+    Account findAccountById(Long id);
 
-    void updateEmployee(@Param("id") Long id, @Param("account") Account account);
+    void updateEmployee(Account account, Long id);
 
     Optional<IAccountDTO> getEmployeeById(Long id);
     Account getEmp(Long id);
