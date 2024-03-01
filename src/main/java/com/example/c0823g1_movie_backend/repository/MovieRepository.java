@@ -23,15 +23,27 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * Date Created: 29/02/2024
      * Function: Get a list of movies that have the highest revenue
      */
-    @Query(value = "SELECT m.name AS movie_name, COUNT(b.id) AS ticket_count " +
-            "FROM movie m " +
-            "JOIN schedule s ON m.id = s.movie_id " +
-            "JOIN booking b ON s.id = b.schedule_id " +
-            "WHERE s.is_deleted = 0 AND m.is_deleted = 0 AND b.is_deleted = 0 " +
-            "GROUP BY m.name " +
-            "ORDER BY ticket_count DESC " +
-            "LIMIT 20", nativeQuery = true)
+    @Query(value = "SELECT " +
+            "m.name AS movie_name, " +
+            "t.tong_so_ve AS sold_ticket, " +
+            "t.tong_so_ve * m.ticket_price AS revenue " +
+            "FROM " +
+            "movie m " +
+            "JOIN " +
+            "(SELECT " +
+            "s.movie_id, COUNT(t.id) AS tong_so_ve " +
+            "FROM " +
+            "ticket t " +
+            "JOIN schedule s ON s.id = t.schedule_id " +
+            "WHERE " +
+            "t.is_deleted = 0 AND s.is_deleted = 0 " +
+            "GROUP BY s.movie_id) t ON t.movie_id = m.id " +
+            "WHERE " +
+            "m.is_deleted = 0 " +
+            "ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC",
+            nativeQuery = true)
     Page<MovieStatisticDTO> findTop20MoviesByRevenue(Pageable pageable);
+
     @Query(value = "select count(b.account_id) as accountId,m.name as name, " +
             "max(m.description )as description," +
             "max(m.poster) as poster\n" +
