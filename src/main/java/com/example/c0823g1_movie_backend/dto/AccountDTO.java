@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.dto;
 
 import com.example.c0823g1_movie_backend.model.Role;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -35,6 +36,7 @@ public class AccountDTO {
     String memberCode;
     @NotBlank(message = "Họ Và Tên không được để rỗng")
     @Pattern(regexp = "^[A-Za-zÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*(?:\\s+[A-Za-zÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*)*\\s*$" ,message = "Họ Và Tên vui lòng nhập đúng định dạng" )
+    @Size(max = 45 ,message = "Họ và Tên Dưới 40 Kí Tự")
     String fullName;
     @NotBlank(message = "Mật Khẩu không được để rỗng")
     @Size(min = 6,max = 20,message = "Mật Khẩu độ dài từ 6-20 kí tự")
@@ -43,9 +45,10 @@ public class AccountDTO {
     String facebookId;
     String googleId;
     String profilePicture;
-    int point;
+    Integer point;
     @NotBlank(message = "Số Điện Thoại không được để rỗng")
     @Pattern(regexp = "^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$",message = "Số điện thoại vui lòng nhập đúng định dạng")
     String phoneNumber;
+    @NotBlank(message = "Mã Xác Minh không được rỗng")
     String verificationCode;
 }

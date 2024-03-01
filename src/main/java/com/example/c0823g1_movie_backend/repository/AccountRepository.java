@@ -170,4 +170,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountByPhone(@Param("phone") String phone);
     @Query(value = "select a.* from account a where a.account_name like :accountName",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
+
+    @Query(nativeQuery = true, value = "UPDATE account SET address=:#{#account.address}, birthday=:#{#account.birthday}, email=:#{#account.email}, full_name=:#{#account.fullName}, gender=:#{#account.gender}, id_number=:#{#account.idNumber},  phone_number=:#{#account.phoneNumber} WHERE id=:id")
+    void updateAccount(@Param("account") Account account, Long id);
 }

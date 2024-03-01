@@ -254,18 +254,16 @@ public class AccountRestController {
             context.setVariable("password",accountDTO.getPassword());
             context.setVariable("randomCode",randomCode);
             iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
-            if (accountDTO.getVerificationCode().equals("12345") == false){
+            if (accountDTO.getVerificationCode().equals(randomCode) == false){
                 erorrList.add("Mã Xác Nhận không đúng");
             }
-            String c = "";
-            try{
-              c = passwordEncoder.encode(accountDTO.getPassword());
-            }catch (NullPointerException e){
-                System.out.println(c);
-            }
+
+
+            String encode = passwordEncoder.encode(accountDTO.getPassword());
+
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
-            account.setPassword(c);
+            account.setPassword(encode);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
 //            int randomMemberCode = 1;
@@ -288,6 +286,23 @@ public class AccountRestController {
         }
         Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
+    }
+    /* Create by: TuanTA
+     * Date created: 29/02/2024
+     * Function: Change Infor Of User Account
+     * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
+     */
+    @PatchMapping("/changeInfoUser")
+    public ResponseEntity<Account> changeInfoUserAccount(@Valid @RequestBody AccountDTO accountDTO , BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            Account account = new Account();
+            BeanUtils.copyProperties(accountDTO,account);
+            iAccountService.updateAccount(account,account.getId());
+            return new ResponseEntity<>(account,HttpStatus.OK);
+        }
+
     }
     /* Create by: BaoNDT
      * Date created: 29/02/2024

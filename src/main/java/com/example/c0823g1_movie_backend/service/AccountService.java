@@ -203,6 +203,12 @@ public class AccountService implements IAccountService {
         }
     }
 
+    @Override
+    public void updateAccount(Account account, Long id) {
+        accountRepository.updateAccount(account,id);
+
+    }
+
 
     @Override
     public boolean checkLoginByEmail(Account account) {
