@@ -1,7 +1,9 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.config.MailConfig;
-import com.example.c0823g1_movie_backend.dto.*;
+import com.example.c0823g1_movie_backend.dto.BookingDTO;
+import com.example.c0823g1_movie_backend.dto.CheckoutDTO;
+import com.example.c0823g1_movie_backend.dto.TicketDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,8 +24,10 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/booking")
-public class BookingRestController {
+@RequestMapping("/api/ticket/booking")
+public class TicketBookingRestController {
+    @Autowired
+    private IBookingService bookingService;
 
     @Autowired
     private IScheduleService scheduleService;
@@ -36,66 +39,12 @@ public class BookingRestController {
     private ITicketService ticketService;
 
     @Autowired
-    private IBookingService iBookingService;
-
-    @Autowired
     private IAccountService accountService;
 
     @Autowired
     private MailConfig mailConfig;
 
-    @GetMapping("historyBooking/{id}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
-        return new ResponseEntity<>(iBookingService.historyBooking(id), HttpStatus.OK);
-    }
-
-    /*
-     * Create by TuanNM
-     * Date create: 29/02/2024
-     * Method: Display ticket booking history
-     * @Param Account ID
-     * @Return A list of booking history
-     */
-
-    @GetMapping("/")
-    public ResponseEntity<List<IBookingDTO>> listBookingTicket() {
-        LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(time);
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
-    }
-
-    @GetMapping("/search/{search}")
-    public ResponseEntity<List<IBookingDTO>> searchBookingTicket(@PathVariable("search") String search) {
-        LocalDateTime time = LocalDateTime.now();
-        List<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, time);
-        System.out.println(listBookingTicket.size() + " search");
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
-    }
-
-
-    @GetMapping("searchMovieBooking/{start}/{end}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable LocalDateTime startDate, @PathVariable LocalDateTime endDate) {
-        return new ResponseEntity<>(iBookingService.searchBookingByDate(startDate, endDate), HttpStatus.OK);
-    }
-    /**
-     * Create by TuanNM
-     * Date create: 29/02/2024
-     * Method: Search by start date and end date
-     * @param startDate is the starting date
-     * @param endDate is the end date
-     * @return a search list
-     */
-
-
-    /*
-     * Create by HaiNT
-     * Date create: 29/02/2024
-     * Method: Receive request from the client when clicking
-     * to book a ticket and return information to the Booking Confirmation page
-     * @Param ticket(idMovie,scheduleId,seatList)
-     * @Return object bookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum)
-     */
-    @PostMapping("/confirm")
+    @PostMapping()
     public ResponseEntity<BookingDTO> returnInformationTicketBooking(@RequestBody TicketDTO ticket) {
         System.out.println("abc");
         Optional<Movie> movie = Optional.ofNullable(movieService.findMovieById(ticket.getIdMovie()));
@@ -165,25 +114,17 @@ public class BookingRestController {
     }
 
 
-    /*
-     * Create by HaiNT
-     * Date create: 29/02/2024
-     * Method: Receive request from the client when checkout successfully
-     * @RequestBody checkoutDTO(accountId,scheduleId,seatList)
-     * @Return status
-     */
     @PostMapping ("/checkout")
     public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO){
         LocalDateTime date = LocalDateTime.now();
-        iBookingService.saveBooking(checkoutDTO.getAccountId(),date);
-        Integer id = iBookingService.getBooking();
-        Long scheduleId = checkoutDTO.getScheduleId();
-        for (Integer seat : checkoutDTO.getSeatNumber()) {
-            ticketService.saveTicket(seat,id,scheduleId);
-        }
-        Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
+
+        bookingService.saveBooking(checkoutDTO.getAccountId(),date);
         Account account = accountService.findAccountById(checkoutDTO.getAccountId());
-        String email = account.getEmail();
+        Integer id = bookingService.getBooking();
+        Long scheduleId = checkoutDTO.getScheduleId();
+
+        Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
+
         String seat = "";
 
 
@@ -222,8 +163,13 @@ public class BookingRestController {
             seat += result;
         }
 
+
+        for (Integer seatNumber : checkoutDTO.getSeatNumber()) {
+
+            ticketService.saveTicket(seatNumber,id,scheduleId);
+        }
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
+        mailMessage.setTo(account.getEmail());
         mailMessage.setSubject("Bạn đã đặt vé xem phim thành công");
         String content = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -268,8 +214,6 @@ public class BookingRestController {
                 "</html>";
         mailMessage.setText(content);
         mailConfig.getJavaMailSender().send(mailMessage);
-
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
