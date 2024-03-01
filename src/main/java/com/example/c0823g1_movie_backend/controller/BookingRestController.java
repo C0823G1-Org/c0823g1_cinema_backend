@@ -126,6 +126,7 @@ public class BookingRestController {
             if (!iBookingDTO.getPrintStatus()){
                 return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
             } else {
+                System.out.println("thay roi");
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
 
                 return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);

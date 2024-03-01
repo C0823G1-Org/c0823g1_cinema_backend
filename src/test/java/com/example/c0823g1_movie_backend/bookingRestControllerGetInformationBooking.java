@@ -52,7 +52,7 @@ public class bookingRestControllerGetInformationBooking {
     }
 
     @Test
-    public void getListBooking_6() throws Exception {
+    public void getListTicket_6() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders
                                 .get("/booking/exportDetail/{id}",1))
@@ -61,7 +61,7 @@ public class bookingRestControllerGetInformationBooking {
                 .andExpect(jsonPath("[0].nameCustomer").value("van do"))
                 .andExpect(jsonPath("[0].cinemaHall").value("ABC"))
                 .andExpect(jsonPath("[0].ticketPrice").value(50000))
-                .andExpect(jsonPath("[0].nameMovie").value("Mai"))
+                .andExpect(jsonPath("[0].nameMovieFilm").value("Mai"))
                 .andExpect(jsonPath("[0].scheduleTime").value("10:30:00"))
                 .andExpect(jsonPath("[0].bookingCode").value(1))
                 .andExpect(jsonPath("[0].seatNumber").value(8))
@@ -74,7 +74,7 @@ public class bookingRestControllerGetInformationBooking {
                 .andExpect(jsonPath("[2].nameCustomer").value("van do"))
                 .andExpect(jsonPath("[2].cinemaHall").value("ABC"))
                 .andExpect(jsonPath("[2].ticketPrice").value(50000))
-                .andExpect(jsonPath("[2].nameMovie").value("Mai"))
+                .andExpect(jsonPath("[2].nameMovieFilm").value("Mai"))
                 .andExpect(jsonPath("[2].scheduleTime").value("10:30:00"))
                 .andExpect(jsonPath("[2].bookingCode").value(1))
                 .andExpect(jsonPath("[2].seatNumber").value(12))
@@ -124,16 +124,16 @@ public class bookingRestControllerGetInformationBooking {
 
     // search
     @Test
-    public void searchBooking_2() throws Exception {
+    public void searchBookingParameterInput_7() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/booking/search/{id}", ""))
+                                .get("/booking/search/"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void searchBooking_3() throws Exception {
+    public void searchBookingParameterInput_8() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders
                                 .get("/booking/search/{id}", 11))

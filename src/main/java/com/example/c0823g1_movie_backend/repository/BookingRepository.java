@@ -43,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value =
             " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
                     " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
-                    " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovie\n" +
+                    " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
                     " FROM booking\n" +
                     "  left join account on booking.account_id  = account.id\n" +
                     "  left join ticket on booking.id = ticket.booking_id \n" +
@@ -56,7 +56,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "SELECT booking.id as bookingCode ,booking.print_status as printStatus, account.id as accountId, account.full_name as nameCustomer,\n" +
             " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
-            " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime ,MAX(movie.name) as nameMovie\n" +
+            " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime ,MAX(movie.name) as nameMovieFilm\n" +
             " FROM booking\n" +
             "  left join account on booking.account_id  = account.id\n" +
             "  left join ticket on booking.id = ticket.booking_id \n" +
@@ -71,7 +71,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value =
             "SELECT booking.id as bookingCode, booking.print_status as printStatus, account.id as accountId, account.full_name as nameCustomer,\n" +
                     " account.id_number as idNumber, account.phone_number as phoneNumber, movie.ticket_price as ticketPrice,\n" +
-                    " booking.date_booking as dateBooking, MAX(sc.schedule_time) as scheduleTime, MAX(movie.name) as nameMovie, ticket.seat_number as seatNumber, MAX(movie.ticket_price) as ticketPrice, MAX(hall.name ) as cinemaHall\n" +
+                    " booking.date_booking as dateBooking, MAX(sc.schedule_time) as scheduleTime, MAX(movie.name) as nameMovieFilm, ticket.seat_number as seatNumber, MAX(movie.ticket_price) as ticketPrice, MAX(hall.name ) as cinemaHall\n" +
                     " FROM booking\n" +
                     " LEFT JOIN account ON booking.account_id = account.id\n" +
                     " LEFT JOIN ticket ON booking.id = ticket.booking_id \n" +
