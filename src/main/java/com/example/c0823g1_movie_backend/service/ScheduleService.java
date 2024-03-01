@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleService implements IScheduleService {
@@ -26,5 +27,10 @@ public class ScheduleService implements IScheduleService {
     @Override
     public List<ScheduleDTO> getScheduleByHallId(Long id) {
         return scheduleRepository.getScheduleByHallId(id);
+    }
+
+    @Override
+    public Optional<Schedule> getScheduleById(Long scheduleId) {
+        return Optional.ofNullable(scheduleRepository.getScheduleById(scheduleId));
     }
 }

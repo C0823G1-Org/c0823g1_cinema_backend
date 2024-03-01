@@ -129,11 +129,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOEmail(@Param("email") String email);
 
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO account (account_name, full_name, phone_number, address, gender, password, role_id, facebook_id, google_id, id_number, profile_picture, birthday, email, member_code, point, is_deleted)\n" +
-            "VALUES (:#{#account.accountName}, :#{#account.fullName}, :#{#account.phoneNumber}, :#{#account.address}, :#{#account.gender}, :#{#account.password}, :role, :#{#account.facebookId}, :#{#account.googleId}, :#{#account.idNumber}, :#{#account.profilePicture}, :#{#account.birthday}, :#{#account.email}, :#{#account.memberCode}, 0, 0)", nativeQuery = true)
-    void register(@Param("account") Account account, @Param("role") Long role);
+//    @Transactional
+//    @Modifying
+//    @Query(value = "INSERT INTO account (account_name, full_name, phone_number, address, gender, password, role_id, facebook_id, google_id, id_number, profile_picture, birthday, email, member_code, point, is_deleted)\n" +
+//            "VALUES (:#{#account.accountName}, :#{#account.fullName}, :#{#account.phoneNumber}, :#{#account.address}, :#{#account.gender}, :#{#account.password}, :role, :#{#account.facebookId}, :#{#account.googleId}, :#{#account.idNumber}, :#{#account.profilePicture}, :#{#account.birthday}, :#{#account.email}, :#{#account.memberCode}, 0, 0)", nativeQuery = true)
+//    void register(@Param("account") Account account, @Param("role") Long role);
 
     @Transactional
     @Modifying
@@ -159,4 +159,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
 
+    @Query(value = "select email from account where id = :id",nativeQuery = true)
+    Account findAccountById(@Param("id") Long id);
 }

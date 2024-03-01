@@ -51,4 +51,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and booking.date_booking >= %:dateNow% - INTERVAL 7 DAY" +
                     "  group by booking.id", nativeQuery = true)
     List<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow);
+    @Modifying
+    @Query(value = "INSERT INTO booking(account_id,date_booking,print_status,is_deleted) VALUES (:accountId, :date,0,0)", nativeQuery = true)
+    void saveBooking(@Param("accountId") Long id, @Param("date") LocalDateTime date);
+
+
+    @Query(value = "select max(id) from booking", nativeQuery = true)
+    Integer getBooking();
+
+
+
+
 }

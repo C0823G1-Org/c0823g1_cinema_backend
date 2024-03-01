@@ -33,4 +33,6 @@ public interface IAccountService extends IGeneralService<Account>{
     boolean checkLoginByEmail(Account account);
 
     String getRoleUserEmail(Account account);
+
+    Account findAccountById(Long accountId);
 }
