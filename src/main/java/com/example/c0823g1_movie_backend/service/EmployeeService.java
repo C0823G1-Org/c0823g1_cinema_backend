@@ -32,7 +32,9 @@ public class EmployeeService implements IEmployeeService {
     @Override
     @Transactional
     public void updateEmployee(Account account, Long id) {
+        if(employeeRepository.findEmployeeById(id).isPresent()){
         employeeRepository.updateEmployee(account, id);
+        }
     }
 
     @Override

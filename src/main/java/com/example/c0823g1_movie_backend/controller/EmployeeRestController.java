@@ -73,8 +73,14 @@ public class EmployeeRestController {
     }
 
     /**
-     * Add an employee with an auto_increment ID.
-     * @ return a ResponseEntity with an HTTP status indicating success or failure of the operation
+     * This REST Controller method is used to add a new employee account to the system.
+     *
+     * @param accountDTO The employee account information sent as an AccountDTO object.
+     * @param bindingResult The BindingResult object to check and handle errors related to input data.
+     * @return ResponseEntity<Account> The result returned includes HttpStatus and an Account object,
+     *         if the addition process is successful, or HttpStatus.BAD_REQUEST if there is an error
+     *         in handling the input data.
+     *         * @author [HieuHTV]
      */
     @PostMapping(value = "/employee/add")
     public ResponseEntity<Account> save(@Valid @RequestBody AccountDTO accountDTO, BindingResult bindingResult){
@@ -88,9 +94,15 @@ public class EmployeeRestController {
     }
 
     /**
-     * Update an employee with the specified ID.
-     * @ param id the ID of the employee to update
-     * @ return a ResponseEntity with an HTTP status indicating success or failure of the operation
+     * This REST Controller method is used to edit an existing employee account in the system.
+     *
+     * @param id The ID of the employee account to be edited.
+     * @param accountDTO The updated employee account information sent as an AccountDTO object.
+     * @param bindingResult The BindingResult object to check and handle errors related to input data.
+     * @return ResponseEntity<Account> The result returned includes HttpStatus,
+     *         if the editing process is successful, or HttpStatus.BAD_REQUEST if there is an error
+     *         in handling the input data.
+     *         * @author [HieuHTV]
      */
 
     @PatchMapping(value = "/employee/edit/{id}")
