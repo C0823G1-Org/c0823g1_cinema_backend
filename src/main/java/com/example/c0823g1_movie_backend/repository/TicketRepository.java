@@ -16,5 +16,5 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
 
     @Modifying
     @Query(value = "INSERT INTO ticket(seat_number,booking_id,schedule_id,is_deleted) VALUES (:seat, :booking,:schedule,0)", nativeQuery = true)
-    void saveTicket(@Param("seat") Integer seat, @Param("bookingId") Integer id,@Param("bookingId") Long scheduleId);
+    void saveTicket(@Param("seat") Integer seat, @Param("booking") Integer id,@Param("schedule") Long scheduleId);
 }

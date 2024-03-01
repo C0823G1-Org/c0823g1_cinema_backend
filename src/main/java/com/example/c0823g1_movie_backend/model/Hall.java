@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -11,6 +12,7 @@ public class Hall {
     private Long id;
     private String name;
     private Integer totalSeat;
+    @JsonBackReference
     @OneToMany(mappedBy = "hall")
     private Set<Schedule> schedules;
     @Column(columnDefinition = "boolean default false")

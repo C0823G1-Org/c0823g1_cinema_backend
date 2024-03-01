@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
@@ -45,7 +46,7 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public Hall getHallByScheduleId(Long scheduleId) {
+    public HallDTO getHallByScheduleId(Long scheduleId) {
         return scheduleRepository.getHallByScheduleId(scheduleId);
     }
 

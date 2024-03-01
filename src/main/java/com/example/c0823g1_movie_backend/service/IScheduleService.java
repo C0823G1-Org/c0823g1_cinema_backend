@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
@@ -17,6 +18,6 @@ public interface IScheduleService extends IGeneralService<Schedule> {
     List<ScheduleDTO> findDateByMovieId(Long movieId);
     List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(Long movieId, LocalDate date);
     Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(Long movieId,LocalDate date,Long scheduleTimeId);
-    Hall getHallByScheduleId(Long scheduleId);
+    HallDTO getHallByScheduleId(Long scheduleId);
     List<ScheduleDTO> getScheduleByHallId(Long id);
 }
