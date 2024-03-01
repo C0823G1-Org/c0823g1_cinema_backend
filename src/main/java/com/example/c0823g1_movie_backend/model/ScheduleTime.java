@@ -11,8 +11,7 @@ public class ScheduleTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     LocalTime scheduleTime;
-    @OneToMany(mappedBy = "scheduleTime")
-    Set<Schedule> schedules;
+
 
     public ScheduleTime() {
     }
@@ -33,11 +32,5 @@ public class ScheduleTime {
         this.scheduleTime = scheduleTime;
     }
 
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
 
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
-    }
 }
