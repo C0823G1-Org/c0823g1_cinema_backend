@@ -6,6 +6,15 @@ public class TicketDTO {
     private List<Integer> seatList;
     private Long idMovie;
     private Long scheduleId;
+    private Long accountId;
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
 
     public TicketDTO() {
     }

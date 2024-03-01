@@ -174,6 +174,11 @@ public class AccountService implements IAccountService {
         return iAccountDTO.map(IAccountDTO::getRole).orElse(null);
     }
 
+    @Override
+    public Account findAccountById(Long accountId) {
+        return accountRepository.findAccountById(accountId);
+    }
+
     public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
