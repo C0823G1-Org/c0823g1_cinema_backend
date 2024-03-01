@@ -10,8 +10,6 @@ public class Version {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "version")
-    private Set<MovieHasVersion> movie;
 
     public Version() {
     }
@@ -32,11 +30,4 @@ public class Version {
         this.name = name;
     }
 
-    public Set<MovieHasVersion> getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Set<MovieHasVersion> movie) {
-        this.movie = movie;
-    }
 }

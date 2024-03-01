@@ -1,7 +1,7 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -29,8 +29,7 @@ public class Account {
     private String address;
     private String memberCode;
     private Integer point;
-    @OneToMany(mappedBy = "account")
-    private Set<Booking> bookings;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Account() {
@@ -53,7 +52,6 @@ public class Account {
         this.address = address;
         this.memberCode = memberCode;
         this.point = point;
-        this.bookings = bookings;
         this.isDeleted = isDeleted;
     }
 

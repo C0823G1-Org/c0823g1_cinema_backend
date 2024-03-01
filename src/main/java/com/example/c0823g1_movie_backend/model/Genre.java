@@ -10,9 +10,9 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
-    @OneToMany(mappedBy = "genre")
-    private Set<MovieHasGenre> movies;
+
 
 
     public Genre() {
@@ -42,11 +42,5 @@ public class Genre {
         isDeleted = deleted;
     }
 
-    public Set<MovieHasGenre> getMovies() {
-        return movies;
-    }
 
-    public void setMovies(Set<MovieHasGenre> movies) {
-        this.movies = movies;
-    }
 }

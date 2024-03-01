@@ -15,21 +15,14 @@ public class Booking {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
     private Boolean printStatus = false;
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
     private LocalDateTime dateBooking;
-    @OneToMany(mappedBy = "booking")
-    private Set<Ticket> tickets;
 
     public Booking() {
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public Long getId() {
         return id;
