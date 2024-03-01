@@ -1,7 +1,6 @@
 package com.example.c0823g1_movie_backend.controller;
 
-import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import java.time.LocalDate;
-import java.util.List;
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
 
 
 @RestController
@@ -37,8 +30,8 @@ public class MovieRestController {
      * */
 
     @GetMapping
-    public ResponseEntity<List<MovieDTO>> getAllMovieHot() {
-        List<MovieDTO> list = movieService.getAllMovieHot();
+    public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
+        List<IMovieDTO> list = movieService.getAllMovieHot();
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -50,11 +43,11 @@ public class MovieRestController {
      *     Function: Get the list of movies showing today
      *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
      * */
-    @GetMapping("/movie/current")
-    public ResponseEntity<List<MovieDTO>> getAllMovieCurrent() {
+    @GetMapping("/current")
+    public ResponseEntity<List<IMovieDTO>> getAllMovieCurrent() {
         LocalDate localDate = LocalDate.now();
         System.out.println(localDate);
-        List<MovieDTO> list = movieService.getAllMovieCurrent();
+        List<IMovieDTO> list = movieService.getAllMovieCurrent();
         System.out.println(list.size());
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -68,13 +61,14 @@ public class MovieRestController {
      *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
      * */
     @GetMapping("/search")
-    public ResponseEntity<Page<MovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
-                                                       @RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
+                                                        @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 8);
-        Page<MovieDTO> searchMovies = movieService.searchMovie(value, pageable);
+        Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
         if (searchMovies == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        System.out.println(searchMovies.getSize());
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
     }
 
@@ -86,18 +80,19 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     /**
-         * Create by TuanNM
-         * Date create: 29/02/2024
-         * Method: See details of the movie
-         * @Param id movie
-         * @Return movie information*/
+     * Create by TuanNM
+     * Date create: 29/02/2024
+     * Method: See details of the movie
+     *
+     * @Param id movie
+     * @Return movie information
+     */
     @GetMapping("/find/{id}")
     public ResponseEntity<Movie> findById(@PathVariable Long id) {
         return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
     }
-
-
 
 
     /**
@@ -123,6 +118,7 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(moviePage, HttpStatus.OK);
     }
+
     /**
      * Created by: ThuanTM
      * Date created: 29/2/2024
