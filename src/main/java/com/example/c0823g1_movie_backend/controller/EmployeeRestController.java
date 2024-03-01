@@ -37,7 +37,7 @@ public class EmployeeRestController {
      * @param page the page number for pagination (default is 0)
      * @return a ResponseEntity containing the paginated list of employees and an HTTP status code
      */
-    @GetMapping("/employee")
+    @GetMapping("/employee/list")
     public ResponseEntity<Page<Account>> getEmployeeList(@RequestParam(defaultValue = "") String searchName,
                                                  @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
