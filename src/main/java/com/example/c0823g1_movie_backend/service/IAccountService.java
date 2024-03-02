@@ -46,4 +46,6 @@ public interface IAccountService extends IGeneralService<Account>{
     Account findAccountByPhone(String phone);
     Account findAccountByEmail(String email);
     void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context);
+    void updateAccount(Account account, Long id);
+    void updatePassword( String password ,String accountName);
 }
