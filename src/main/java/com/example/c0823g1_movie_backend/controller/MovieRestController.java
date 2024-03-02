@@ -40,6 +40,7 @@ public class MovieRestController {
      * Created by DuyDD
      * Date Created: 29/02/2024
      * Function: Get a list of movies that have the highest revenue
+     *
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
@@ -50,6 +51,7 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
@@ -146,7 +148,7 @@ public class MovieRestController {
         Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<Movie> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
-        if (moviePage.isEmpty()) {
+        if (moviePage == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(moviePage, HttpStatus.OK);
