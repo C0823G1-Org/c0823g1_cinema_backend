@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Role;
@@ -8,7 +9,8 @@ import com.example.c0823g1_movie_backend.repository.RolesRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -134,7 +136,16 @@ public class AccountService implements IAccountService {
         return accountRepository.findByAccountNameDTOGG(googleId);
     }
 
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     */
     @Override
+    public Page<AccountStatisticDTO> getAccountStatistic(Pageable pageable) {
+        return accountRepository.getTop50Account(pageable);
+    }
+
     public Optional<IAccountDTO> findByEmail(String email) {
         return accountRepository.findByEmail(email);
     }
@@ -143,16 +154,64 @@ public class AccountService implements IAccountService {
     public void updatePasswordAndSendMail(Long id, String newPassword) {
         Optional<IAccountDTO> account = accountRepository.findByIdAccountDTO(id);
         if (account.isPresent()) {
-            accountRepository.updateAccountPassword(id,passwordEncoder.encode(newPassword));
+            accountRepository.updateAccountPassword(id, passwordEncoder.encode(newPassword));
             String to = account.get().getEmail();
             String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
             String templateName = "email-template";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("fullName", account.get().getFullName());
             context.setVariable("password", newPassword);
-            sendEmailWithHtmlTemplate(to,subject,templateName,context);
+            sendEmailWithHtmlTemplate(to, subject, templateName, context);
         }
     }
+//    public void registerAndSendMail(AccountDTO accountDTO){
+//        String to = accountDTO.getEmail();
+//        String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
+//        String templateName = "email-register";
+//        org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
+//        String randomCode = RandomStringUtils.random(6,true,true);
+//        context.setVariable("fullName",accountDTO.getFullName());
+//        context.setVariable("account",accountDTO.getAccountName());
+//        context.setVariable("password",accountDTO.getPassword());
+//        context.setVariable("randomCode",randomCode);
+//        sendEmailWithHtmlTemplate(to,subject,templateName,context);
+//    }
+
+    @Override
+    public List<Account> getAllAccount() {
+        return accountRepository.getAllAccount();
+    }
+
+    @Override
+    public Account findAccountByAccountName(String accountName) {
+        return accountRepository.findAccountByAccountName(accountName);
+    }
+
+    @Override
+    public Account findAccountByPhone(String phone) {
+        return accountRepository.findAccountByPhone(phone);
+    }
+
+    @Override
+    public Account findAccountByEmail(String email) {
+        return accountRepository.findAccountByEmail(email);
+    }
+
+    @Override
+    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        try {
+            helper.setTo(to);
+            helper.setSubject(subject);
+            String htmlContent = templateEngine.process(templateName, context);
+            helper.setText(htmlContent, true);
+            emailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public boolean checkLoginByEmail(Account account) {
@@ -179,17 +238,17 @@ public class AccountService implements IAccountService {
         return accountRepository.findAccountById(accountId);
     }
 
-    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
-        MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-        try {
-            helper.setTo(to);
-            helper.setSubject(subject);
-            String htmlContent = templateEngine.process(templateName, context);
-            helper.setText(htmlContent, true);
-            emailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
+//        MimeMessage mimeMessage = emailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+//        try {
+//            helper.setTo(to);
+//            helper.setSubject(subject);
+//            String htmlContent = templateEngine.process(templateName, context);
+//            helper.setText(htmlContent, true);
+//            emailSender.send(mimeMessage);
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -1,29 +1,29 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.AccountDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
-import com.example.c0823g1_movie_backend.model.Role;
 import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.IRoleService;
 import com.example.c0823g1_movie_backend.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @CrossOrigin("*")
@@ -35,6 +35,7 @@ public class AccountRestController {
     private IAccountService iAccountService;
     @Autowired
     private IRoleService iRoleService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     /* Create by: BaoNDT
@@ -225,17 +226,54 @@ public class AccountRestController {
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            String encodedPassword = passwordEncoder.encode(accountDTO.getPassword());
+//            List<Account> accountList = iAccountService.getAllAccount();
+//            for (int i = 0; i < accountList.size() ; i++) {
+//                if (accountList.get(i).getEmail().equals(accountDTO.getEmail()) || accountList.get(i).getAccountName().equals(accountDTO.getAccountName()) || accountList.get(i).getPhoneNumber().equals(accountDTO.getPhoneNumber())) {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//                }
+//            }
+            List<String> erorrList = new ArrayList<>();
+            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) == null){
+                      erorrList.add("Email Đã Tồn Tại");
+            } else if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) == null){
+                erorrList.add(" Số Điện Thoại Đã Tồn Tại ");
+            }else if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) == null){
+                erorrList.add("Tài Khoản Đã Tồn Tại");
+            }
+//            if (erorrList.size() > 0){
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+
+            String to = accountDTO.getEmail();
+            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
+            String templateName = "email-register";
+            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
+            String randomCode = RandomStringUtils.random(6,true,true);
+            System.out.println(randomCode);
+            context.setVariable("fullName",accountDTO.getFullName());
+            context.setVariable("account",accountDTO.getAccountName());
+            context.setVariable("password",accountDTO.getPassword());
+            context.setVariable("randomCode",randomCode);
+            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
+            if (accountDTO.getVerificationCode().equals("12345") == false){
+                erorrList.add("Mã Xác Nhận không đúng");
+            }
+            String c = "";
+            try{
+              c = passwordEncoder.encode(accountDTO.getPassword());
+            }catch (NullPointerException e){
+                System.out.println(c);
+            }
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
-            account.setPassword(encodedPassword);
+            account.setPassword(c);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
-            int randomMemberCode = 1;
-            account.setMemberCode("TV-" + account1.getMemberCode());
+//            int randomMemberCode = 1;
+            account.setMemberCode(account1.getMemberCode());
             iAccountService.register(account, 2L);
             System.out.println("Success");
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(account, HttpStatus.OK);
         }
 
     }
@@ -252,8 +290,6 @@ public class AccountRestController {
         Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
     }
-
-
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information and check account information
@@ -269,7 +305,20 @@ public class AccountRestController {
             iAccountService.register(account);
         }
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
+     */
+    @GetMapping("/statistics")
+    private ResponseEntity<Page<AccountStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<AccountStatisticDTO> accountList = iAccountService.getAccountStatistic(pageable);
+        if (accountList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(accountList, HttpStatus.OK);
+    }
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: generated random new password

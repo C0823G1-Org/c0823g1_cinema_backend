@@ -3,7 +3,6 @@ package com.example.c0823g1_movie_backend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 public class Schedule {
@@ -20,21 +19,14 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movie;
-    @OneToMany(mappedBy = "schedule")
-    private Set<Ticket> tickets;
+
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Schedule() {
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public Long getId() {
         return id;

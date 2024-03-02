@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HallDTO {
+public class ScheduleTimeDTO {
     private Long id;
 }

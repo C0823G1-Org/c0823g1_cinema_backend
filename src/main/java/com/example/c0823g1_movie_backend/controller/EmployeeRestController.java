@@ -26,7 +26,7 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-public class EmployeeController {
+public class EmployeeRestController {
 
     @Autowired
     private EmployeeService employeeService;
@@ -37,8 +37,8 @@ public class EmployeeController {
      * @param page the page number for pagination (default is 0)
      * @return a ResponseEntity containing the paginated list of employees and an HTTP status code
      */
-    @GetMapping("/employee")
-    public ResponseEntity<Page<Account>> getPage(@RequestParam(defaultValue = "") String searchName,
+    @GetMapping("/employee/list")
+    public ResponseEntity<Page<Account>> getEmployeeList(@RequestParam(defaultValue = "") String searchName,
                                                  @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<Account> accountPage = employeeService.getAllEmployee(searchName, pageable);
@@ -57,8 +57,8 @@ public class EmployeeController {
 //        return new ResponseEntity<>(account,HttpStatus.OK);
 //    }
 
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping("/employee/delete/{id}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
         if (account == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
