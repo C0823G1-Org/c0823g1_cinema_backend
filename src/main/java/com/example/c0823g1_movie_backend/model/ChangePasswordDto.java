@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordDto implements Validator {
-    private String email;
+//    private String email;
     private String currentPassword;
     private String newPassword;
     private String confirmationPassword;

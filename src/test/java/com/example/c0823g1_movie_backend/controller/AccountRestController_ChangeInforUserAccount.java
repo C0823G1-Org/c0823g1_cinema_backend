@@ -422,7 +422,7 @@ public class AccountRestController_ChangeInforUserAccount
     }
     /**
      * Creator : TuanTA
-     * accountDTO.birthday = null
+     * Success
      * Goal : HttpStatus = 200
      * date create : 01-03-2024
      * @throws Exception
