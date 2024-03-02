@@ -27,8 +27,7 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     void createMovie(Movie movie, List<Schedule> schedules);
 
-    Page<Movie> searchMovieByNameAndPublisher(String name, String publisher
-            , LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 
     Movie findMovieById(long id);
