@@ -17,15 +17,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MovieController_deleteMovie {
     @Autowired
     private MockMvc mockMvc;
+
     /**
      * Created by: ThuanTM
      * Date created: 02/03/2024
      * This method is used to test for function deleteMovie.
      * But dont delete data in the database. Only update the state of the is_delete field
      * this case with id = ""
+     *
      * @return HTTPStatus.NO_FOUND
      */
-   
+
     @Test
     public void deleteMovieById_26() throws Exception {
         this.mockMvc.perform(
@@ -34,10 +36,12 @@ public class MovieController_deleteMovie {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+
     /**
      * This method is used to test for function deleteMovie.
      * But dont delete data in the database. Only update the state of the is_delete field
      * this case with id = 100 does not exist in the database
+     *
      * @return HTTPStatus.NO_FOUND
      */
     @Test
@@ -48,10 +52,12 @@ public class MovieController_deleteMovie {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+
     /**
      * This method is used to test for function deleteMovie.
      * But dont delete data in the database. Only update the state of the is_delete field
      * this case with id = 1  exist in the database
+     *
      * @return HTTPStatus.OK
      */
     @Test

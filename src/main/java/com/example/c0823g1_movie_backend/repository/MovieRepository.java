@@ -90,8 +90,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Optional<Movie> findByIdMovie(Long id);
 
 
-
-
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
             "where id  =:id and is_deleted =0", nativeQuery = true)
     Movie findMovieById(@Param("id") Long id);

@@ -21,6 +21,7 @@ public class MovieController_fillAllMovie {
      * Created by: ThuanTM
      * Date created: 01/03/2024
      * This method is used to test for function findAllMovie with list size = 0
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -32,8 +33,10 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie with list size > 0
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -55,9 +58,11 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * with parameter name , publisher, startDate, endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -79,10 +84,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher = null, startDate="", endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -104,10 +111,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name ="", publisher = "", startDate is null, endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -129,10 +138,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name ="", publisher = "", startDate ="", endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -154,10 +165,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher is null, startDate ="2014-11-06", endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -179,10 +192,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[1].startDate").value("2014-11-06"))
                 .andExpect(jsonPath("content[1].duration").value(169));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher is null, startDate ="2014-11-06", endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -204,10 +219,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[1].startDate").value("2014-11-06"))
                 .andExpect(jsonPath("content[1].duration").value(169));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher is null, startDate is null, endDate ="2014-11-06"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -229,10 +246,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher is null, startDate = "2008-07-18", endDate ="2014-11-06"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -254,10 +273,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null, publisher is null, startDate = "2014-11-06", endDate ="2008-07-18"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -274,6 +295,7 @@ public class MovieController_fillAllMovie {
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name ="", publisher ="", startDate is null, endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -295,10 +317,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "" , publisher ="", startDate ="", endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -320,10 +344,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher ="h", startDate ="", endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -345,10 +371,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher ="h", startDate is null, endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -370,10 +398,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher ="Thuận", startDate is null, endDate is null
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -385,10 +415,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher ="Thuận", startDate ="", endDate =""
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -400,10 +432,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher ="Thuận", startDate ="2008-07-18", endDate ="2014-11-06"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -415,10 +449,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher ="Thuận", startDate ="2014-11-06", endDate ="2008-07-18"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -430,10 +466,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher ="h", startDate ="2014-11-06", endDate ="2008-07-18"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -445,10 +483,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher ="h", startDate ="2008-07-18", endDate ="2014-11-06"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -470,10 +510,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[3].startDate").value("2008-07-18"))
                 .andExpect(jsonPath("content[3].duration").value(152));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "" , publisher ="", startDate ="2014-11-06", endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -495,10 +537,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[1].startDate").value("2014-11-06"))
                 .andExpect(jsonPath("content[1].duration").value(169));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name is null , publisher is null, startDate ="", endDate ="2014-11-06"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -520,10 +564,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("2009-12-18"))
                 .andExpect(jsonPath("content[5].duration").value(162));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate ="2008-07-18", endDate =""
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -535,10 +581,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate ="2008-07-18", endDate is null
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -550,10 +598,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate ="", endDate =2008-07-18"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -565,10 +615,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate is null, endDate ="2008-07-18"
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -580,10 +632,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate ="2008-07-18", endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -605,10 +659,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[3].startDate").value("2008-07-18"))
                 .andExpect(jsonPath("content[3].duration").value(152));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate ="2008-07-18", endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -630,10 +686,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[3].startDate").value("2008-07-18"))
                 .andExpect(jsonPath("content[3].duration").value(152));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate ="", endDate ="2008-07-18"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -655,10 +713,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[3].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[3].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate is null, endDate ="2008-07-18"
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -680,10 +740,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[3].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[3].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate ="", endDate is null
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -705,10 +767,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "h" , publisher = "h", startDate is null, endDate =""
+     *
      * @return HTTPStatus.OK
      */
     @Test
@@ -730,10 +794,12 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate is null, endDate =""
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
@@ -745,10 +811,12 @@ public class MovieController_fillAllMovie {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
+
     /**
      * This method is used to test for function findAllMovie
      * name and publisher use only a input
      * with parameter name = "Thuận" , publisher = "Thuận", startDate ="", endDate is null
+     *
      * @return HTTPStatus.NO_CONTENT
      */
     @Test
