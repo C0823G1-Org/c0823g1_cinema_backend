@@ -1,7 +1,6 @@
 package com.example.c0823g1_movie_backend.dto;
 
 import com.example.c0823g1_movie_backend.model.Role;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -51,4 +50,13 @@ public class AccountDTO {
     String phoneNumber;
     @NotBlank(message = "Mã Xác Minh không được rỗng")
     String verificationCode;
+
+    public AccountDTO(String accountName, String password) {
+        this.accountName = accountName;
+        this.password = password;
+    }
+
+    public AccountDTO(String email) {
+        this.email = email;
+    }
 }

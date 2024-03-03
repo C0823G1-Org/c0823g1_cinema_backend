@@ -63,11 +63,13 @@ public class AccountRestController {
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody Account account) {
+    public ResponseEntity<LoginSuccess> login(HttpServletRequest request, @RequestBody AccountDTO accountDTO) {
         String accessToken = "";
         String roleUser = "";
         HttpStatus httpStatus = null;
         LoginSuccess loginSuccess;
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO, account);
         try {
             if (iAccountService.checkLogin(account)) {
                 roleUser = iAccountService.getRoleUser(account);
@@ -92,7 +94,7 @@ public class AccountRestController {
 
     /* Create by: BaoNDT
      * Date created: 29/02/2024
-     * Function: Receive account information (fullName, facebookId, profilePicture, email) and check account information.
+     * Function: receive accessToken code returned to facebook. Use that accessToken code to call Facebook to get user information. Check account information.
      * If account not found create new account.
      * @return HttpStatus.BAD_REQUEST if account has been locked/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
@@ -147,7 +149,7 @@ public class AccountRestController {
 
     /* Create by: BaoNDT
      * Date created: 29/02/2024
-     * Function: Receive account information (fullName, googleId, profilePicture, email, phoneNumber) and check account information.
+     * Function: receive oauthAccessToken code returned to google. Use that accessToken code to call Google to get user information. Check account information.
      * If account not found create new account.
      * @return HttpStatus.BAD_REQUEST if account has been locked/ access token,role user, account information and HttpStatus.OK if account information is accurate/
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
@@ -228,7 +230,9 @@ public class AccountRestController {
      * @return HttpStatus.BAD_REQUEST if account not found/ HttpStatus.OK if account is found
      */
     @PostMapping("/forget-password")
-    public ResponseEntity<?> forgetPassword(HttpServletRequest request, @RequestBody Account account) {
+    public ResponseEntity<?> forgetPassword(HttpServletRequest request, @RequestBody AccountDTO accountDTO) {
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO, account);
         System.out.println(account.getEmail());
         Optional<IAccountDTO> iAccountDTO = iAccountService.findByEmail(account.getEmail());
         if (!iAccountDTO.isPresent()) {
@@ -246,7 +250,9 @@ public class AccountRestController {
      * HttpStatus.INTERNAL_SERVER_ERROR if server error
      */
     @PostMapping("/login-email")
-    public ResponseEntity<LoginSuccess> loginByEmail(HttpServletRequest request, @RequestBody Account account) {
+    public ResponseEntity<LoginSuccess> loginByEmail(HttpServletRequest request, @RequestBody AccountDTO accountDTO) {
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO, account);
         String accessToken = "";
         String roleUser = "";
         LoginSuccess loginSuccess;
