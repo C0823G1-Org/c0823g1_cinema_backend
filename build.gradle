@@ -32,6 +32,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
     implementation group: 'org.thymeleaf', name: 'thymeleaf', version: '3.1.2.RELEASE'
     implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
+    implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.23.0'
+    implementation group: 'com.restfb', name: 'restfb', version: '2024.2.0'
 
 
     compileOnly 'org.projectlombok:lombok'
