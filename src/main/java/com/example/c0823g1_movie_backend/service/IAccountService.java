@@ -1,9 +1,10 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.AccountDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.thymeleaf.context.Context;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public interface IAccountService extends IGeneralService<Account>{
     Optional<IAccountDTO> findByAccountName(String accountName);
 
     Optional<IAccountDTO> findByGoogleID(String googleId);
+    Page<AccountStatisticDTO> getAccountStatistic(Pageable pageable);
 
     Optional<IAccountDTO> findByEmail(String email);
 
@@ -44,4 +46,6 @@ public interface IAccountService extends IGeneralService<Account>{
     Account findAccountByPhone(String phone);
     Account findAccountByEmail(String email);
     void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context);
+    void updateAccount(Account account, Long id);
+    void updatePassword( String password ,String accountName);
 }

@@ -1,10 +1,11 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.AccountDTO;
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
+import com.example.c0823g1_movie_backend.model.ChangePasswordDto;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
-import com.example.c0823g1_movie_backend.model.Role;
 import com.example.c0823g1_movie_backend.service.IAccountService;
 import com.example.c0823g1_movie_backend.service.IRoleService;
 import com.example.c0823g1_movie_backend.service.JwtService;
@@ -13,15 +14,17 @@ import jakarta.validation.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -221,27 +224,24 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */
     @PostMapping("/register")
-    public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
+    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
+        List<String> listError = new ArrayList<>();
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-//            List<Account> accountList = iAccountService.getAllAccount();
-//            for (int i = 0; i < accountList.size() ; i++) {
-//                if (accountList.get(i).getEmail().equals(accountDTO.getEmail()) || accountList.get(i).getAccountName().equals(accountDTO.getAccountName()) || accountList.get(i).getPhoneNumber().equals(accountDTO.getPhoneNumber())) {
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//                }
-//            }
-            List<String> erorrList = new ArrayList<>();
             if (iAccountService.findAccountByEmail(accountDTO.getEmail()) == null){
-                      erorrList.add("Email Đã Tồn Tại");
-            } else if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) == null){
-                erorrList.add(" Số Điện Thoại Đã Tồn Tại ");
-            }else if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) == null){
-                erorrList.add("Tài Khoản Đã Tồn Tại");
+                      listError.add("Email Đã Tồn Tại");
             }
-//            if (erorrList.size() > 0){
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
+            if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) == null){
+                listError.add(" Số Điện Thoại Đã Tồn Tại ");
+            }
+            if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) == null){
+                listError.add("Tài Khoản Đã Tồn Tại");
+            }
+            if (listError.size() > 0){
+                return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
+            }
+
 
             String to = accountDTO.getEmail();
             String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
@@ -254,21 +254,15 @@ public class AccountRestController {
             context.setVariable("password",accountDTO.getPassword());
             context.setVariable("randomCode",randomCode);
             iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
-            if (accountDTO.getVerificationCode().equals("12345") == false){
-                erorrList.add("Mã Xác Nhận không đúng");
+            if (!accountDTO.getVerificationCode().equals(randomCode)){
+                listError.add("Mã Xác Nhận không đúng");
             }
-            String c = "";
-            try{
-              c = passwordEncoder.encode(accountDTO.getPassword());
-            }catch (NullPointerException e){
-                System.out.println(c);
-            }
+            String encode = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
-            account.setPassword(c);
+            account.setPassword(encode);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
-//            int randomMemberCode = 1;
             account.setMemberCode(account1.getMemberCode());
             iAccountService.register(account, 2L);
             System.out.println("Success");
@@ -289,6 +283,23 @@ public class AccountRestController {
         Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
     }
+    /* Create by: TuanTA
+     * Date created: 29/02/2024
+     * Function: Change Infor Of User Account
+     * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
+     */
+    @PatchMapping("/changeInfoUser")
+    public ResponseEntity<?> changeInfoUserAccount(@Valid @RequestBody AccountDTO accountDTO , BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            Account account = new Account();
+            BeanUtils.copyProperties(accountDTO,account);
+            iAccountService.updateAccount(account,account.getId());
+            return new ResponseEntity<>(account,HttpStatus.OK);
+        }
+
+    }
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information and check account information
@@ -304,7 +315,20 @@ public class AccountRestController {
             iAccountService.register(account);
         }
     }
-
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
+     */
+    @GetMapping("/statistics")
+    private ResponseEntity<Page<AccountStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+        Page<AccountStatisticDTO> accountList = iAccountService.getAccountStatistic(pageable);
+        if (accountList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(accountList, HttpStatus.OK);
+    }
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: generated random new password
@@ -327,17 +351,25 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the current password is not the same as the current password input and If the new password is not the same as confirming the password
      * HttpStatus.OK if the current password is the same as the current password in the input field and the new password is the same as the new password confirmation
      */
-    @PatchMapping("/changePassword/{currenPass}/{newPass}/{confirmNewPass}")
-    public ResponseEntity<Account> changePassword(Principal principal,@PathVariable String currenPass,@PathVariable String newPass , @PathVariable String confirmNewPass){
-     Account account = iAccountService.getAllInfoUser(principal.getName());
-     if (!passwordEncoder.matches(account.getPassword(),currenPass)){
-          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-     }
-     if (!newPass.equals(confirmNewPass)){
-         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-     }
-     String encoder = passwordEncoder.encode(newPass);
-     account.setPassword(encoder);
-     return new ResponseEntity<>(HttpStatus.OK);
+    @PatchMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult,Principal principal){
+        List<String> listErrors = new ArrayList<>();
+        changePasswordDto.validate(changePasswordDto,bindingResult);
+        if (bindingResult.hasErrors()){
+            for (FieldError error : bindingResult.getFieldErrors()){
+                listErrors.add(error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
+        }
+       Account account = iAccountService.findAccountByAccountName(principal.getName());
+        if (account.getPassword().equals(changePasswordDto.getCurrentPassword())){
+            account.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+            iAccountService.updatePassword(account.getPassword(),principal.getName());
+            return new ResponseEntity<>("Đổi Mật Khẩu Thành Công",HttpStatus.OK);
+        }else {
+            listErrors.add("Mật Khẩu Hiện Tại Không Đúng");
+            return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
+        }
     }
+
 }
