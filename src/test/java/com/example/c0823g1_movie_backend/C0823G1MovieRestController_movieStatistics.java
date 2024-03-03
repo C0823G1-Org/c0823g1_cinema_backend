@@ -14,12 +14,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class C0823G1MovieRestController_movieStatistics {
     @Autowired
     private MockMvc mockMvc;
-
+    /**
+     * This function is used to test the return value of records from database
+     * @author DuyDD
+     * @Time 6:13pm 03/03/24
+     */
     @Test
     public void movieStatistics_5() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/movie/statistics"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
+    /**
+     * This function is used to test the return value of records from database
+     * @author DuyDD
+     * @Time 6:13pm 03/03/24
+     */
     @Test
     public void movieStatistics_nonEmptyList() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/movie/statistics"))
