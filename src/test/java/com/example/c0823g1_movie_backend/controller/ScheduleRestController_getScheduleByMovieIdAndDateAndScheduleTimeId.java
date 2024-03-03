@@ -18,106 +18,191 @@ public class ScheduleRestController_getScheduleByMovieIdAndDateAndScheduleTimeId
     /**
      * Create by: HuuPT
      * Date: 01/03/2024
-     * Test case: this function use to test the validation of schedule more specific is null movieId parameter
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter,date parameter  and scheduleId parameter are null
      */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_1() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_date_scheduleId_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=&date=&scheduleTimeId="))
+                        MockMvcRequestBuilders.get("/schedule/schedule"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * date parameter  and scheduleId parameter are null, movieId parameter has data
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_2() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_date_schedule_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=&scheduleTimeId="))
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and scheduleId parameter are null, date parameter  has data
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_3() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_scheduleId_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2024-02-02&scheduleTimeId="))
+                        MockMvcRequestBuilders.get("/schedule/schedule?date=2024-02-02"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and date parameter  are null, scheduleId parameter has data
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_4() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_date_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=&scheduleTimeId=1"))
+                        MockMvcRequestBuilders.get("/schedule/schedule?scheduleTimeId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and date parameter  have data, scheduleId parameter is null
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_5() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_scheduleId_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=&date=2024-02-02&scheduleTimeId=1"))
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2024-02-02"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and scheduleId parameter  have data, date parameter is null
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_6() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_date_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=&date=2024-02-02&scheduleTimeId="))
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&scheduleTimeId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * date parameter and scheduleId parameter  have data, movieId parameter is null
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_7() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_7() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=&date=&scheduleTimeId=1"))
+                        MockMvcRequestBuilders.get("/schedule/schedule?date=2024-02-02&scheduleTimeId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and date aren't in database and scheduleId parameter is in database
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_8() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_date_9() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2024-02-02&scheduleTimeId=1"))
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2022-02-02&scheduleTimeId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and scheduleId parameter aren't in database and date parameter is in database
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_9() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_scheduleId_9() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2024-02-02&scheduleTimeId=10"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * date parameter and scheduleId parameter aren't in database and movieId parameter is in database
+     */
+    @Test
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_date_scheduleId_9() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2004-02-02&scheduleTimeId=10"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * date parameter and scheduleId parameter are in database and movieId parameter isn't in database
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_10() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2024-02-02&scheduleTimeId=10"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_11() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2024-02-02&scheduleTimeId=10"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_12() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2004-02-02&scheduleTimeId=1"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_13() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_9() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2024-02-02&scheduleTimeId=1"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and date parameter are in database and scheduleId parameter isn't in database
+     */
     @Test
-    public void getScheduleByMovieIdAndDateAndScheduleTimeId_14() throws Exception {
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_scheduleId_9() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2024-02-02&scheduleTimeId=10"))
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=1&date=2024-02-02&scheduleTimeId=10"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter and scheduleId parameter are in database and date parameter isn't in database
+     */
+    @Test
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_date_9() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2004-02-02&scheduleTimeId=1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter, scheduleId parameter and date parameter aren't in database
+     */
+    @Test
+    public void getScheduleByMovieIdAndDateAndScheduleTimeId_movieId_date_scheduleId_9() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/schedule/schedule?movieId=10&date=2004-02-02&scheduleTimeId=10"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+    /**
+     * Create by: HuuPT
+     * Date: 01/03/2024
+     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
+     * movieId parameter, scheduleId parameter and date parameter are in database
+     */
     @Test
     public void getScheduleByMovieIdAndDateAndScheduleTimeId_15() throws Exception {
         this.mockMvc.perform(

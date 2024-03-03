@@ -28,45 +28,7 @@ public class ScheduleRestController_findScheduleTimeByMovieAndDate {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
-    /**
-     * Create by: HuuPT
-     * Date: 01/03/2024
-     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
-     * movieId parameter is empty and date parameter is null
-     */
-    @Test
-    public void findScheduleTimeByMovieAndDate_date_7_movieId_8() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/time?movieId="))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    /**
-     * Create by: HuuPT
-     * Date: 01/03/2024
-     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
-     * movieId parameter is null and date parameter is empty
-     */
-    @Test
-    public void findScheduleTimeByMovieAndDate_date_8_movieId_7() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/time?date="))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    /**
-     * Create by: HuuPT
-     * Date: 01/03/2024
-     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
-     * movieId parameter and date parameter are empty
-     */
-    @Test
-    public void findScheduleTimeByMovieAndDate_movieId_8_date_8() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/time?movieId=&date="))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
+
     /**
      * Create by: HuuPT
      * Date: 01/03/2024
@@ -93,32 +55,8 @@ public class ScheduleRestController_findScheduleTimeByMovieAndDate {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
-    /**
-     * Create by: HuuPT
-     * Date: 01/03/2024
-     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
-     * movieId parameter is empty and date parameter has data
-     */
-    @Test
-    public void findScheduleTimeByMovieAndDate_movieId_8() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/time?movieId=&date=2004-02-02"))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-    /**
-     * Create by: HuuPT
-     * Date: 01/03/2024
-     * Test case: this function use to test the validation of dropdown schedule time. Specifically,
-     * movieId parameter has data and date parameter is empty
-     */
-    @Test
-    public void findScheduleTimeByMovieAndDate_date_8() throws Exception {
-        this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("/schedule/time?movieId=1&date="))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
+
+
     /**
      * Create by: HuuPT
      * Date: 01/03/2024

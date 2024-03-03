@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class Booking {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
     private LocalDateTime dateBooking;
+    @JsonBackReference
     @OneToMany(mappedBy = "booking")
     private Set<Ticket> tickets;
 
