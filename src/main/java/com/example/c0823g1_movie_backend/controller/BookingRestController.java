@@ -92,6 +92,7 @@ public class BookingRestController {
      */
 
 
+
     /* Create by: DoLV
      * Date created: 29/02/2024
      * Function: Displays list and pagination of ticket booking with search action
@@ -107,13 +108,36 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
-    @GetMapping("/search/{search}/{date}")
-    public ResponseEntity<Page<IBookingDTO>> searchBookingTicketDate(@PathVariable("search")String search,@PathVariable("date") LocalDate localDate ,@PageableDefault(size = 2) Pageable pageable){
+
+    /* Created by: DoLV
+     * Date created: 03/03/2024
+     * Function: Display the list and paginate ticket bookings by search operation, with parameter date being the date entered.
+     * If no record is found, the default list will be returned.
+     */
+    @GetMapping("/searchDate/{date}")
+    public ResponseEntity<Page<IBookingDTO>> searchBookingTicketWithDate(@PathVariable("date")LocalDate localDate , @PageableDefault(size = 2) Pageable pageable){
         LocalDateTime dateSearch = localDate.atStartOfDay();
         LocalDateTime timeNow = LocalDateTime.now();
-        Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearchAndSearch(search,dateSearch,pageable);
+        Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterDate(dateSearch,pageable);
         if (listBookingTicket.isEmpty()){
-            System.out.println("co vo day khong ???");
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,timeNow);
+            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
+    }
+
+    
+    /* Created by: DoLV
+     * Date created: 03/03/2024
+     * Function: Display the list and paginate ticket bookings by search operation, with parameters date and search as the entered values.
+     *  If no record is found, the default list will be returned.
+     */
+    @GetMapping("/search/{search}/{date}")
+    public ResponseEntity<Page<IBookingDTO>> searchBookingTicketWithDateAndSearch(@PathVariable("search")String search,@PathVariable("date") LocalDate localDate ,@PageableDefault(size = 2) Pageable pageable){
+        LocalDateTime dateSearch = localDate.atStartOfDay();
+        LocalDateTime timeNow = LocalDateTime.now();
+        Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearchAndDate(search,dateSearch,pageable);
+        if (listBookingTicket.isEmpty()){
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,timeNow);
             return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
         }
@@ -122,7 +146,8 @@ public class BookingRestController {
 
     /* Created by: DoLV
      * Date created: February 29, 2024
-     * Function: Select a booking ticket detail . If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, it returns the booking ticket object to be printed.
+     * Function: Select a booking ticket detail . If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false,
+     * it returns the booking ticket object to be printed.
      */
 
     @GetMapping("/exportDetail/{idBookingTicket}")

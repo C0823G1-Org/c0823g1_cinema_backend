@@ -26,5 +26,7 @@ public interface IBookingService {
 
     Integer getBooking();
 
-    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndSearch(String search, LocalDateTime dateSearch, Pageable pageable);
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable);
+
+    Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
 }

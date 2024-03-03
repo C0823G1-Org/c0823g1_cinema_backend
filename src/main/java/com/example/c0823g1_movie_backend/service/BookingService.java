@@ -61,8 +61,13 @@ public class BookingService implements IBookingService{
     }
 
     @Override
-    public Page<IBookingDTO> searchBookingTicketWithParameterSearchAndSearch(String search, LocalDateTime dateSearch, Pageable pageable) {
-        return bookingRepository.searchBookingTicketWithParameterSearchAndSearch(search,dateSearch,pageable);
+    public Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterSearchAndDate(search,dateSearch,pageable);
+    }
+
+    @Override
+    public Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterDate(dateSearch,pageable);
     }
 
 
