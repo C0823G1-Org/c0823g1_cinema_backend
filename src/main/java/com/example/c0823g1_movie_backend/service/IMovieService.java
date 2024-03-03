@@ -27,7 +27,7 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     Movie findById(Long id);
 
-    void createMovie(MovieDTO movie, Set<ScheduleDTO> schedules);
+    void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS);
 
     Page<Movie> searchMovieByNameAndPublisher(String name, String publisher
             , LocalDate startDate, LocalDate endDate, Pageable pageable);
@@ -36,4 +36,6 @@ public interface IMovieService extends IGeneralService<Movie> {
     Movie findMovieById(long id);
 
     Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable);
+
+    boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO);
 }

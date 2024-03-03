@@ -1,20 +1,12 @@
 package com.example.c0823g1_movie_backend.dto;
 
-import com.example.c0823g1_movie_backend.model.Hall;
-import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.ScheduleTime;
-import com.example.c0823g1_movie_backend.model.Ticket;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,8 +14,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class ScheduleDTO {
     private Long id;
+    @NotNull(message = "Ngày chiếu không được để rỗng")
     private LocalDate date;
-    private ScheduleTime scheduleTime;
-    private Hall hall;
+    @NotNull(message = "Thời gian chiếu không được để rỗng")
+    private Long scheduleTime;
+    @NotNull(message = "Sảnh chiếu không được để rỗng")
+    private Long hall;
     private Long movie;
+
+    public ScheduleDTO(LocalDate date, Long scheduleTime, Long hall) {
+        this.date = date;
+        this.scheduleTime = scheduleTime;
+        this.hall = hall;
+    }
 }

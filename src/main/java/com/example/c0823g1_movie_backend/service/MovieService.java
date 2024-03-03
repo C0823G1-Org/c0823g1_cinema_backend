@@ -1,10 +1,11 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.*;
+import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieDTO;
+import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
+import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
-import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public class MovieService implements IMovieService {
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private IScheduleService scheduleService;
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -45,6 +46,7 @@ public class MovieService implements IMovieService {
     public Movie create(Movie movie) {
         return null;
     }
+
     /**
      * Created by DuyDD
      * Date Created: 29/02/2024
@@ -55,11 +57,33 @@ public class MovieService implements IMovieService {
         return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 
-    public void createMovie(MovieDTO movie, Set<ScheduleDTO> schedules) {
-        movieRepository.create(movie);
-        for (ScheduleDTO schedule: schedules){
-            scheduleRepository.create(schedule);
+    @Override
+    public boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO) {
+        Movie currentMovie = findMovieById(movie.getId());
+        if (currentMovie != null) {
+            for (ScheduleDTO schedule : scheduleDTO) {
+                if (schedule.getId() != null) {
+                    if (!scheduleService.editSchedule(schedule)) {
+                        return false;
+                    }
+                } else {
+                    scheduleService.createSchedule(schedule);
+                }
+            }
+            movieRepository.editMovie(movie);
+            return true;
         }
+        return false;
+    }
+
+    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS) {
+        movieRepository.create(movie);
+        Long newMovieId = movieRepository.returnLastInsertId();
+        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
+            scheduleDTO.setMovie(newMovieId);
+            scheduleService.createSchedule(scheduleDTO);
+        }
+        System.out.println(newMovieId);
     }
 
     @Override
