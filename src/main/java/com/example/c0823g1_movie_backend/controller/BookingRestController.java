@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,15 +97,26 @@ public class BookingRestController {
      * Function: Displays list and pagination of ticket booking with search action
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search")String search,@RequestParam(defaultValue = "0") int page){
+    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search")String search,@PageableDefault(size = 2) Pageable pageable){
         LocalDateTime time = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(page, 2);
         Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search,time,pageable);
         if (listBookingTicket.isEmpty()){
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,time);
             return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
         }
-        System.out.println(listBookingTicket.getSize() + " search");
+        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{search}/{date}")
+    public ResponseEntity<Page<IBookingDTO>> searchBookingTicketDate(@PathVariable("search")String search,@PathVariable("date") LocalDate localDate ,@PageableDefault(size = 2) Pageable pageable){
+        LocalDateTime dateSearch = localDate.atStartOfDay();
+        LocalDateTime timeNow = LocalDateTime.now();
+        Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearchAndSearch(search,dateSearch,pageable);
+        if (listBookingTicket.isEmpty()){
+            System.out.println("co vo day khong ???");
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,timeNow);
+            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
@@ -121,7 +133,7 @@ public class BookingRestController {
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
 
         if (iBookingDTO == null){
-            return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(listBookingTicket, HttpStatus.BAD_REQUEST);
         } else {
             if (!iBookingDTO.getPrintStatus()){
                 return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);

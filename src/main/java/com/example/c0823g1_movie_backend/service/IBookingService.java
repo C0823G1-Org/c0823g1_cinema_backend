@@ -25,4 +25,6 @@ public interface IBookingService {
     void saveBooking(Long accountId, LocalDateTime date);
 
     Integer getBooking();
+
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndSearch(String search, LocalDateTime dateSearch, Pageable pageable);
 }

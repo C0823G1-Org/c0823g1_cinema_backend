@@ -94,5 +94,30 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
 
-
+//    @Query(value =
+//            " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
+//                    " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+//                    " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+//                    " FROM booking\n" +
+//                    "  left join account on booking.account_id  = account.id\n" +
+//                    "  left join ticket on booking.id = ticket.booking_id \n" +
+//                    "  left join schedule on ticket.schedule_id = schedule.id\n" +
+//                    "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+//                    "  left join movie on movie.id = schedule.movie_id\n" +
+//                    " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and booking.date_booking >= %:dateNow% - INTERVAL 7 DAY" +
+//                    "  group by booking.id", nativeQuery = true)
+//    Page<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow,Pageable pageable);
+@Query(value =
+        " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
+                " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+                " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+                " FROM booking\n" +
+                "  left join account on booking.account_id  = account.id\n" +
+                "  left join ticket on booking.id = ticket.booking_id \n" +
+                "  left join schedule on ticket.schedule_id = schedule.id\n" +
+                "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+                "  left join movie on movie.id = schedule.movie_id\n" +
+                " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and booking.date_booking >= %:dateSearch%" +
+                "  group by booking.id", nativeQuery = true)
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndSearch(@Param("search") String search, @Param("dateSearch") LocalDateTime dateNow, Pageable pageable);
 }
