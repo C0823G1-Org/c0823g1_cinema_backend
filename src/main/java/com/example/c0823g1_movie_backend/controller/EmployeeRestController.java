@@ -42,6 +42,9 @@ public class EmployeeRestController {
                                                  @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<Account> accountPage = employeeService.getAllEmployee(searchName, pageable);
+        if (accountPage.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return ResponseEntity.ok(accountPage);
     }
 

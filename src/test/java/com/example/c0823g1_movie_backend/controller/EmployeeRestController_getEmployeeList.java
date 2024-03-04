@@ -129,7 +129,7 @@ public class EmployeeRestController_getEmployeeList {
                         MockMvcRequestBuilders
                                 .get("/api/employee/list?page=0&size=5&name=z"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
     }
 
     /**
