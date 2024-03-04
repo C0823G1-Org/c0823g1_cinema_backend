@@ -3,7 +3,6 @@ package com.example.c0823g1_movie_backend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 

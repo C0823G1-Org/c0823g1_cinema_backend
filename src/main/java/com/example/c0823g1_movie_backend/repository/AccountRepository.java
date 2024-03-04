@@ -1,15 +1,17 @@
 package com.example.c0823g1_movie_backend.repository;
 
+import com.example.c0823g1_movie_backend.dto.AccountStatisticDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,6 +114,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " role.name as role from account join role on account.role_id = role.id " +
             " where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
     Optional<IAccountDTO> findByEmail(@Param("email") String email);
+
     @Query(value = "select account.id as id,\n" +
             " account.account_name as accountName, \n" +
             " account.address as address, \n" +
@@ -139,7 +142,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Modifying
     @Query(value = "update account \n" +
             "set account.password = :password " +
-            "where account.id = :id" , nativeQuery = true)
+            "where account.id = :id", nativeQuery = true)
     void updateAccountPassword(@Param("id") Long id, @Param("password") String password);
 
     @Query(value = "select account.id as id,\n" +
@@ -158,6 +161,41 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " role.name as role from account join role on account.role_id = role.id " +
             "where account.id = :id", nativeQuery = true)
     Optional<IAccountDTO> findByIdAccountDTO(@Param("id") Long id);
+
+    /**
+     * Created by DuyDD
+     * Date Created: 29/02/2024
+     * Function: Get a list of accounts that have the highest amount of money spent
+     */
+    @Query(value = "SELECT " +
+            "a.id AS ma_thanh_vien, " +
+            "a.account_name AS ten_thanh_vien, " +
+            "t.ticket_count AS so_luong_ve, " +
+            "t.total_ticket_price AS tong_tien, " +
+            "SUM(a.point) AS diem_tich_luy " +
+            "FROM " +
+            "account a " +
+            "JOIN " +
+            "(SELECT " +
+            "b.account_id, " +
+            "COUNT(t.id) AS ticket_count, " +
+            "SUM(ticket_price) AS total_ticket_price " +
+            "FROM " +
+            "booking b " +
+            "JOIN ticket t ON b.id = t.booking_id " +
+            "JOIN schedule s ON t.schedule_id = s.id " +
+            "JOIN movie m ON m.id = s.movie_id " +
+            "WHERE " +
+            "b.is_deleted = 0 AND t.is_deleted = 0 " +
+            "AND s.is_deleted = 0 " +
+            "AND m.is_deleted = 0 " +
+            "GROUP BY b.account_id) t ON a.id = t.account_id " +
+            "WHERE " +
+            "a.is_deleted = 0 " +
+            "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            nativeQuery = true)
+    Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
     @Query(value = "select * from account where id = :id",nativeQuery = true)
     Account findAccountById(@Param("id") Long id);

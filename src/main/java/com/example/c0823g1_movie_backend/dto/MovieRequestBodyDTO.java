@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HallDTO {
-    private Long id;
+public class MovieRequestBodyDTO {
+    private MovieDTO movieDTO;
+    private Set<ScheduleDTO> scheduleDTO;
 }
