@@ -42,7 +42,7 @@ public class MovieRestController_detailMovie {
     @Test
     public void getDetailMovie_id_3() {
         try {
-            this.mockMvc.perform(MockMvcRequestBuilders.get("/movie/find/{id}", 3))
+            this.mockMvc.perform(MockMvcRequestBuilders.get("/movie/find/{id}", 6))
                     .andDo(print())
                     .andExpect(status().is4xxClientError());
         } catch (Exception e) {
