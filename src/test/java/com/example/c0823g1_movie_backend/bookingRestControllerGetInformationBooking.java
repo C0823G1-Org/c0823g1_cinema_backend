@@ -126,7 +126,7 @@ public class bookingRestControllerGetInformationBooking {
     public void searchBookingParameterInput_7() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/booking/search/{search}"))
+                                .get("/booking/search/"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -227,7 +227,7 @@ public class bookingRestControllerGetInformationBooking {
     public void searchBookingParameterInputAndDate_7() throws Exception {
         this.mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/booking/search/{search}/{date}"))
+                                .get("/booking/search//"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -314,6 +314,78 @@ public class bookingRestControllerGetInformationBooking {
     }
 
 
+    @Test
+    public void searchBookingParameterDate_7() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/booking/searchDate/"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
 
+    @Test
+    public void searchBookingParameterDate_8() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/booking/searchDate/{date}", ""))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void searchBookingParameterDate_9() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/booking/searchDate/{date}", "2025-05-05"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("content[0].nameCustomer").value("van do"))
+                .andExpect(jsonPath("content[0].bookingCode").value(1))
+                .andExpect(jsonPath("content[0].idNumber").value("202687453"))
+                .andExpect(jsonPath("content[0].phoneNumber").value("0982009465"))
+                .andExpect(jsonPath("content[0].nameMovieFilm").value("Mai"))
+                .andExpect(jsonPath("content[0].scheduleTime").value("10:30:00"))
+                .andExpect(jsonPath("content[0].dateBooking").value("2024-03-01T20:30:30"))
+
+                .andExpect(jsonPath("content[1].nameCustomer").value("van do"))
+                .andExpect(jsonPath("content[1].bookingCode").value(2))
+                .andExpect(jsonPath("content[1].idNumber").value("202687453"))
+                .andExpect(jsonPath("content[1].phoneNumber").value("0982009465"))
+                .andExpect(jsonPath("content[1].nameMovieFilm").value("The Flash"))
+                .andExpect(jsonPath("content[1].scheduleTime").value("08:45:00"))
+                .andExpect(jsonPath("content[1].dateBooking").value("2024-04-01T20:30:30"));
+    }
+    @Test
+    public void searchBookingParameter_10() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/booking/searchDate/{date}", "2024-06-04"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("content[0].nameCustomer").value("van do"))
+                .andExpect(jsonPath("content[0].bookingCode").value(1))
+                .andExpect(jsonPath("content[0].idNumber").value("202687453"))
+                .andExpect(jsonPath("content[0].phoneNumber").value("0982009465"))
+                .andExpect(jsonPath("content[0].nameMovieFilm").value("Mai"))
+                .andExpect(jsonPath("content[0].scheduleTime").value("10:30:00"))
+                .andExpect(jsonPath("content[0].dateBooking").value("2024-03-01T20:30:30"))
+
+                .andExpect(jsonPath("content[1].nameCustomer").value("van do"))
+                .andExpect(jsonPath("content[1].bookingCode").value(2))
+                .andExpect(jsonPath("content[1].idNumber").value("202687453"))
+                .andExpect(jsonPath("content[1].phoneNumber").value("0982009465"))
+                .andExpect(jsonPath("content[1].nameMovieFilm").value("The Flash"))
+                .andExpect(jsonPath("content[1].scheduleTime").value("08:45:00"))
+                .andExpect(jsonPath("content[1].dateBooking").value("2024-04-01T20:30:30"));
+    }
+
+    @Test
+    public void searchBookingParameterDate_11() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/booking/searchDate/{date}", "2024-03-01"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
 
 }

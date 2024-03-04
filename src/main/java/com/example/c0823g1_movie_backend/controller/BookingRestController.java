@@ -69,7 +69,7 @@ public class BookingRestController {
     private MailConfig mailConfig;
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 2) Pageable pageable ) {
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 4) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         if (listBookingTicket.isEmpty()) {
