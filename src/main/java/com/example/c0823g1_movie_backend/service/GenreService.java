@@ -5,6 +5,8 @@ import com.example.c0823g1_movie_backend.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GenreService implements IGenreService {
     @Autowired
@@ -13,6 +15,11 @@ public class GenreService implements IGenreService {
     @Override
     public Iterable<Genre> getListMovieHasGenreById(Long id) {
         return genreRepository.getListMovieHasGenreById(id);
+    }
+
+    @Override
+    public List<Genre> getAll() {
+        return genreRepository.getAll();
     }
 
 }

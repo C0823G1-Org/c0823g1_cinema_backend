@@ -1,8 +1,12 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.*;
+import com.example.c0823g1_movie_backend.model.Genre;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.model.Version;
+import com.example.c0823g1_movie_backend.service.IGenreService;
 import com.example.c0823g1_movie_backend.service.IMovieService;
+import com.example.c0823g1_movie_backend.service.IVersionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,10 @@ import java.util.Set;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
+    @Autowired
+    private IGenreService genreService;
+    @Autowired
+    private IVersionService versionService;
     /*    Create by: BaoLVN
      *     Date created : 29/02/2024
      *     Function: Get a list of movies with many views
@@ -131,6 +139,20 @@ public class MovieRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 04/03/2024
+     * Function: return all the attributes that get data from database
+     *
+     * @return HTTPStatus.OK
+     */
+    @GetMapping("/attributes")
+    public ResponseEntity<MovieAttributeDTO> getAllAttributes() {
+        List<Genre> genres = genreService.getAll();
+        List<Version> versions = versionService.getAll();
+        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions), HttpStatus.OK);
     }
 
     /**

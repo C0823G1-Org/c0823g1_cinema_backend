@@ -21,7 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class movieRestController_edit {
+
+public class MovieRestController_create {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -46,8 +47,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -56,7 +55,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -84,8 +83,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -94,7 +91,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -121,8 +118,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -131,7 +126,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -158,8 +153,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -168,7 +161,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -195,8 +188,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -205,7 +196,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -232,8 +223,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -242,7 +231,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -269,8 +258,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -279,7 +266,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -306,8 +293,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -316,7 +301,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -343,8 +328,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -353,7 +336,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -380,8 +363,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -390,7 +371,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -417,8 +398,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -427,7 +406,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -454,8 +433,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -464,7 +441,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -491,8 +468,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -501,7 +476,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -528,8 +503,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -538,7 +511,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -565,8 +538,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -575,7 +546,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -602,8 +573,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -612,7 +581,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -639,8 +608,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -649,7 +616,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -676,8 +643,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -686,7 +651,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -713,8 +678,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -723,7 +686,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -750,8 +713,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -760,7 +721,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -788,8 +749,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -798,7 +757,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -825,8 +784,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -835,7 +792,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -862,8 +819,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -872,7 +827,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -899,8 +854,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -909,7 +862,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -936,8 +889,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -946,7 +897,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -973,8 +924,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -983,7 +932,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -1010,8 +959,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -1020,7 +967,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -1047,8 +994,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
 //        scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -1057,7 +1002,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -1084,8 +1029,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
 //        scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -1094,7 +1037,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -1121,8 +1064,6 @@ public class movieRestController_edit {
         movieDTO.setTicketPrice(150000);
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
 //        scheduleDTO.setHall(1L);
@@ -1131,82 +1072,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
-                        .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-
-    /**
-     * Created by: LamNT
-     * Created date: 04/03/2024
-     * Test movie's id not found
-     */
-    @Test
-    public void createMovie_name31() throws Exception {
-        MovieDTO movieDTO = new MovieDTO();
-        movieDTO.setName("The Dark Knight");
-        movieDTO.setActor("Christian Bale, Heath Ledger");
-        movieDTO.setCountry("USA");
-        movieDTO.setDuration(120);
-        movieDTO.setDirector("Christopher Nolan");
-        movieDTO.setPoster("");
-        movieDTO.setPublisher("Warner Bros.");
-        movieDTO.setTrailer("[Trailer]");
-        movieDTO.setStartDate(LocalDate.of(2024, 3, 9));
-        movieDTO.setTicketPrice(150000);
-        movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(9999L);
-        scheduleDTO.setMovie(1L);
-        scheduleDTO.setScheduleTime(1L);
-        scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
-        scheduleDTO.setHall(1L);
-        Set<ScheduleDTO> scheduleDTOSet = new HashSet<>();
-        scheduleDTOSet.add(scheduleDTO);
-        MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
-
-        this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
-                        .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-
-
-    /**
-     * Created by: LamNT
-     * Created date: 04/03/2024
-     * Test schedule's movie id not found
-     */
-    @Test
-    public void createMovie_name32() throws Exception {
-        MovieDTO movieDTO = new MovieDTO();
-        movieDTO.setName("The Dark Knight");
-        movieDTO.setActor("Christian Bale, Heath Ledger");
-        movieDTO.setCountry("USA");
-        movieDTO.setDuration(120);
-        movieDTO.setDirector("Christopher Nolan");
-        movieDTO.setPoster("");
-        movieDTO.setPublisher("Warner Bros.");
-        movieDTO.setTrailer("[Trailer]");
-        movieDTO.setStartDate(LocalDate.of(2024, 3, 9));
-        movieDTO.setTicketPrice(150000);
-        movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(99999L);
-        scheduleDTO.setScheduleTime(1L);
-        scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
-        scheduleDTO.setHall(1L);
-        Set<ScheduleDTO> scheduleDTOSet = new HashSet<>();
-        scheduleDTOSet.add(scheduleDTO);
-        MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
-
-        this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -1233,8 +1099,6 @@ public class movieRestController_edit {
         movieDTO.setTrailer("[Trailer link]");
         movieDTO.setDescription("When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.");
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        movieDTO.setId(1L);
-        scheduleDTO.setMovie(1L);
         scheduleDTO.setScheduleTime(1L);
         scheduleDTO.setDate(LocalDate.parse("2024-03-08"));
         scheduleDTO.setHall(1L);
@@ -1243,7 +1107,7 @@ public class movieRestController_edit {
         MovieRequestBodyDTO movieRequestBodyDTO = new MovieRequestBodyDTO(movieDTO, scheduleDTOSet);
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/movie/edit")
+                        .post("/movie/create")
                         .content(this.objectMapper.writeValueAsString(movieRequestBodyDTO))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
