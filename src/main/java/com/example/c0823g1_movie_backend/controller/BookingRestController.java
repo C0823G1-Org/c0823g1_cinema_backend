@@ -12,12 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,13 +43,13 @@ public class BookingRestController {
     @Autowired
     private MailConfig mailConfig;
 
-    @GetMapping("historyBooking/{id}")
-    public ResponseEntity<List<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
+    @GetMapping("historyBooking/{id}/{number}")
+    public ResponseEntity<List<HistoryBookingDTO>> historyMovie(@PathVariable Long id, @PathVariable int number) {
         Account account = accountService.findAccountById(id);
         if (account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        List<HistoryBookingDTO> list = iBookingService.historyBooking(id);
+        List<HistoryBookingDTO> list = iBookingService.historyBooking(id, number);
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -81,9 +80,9 @@ public class BookingRestController {
     }
 
 
-    @GetMapping("searchMovieBooking/{id}/{start}/{end}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable("id") Long id, @PathVariable("start") LocalDateTime startDate, @PathVariable("end") LocalDateTime endDate) {
-        List<HistoryBookingDTO> list = iBookingService.searchBookingByDate(id, startDate, endDate);
+    @GetMapping("searchMovieBooking/{id}/{start}/{end}/{pages}")
+    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable("id") Long id, @PathVariable("start") LocalDateTime startDate, @PathVariable("end") LocalDateTime endDate, @PathVariable("pages") int page) {
+        List<HistoryBookingDTO> list = iBookingService.searchBookingByDate(id, startDate, endDate, page);
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

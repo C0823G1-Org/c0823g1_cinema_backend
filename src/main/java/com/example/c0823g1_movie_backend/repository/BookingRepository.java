@@ -18,12 +18,24 @@ import java.util.List;
 @Transactional
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Modifying
-    @Query(value = "SELECT m.name AS nameMovie, b.dateBooking AS dateBooking, SUM(m.ticketPrice * t.seatNumber) AS price FROM Booking b INNER JOIN Ticket t ON b.id = t.booking.id INNER JOIN Schedule s ON t.schedule.id = s.id INNER JOIN Movie m ON s.movie.id = m.id WHERE b.account.id = :id GROUP BY m.name, b.dateBooking")
-    List<HistoryBookingDTO> getListMovieByHistoryBooking(@Param("id") Long id);
+    @Query(value = "SELECT movie.name AS nameMovie, booking.date_booking AS dateBooking, movie.ticket_price * ticket.seat_number AS price \n" +
+            "FROM booking \n" +
+            "JOIN ticket ON booking.id = ticket.booking_id \n" +
+            "JOIN schedule ON ticket.schedule_id = schedule.id \n" +
+            "JOIN movie ON schedule.movie_id = movie.id \n" +
+            "WHERE booking.account_id = :id " +
+            "limit :number, 5", nativeQuery = true)
+    List<HistoryBookingDTO> getListMovieByHistoryBooking(@Param("id") Long id, @Param("number") int number);
+
 
     @Modifying
-    @Query(value = "SELECT m.name AS nameMovie, b.dateBooking AS dateBooking FROM Booking b INNER JOIN Ticket t ON b.id = t.booking.id INNER JOIN Schedule s ON t.schedule.id = s.id INNER JOIN Movie m ON s.movie.id = m.id WHERE b.account.id = :id and b.dateBooking BETWEEN :dateStart and  :dateEnd ORDER BY b.dateBooking DESC")
-    List<HistoryBookingDTO> searchMovieBookingByDate(@Param("id") Long id, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd);
+    @Query(value = "select movie.name as nameMovie, booking.date_booking as dateBooking, movie.ticket_price * ticket.seat_number AS price \n" +
+            "from booking\n" +
+            "join ticket on booking.id = ticket.booking_id\n" +
+            "join schedule on ticket.schedule_id = schedule.id\n" +
+            "join movie on schedule.movie_id = movie.id\n" +
+            "where booking.account_id = :id and booking.date_booking between :dateStart and :dateEnd limit :page,5", nativeQuery = true)
+    List<HistoryBookingDTO> searchMovieBookingByDate(@Param("id") Long id, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, @Param("page") int page);
 
     @Query(value =
             " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +

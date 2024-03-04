@@ -20,13 +20,13 @@ public class BookingService implements IBookingService {
     private BookingRepository bookingRepository;
 
     @Override
-    public List<HistoryBookingDTO> historyBooking(Long id) {
-        return bookingRepository.getListMovieByHistoryBooking(id);
+    public List<HistoryBookingDTO> historyBooking(Long id, int number) {
+        return bookingRepository.getListMovieByHistoryBooking(id, number);
     }
 
     @Override
-    public List<HistoryBookingDTO> searchBookingByDate(Long id,LocalDateTime startDate, LocalDateTime endDate) {
-        return bookingRepository.searchMovieBookingByDate(id,startDate, endDate);
+    public List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page) {
+        return bookingRepository.searchMovieBookingByDate(id, startDate, endDate, page);
     }
 
     public List<IBookingDTO> findAllBookingTicket(LocalDateTime time) {

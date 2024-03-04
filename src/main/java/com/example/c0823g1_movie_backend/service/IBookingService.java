@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IBookingService {
-    List<HistoryBookingDTO> historyBooking(Long id);
+    List<HistoryBookingDTO> historyBooking(Long id, int number);
 
-    List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate);
+    List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page);
 
     List<IBookingDTO> findAllBookingTicket(LocalDateTime time);
 

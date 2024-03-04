@@ -25,8 +25,8 @@ public class BookingRestController_historyMovie {
 
     @Test
     public void getHistoryMovie_id_7() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}",
-                (Object) null)).andDo(print()).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}",
+                (Object) null,1)).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
@@ -36,7 +36,7 @@ public class BookingRestController_historyMovie {
      */
     @Test
     public void getHistoryMovie_id_8() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}", "")).andDo(print()).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}", "",1)).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
@@ -46,7 +46,7 @@ public class BookingRestController_historyMovie {
      */
     @Test
     public void getHistoryMovie_id_9() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}", 50)).andDo(print()).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}", 50,1)).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
@@ -56,7 +56,7 @@ public class BookingRestController_historyMovie {
      */
     @Test
     public void getHistoryMovie_id_10() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}", 1)).andDo(print()).andExpect(status().is2xxSuccessful());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}", 1,1)).andDo(print()).andExpect(status().is2xxSuccessful());
     }
 
     /**
@@ -66,6 +66,15 @@ public class BookingRestController_historyMovie {
      */
     @Test
     public void getHistoryMovie_id_11() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}", 2)).andDo(print()).andExpect(status().is2xxSuccessful());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}", 2,1)).andDo(print()).andExpect(status().is2xxSuccessful());
+    }
+    /**
+     * This function checks if ID exists and no has data because page does not exist
+     *
+     * @author: TuanNM
+     */
+    @Test
+    public void getHistoryMovie_id_99() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/historyBooking/{id}/{number}", 2,1000)).andDo(print()).andExpect(status().is2xxSuccessful());
     }
 }

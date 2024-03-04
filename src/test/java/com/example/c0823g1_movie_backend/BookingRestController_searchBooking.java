@@ -20,35 +20,35 @@ public class BookingRestController_searchBooking {
     private MockMvc mockMvc;
 
     /**
-     * This function checks if StartDate, EndDate and Id is null
+     * This function checks if StartDate, EndDate and Id is null page is null
      *
      * @author: TuanNM
      */
     @Test
     public void getListHistorySearch_99() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", null, null, null))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", null, null, null,null))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
-     * This function checks if StartDate , EndDate and Id is empty
+     * This function checks if StartDate , EndDate and Id is empty page is empty
      *
      * @author: TuanNM
      */
     @Test
     public void getListHistorySearch_98() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", "", "", ""))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", "", "", "", ""))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
-     * This function checks if StartDate and EndDate and ID but no data
+     * This function checks if StartDate and EndDate and ID but no data page is exist
      *
      * @author: TuanNM
      */
     @Test
     public void getListHistorySearch_97() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, "2024-03-02T09:10:48.829116228", "2024-03-03T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, "2024-03-02T09:10:48.829116228", "2024-03-03T09:10:48.829116228",1))
                 .andDo(print()).andExpect(status().isNoContent());
     }
 
@@ -59,7 +59,7 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_96() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, "2024-02-02T09:10:48.829116228", "2024-03-01T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, "2024-02-02T09:10:48.829116228", "2024-03-01T09:10:48.829116228",1))
                 .andDo(print()).andExpect(status().is2xxSuccessful());
     }
 
@@ -70,29 +70,29 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_95() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", null, "2024-02-02T09:10:48.829116228", "2024-03-01T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", null, "2024-02-02T09:10:48.829116228", "2024-03-01T09:10:48.829116228",1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
-     * This function checks if id not null but startDate and endDate is empty
+     * This function checks if id not null but startDate and endDate is empty page is empty
      *
      * @author: TuanNM
      */
     @Test
     public void getListHistorySearch_94() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, "", ""))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, "", "",""))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 
     /**
-     * This function checks if id not null but startDate and endDate is empty
+     * This function checks if id not null but startDate and endDate is empty page is exist
      *
      * @author: TuanNM
      */
     @Test
     public void getListHistorySearch_93() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, "2024-02-02T09:10:48.829116228", ""))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, "2024-02-02T09:10:48.829116228", "", 1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 
@@ -103,7 +103,7 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_92() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, null, null))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, null, null, 1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
     /**
@@ -113,7 +113,7 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_91() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", null, "2024-02-02T09:10:48.829116228", "2024-03-02T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", null, "2024-02-02T09:10:48.829116228", "2024-03-02T09:10:48.829116228", 1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
     /**
@@ -123,7 +123,7 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_90() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", null, null, "2024-03-02T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", null, null, "2024-03-02T09:10:48.829116228", 1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
     /**
@@ -133,7 +133,7 @@ public class BookingRestController_searchBooking {
      */
     @Test
     public void getListHistorySearch_89() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}", 2, null, "2024-03-02T09:10:48.829116228"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/booking/searchMovieBooking/{id}/{start}/{end}/{page}", 2, null, "2024-03-02T09:10:48.829116228", 1))
                 .andDo(print()).andExpect(status().is4xxClientError());
     }
 }
