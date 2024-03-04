@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class C0823G1MovieRestController_accountStatistics {
+public class C0823G1AccountRestController_accountStatistics {
     @Autowired
     private MockMvc mockMvc;
 
@@ -21,7 +21,7 @@ public class C0823G1MovieRestController_accountStatistics {
      * @Time 6:13pm 03/03/24
      */
     @Test
-    public void movieStatistics_5() throws Exception {
+    public void accountStatistics_5() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/account/statistics"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
@@ -32,7 +32,7 @@ public class C0823G1MovieRestController_accountStatistics {
      * @Time 6:13pm 03/03/24
      */
     @Test
-    public void movieStatistics_nonEmptyList() throws Exception {
+    public void accountStatistics_nonEmptyList() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/account/statistics"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
