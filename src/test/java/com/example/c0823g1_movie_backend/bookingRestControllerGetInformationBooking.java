@@ -23,6 +23,7 @@ public class bookingRestControllerGetInformationBooking {
                                 .get("/booking/exportDetail/" ))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+
     }
 
     @Test
