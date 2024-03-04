@@ -36,6 +36,14 @@ public class MovieController_deleteMovie {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+    @Test
+    public void deleteMovieById_262() throws Exception {
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .patch("/movie/delete/{id}",null ))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
 
     /**
      * This method is used to test for function deleteMovie.

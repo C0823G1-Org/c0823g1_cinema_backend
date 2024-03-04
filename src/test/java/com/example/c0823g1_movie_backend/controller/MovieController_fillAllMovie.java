@@ -368,7 +368,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(162))
                 .andExpect(jsonPath("content[5].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[5].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[5].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
 
@@ -395,7 +395,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(162))
                 .andExpect(jsonPath("content[5].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[5].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[5].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
 
@@ -710,7 +710,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(152))
                 .andExpect(jsonPath("content[3].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[3].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[3].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[3].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[3].duration").value(142));
     }
 
@@ -737,7 +737,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(152))
                 .andExpect(jsonPath("content[3].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[3].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[3].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[3].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[3].duration").value(142));
     }
 
@@ -764,7 +764,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(162))
                 .andExpect(jsonPath("content[5].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[5].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[5].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
 
@@ -791,7 +791,7 @@ public class MovieController_fillAllMovie {
                 .andExpect(jsonPath("content[0].duration").value(162))
                 .andExpect(jsonPath("content[5].name").value("The Shawshank Redemption"))
                 .andExpect(jsonPath("content[5].publisher").value("Warner Bros."))
-                .andExpect(jsonPath("content[5].startDate").value("1994-10-14"))
+                .andExpect(jsonPath("content[5].startDate").value("2004-10-14"))
                 .andExpect(jsonPath("content[5].duration").value(142));
     }
 
