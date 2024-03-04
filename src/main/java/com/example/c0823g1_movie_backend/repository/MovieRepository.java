@@ -1,9 +1,9 @@
 package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -75,12 +75,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "group by m.name\n", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrent();
 
-
-    @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " +
-            "where (name like :name or publisher like :publisher) and start_date BETWEEN :startDate AND :endDate and is_deleted = 0 ", nativeQuery = true)
-    Page<Movie> searchMovieByNameAndPublisher(@Param("name") String name, @Param("publisher") String publisher
+    @Query(value = "select m.id, m.name, m.start_date as startDate, m.publisher, m.duration,group_concat( v.name separator ', ' ) as versions \n" +
+            "from movie m\n" +
+            "join movie_has_version mv  on mv.movie_id = m.id\n" +
+            "join version v on v.id = mv.version_id  \n" +
+            "where (m.name like :name or m.publisher like :publisher) and m.start_date BETWEEN :startDate  AND :endDate and m.is_deleted = 0\n" +
+            "group by m.id", nativeQuery = true)
+    Page<IMovieListDTO> searchMovieByNameAndPublisher(@Param("name") String name, @Param("publisher") String publisher
             , @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, Pageable pageable);
-
     @Transactional
     @Modifying
     @Query(value = "UPDATE movie SET is_deleted = 1 where id  =:id", nativeQuery = true)
