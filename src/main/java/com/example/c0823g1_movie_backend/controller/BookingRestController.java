@@ -77,9 +77,9 @@ public class BookingRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
-
+    }
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 2) Pageable pageable ) {
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@PageableDefault(size = 2) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         if (listBookingTicket.isEmpty()) {
@@ -88,10 +88,6 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket,HttpStatus.OK);
     }
 
-    @GetMapping("historyBooking/{id}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> historyMovie(@PathVariable Long id) {
-        return new ResponseEntity<>(iBookingService.historyBooking(id), HttpStatus.OK);
-    }
 
     /*
      * Create by TuanNM
