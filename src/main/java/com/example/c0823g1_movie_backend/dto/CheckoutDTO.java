@@ -6,6 +6,15 @@ public class CheckoutDTO {
     private Long accountId;
     private Long scheduleId;
     private List<Integer> seatNumber;
+    private Long totalAmount;
+
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public CheckoutDTO() {
     }

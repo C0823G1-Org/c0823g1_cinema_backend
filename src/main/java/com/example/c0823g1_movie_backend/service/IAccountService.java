@@ -35,4 +35,5 @@ public interface IAccountService extends IGeneralService<Account>{
     String getRoleUserEmail(Account account);
 
     Account findAccountById(Long accountId);
+
 }

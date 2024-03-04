@@ -14,6 +14,50 @@ public class BookingDTO {
 
     private String email;
 
+    private Long accountId;
+    private Long scheduleId;
+
+    public BookingDTO(String image, String movieName, String screen, String date, String time, List<String> seat, Integer price, Long sum, String email, Long accountId, Long scheduleId, List<Integer> seatNumber) {
+        this.image = image;
+        this.movieName = movieName;
+        this.screen = screen;
+        this.date = date;
+        this.time = time;
+        this.seat = seat;
+        this.price = price;
+        this.sum = sum;
+        this.email = email;
+        this.accountId = accountId;
+        this.scheduleId = scheduleId;
+        this.seatNumber = seatNumber;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public Long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Long scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
+    public List<Integer> getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(List<Integer> seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    private List<Integer> seatNumber;
+
     public String getEmail() {
         return email;
     }

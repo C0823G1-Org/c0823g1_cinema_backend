@@ -5,6 +5,7 @@ import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
+import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,71 +98,90 @@ public class BookingRestController {
      */
     @PostMapping("/confirm")
     public ResponseEntity<BookingDTO> returnInformationTicketBooking(@RequestBody TicketDTO ticket) {
-        System.out.println("abc");
-        Optional<Movie> movie = Optional.ofNullable(movieService.findMovieById(ticket.getIdMovie()));
-        Optional<Schedule> schedule = scheduleService.getScheduleById(ticket.getScheduleId());
-        List<Integer> seatList = ticket.getSeatList();
+        if (ticket == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            if (ticket.getIdMovie() == null || ticket.getAccountId() == null || ticket.getScheduleId() == null || ticket.getSeatList().isEmpty()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else {
+                Movie movie = movieService.findMovieById(ticket.getIdMovie());
+                Optional<Schedule> schedule = scheduleService.getScheduleById(ticket.getScheduleId());
+                Account account = accountService.findAccountById(ticket.getAccountId());
 
-        String image = movie.get().getPoster();
-        String movieName = movie.get().getName();
-        String screen = schedule.get().getHall().getName();
-        LocalDate date = schedule.get().getDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String movieDate = date.format(formatter);
-        LocalTime time = schedule.get().getScheduleTime().getScheduleTime();
-        List<String> seat = new ArrayList<>();
+                if (movie == null || schedule.isEmpty()|| account == null){
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                List<Integer> seatList = ticket.getSeatList();
+                String image = movie.getPoster();
+                String movieName = movie.getName();
+                String screen = schedule.get().getHall().getName();
+                LocalDate date = schedule.get().getDate();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String movieDate = date.format(formatter);
+                LocalTime time = schedule.get().getScheduleTime().getScheduleTime();
+                List<String> seat = new ArrayList<>();
 
-        for (Integer s: seatList) {
-            String result = "";
-            String ss = s.toString();
-            if (s<=10){
-                result = "A" + s;
-            }else if (s<=20){
-                if (s==20){
-                    result = "B10";
-                }else {
-                    result = "B" + ss.charAt(ss.length()-1);
+                for (Integer s: seatList) {
+                    if (s>schedule.get().getHall().getTotalSeat() || s<0){
+                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    }
+                    String result = "";
+                    String ss = s.toString();
+                    if (s<=10){
+                        result = "A" + s;
+                    }else if (s<=20){
+                        if (s==20){
+                            result = "B10";
+                        }else {
+                            result = "B" + ss.charAt(ss.length()-1);
+                        }
+
+                    }else if (s<=30){
+                        if (s==30){
+                            result = "C10";
+                        }else {
+                            result = "C" + ss.charAt(ss.length()-1);
+                        }
+                    }else if (s<=40){
+                        if (s==40){
+                            result = "D10";
+                        }else {
+                            result = "D" + ss.charAt(ss.length()-1);
+                        }
+                    }else if (s<=50){
+                        if (s==50){
+                            result = "E10";
+                        }else {
+                            result = "E" + ss.charAt(ss.length()-1);
+                        }
+                    }
+
+                    seat.add(result);
                 }
 
-            }else if (s<=30){
-                if (s==30){
-                    result = "C10";
-                }else {
-                    result = "C" + ss.charAt(ss.length()-1);
-                }
-            }else if (s<=40){
-                if (s==40){
-                    result = "D10";
-                }else {
-                    result = "D" + ss.charAt(ss.length()-1);
-                }
-            }else if (s<=50){
-                if (s==50){
-                    result = "E10";
-                }else {
-                    result = "E" + ss.charAt(ss.length()-1);
-                }
+                Integer price = movie.getTicketPrice();
+
+                Long sum = ((long) seatList.size() * price);
+
+                String timeStart = time.toString().substring(0,5);
+                System.out.println(timeStart);
+
+                String email = account.getEmail();
+
+                Long accountId = ticket.getAccountId();
+                Long scheduleId = ticket.getScheduleId();
+                List<Integer> seatNumber = ticket.getSeatList();
+
+
+                BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum,email,accountId,scheduleId,seatNumber);
+
+
+
+                return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
             }
 
-            seat.add(result);
         }
 
-        Integer price = movie.get().getTicketPrice();
-
-        Long sum = (long) (seat.size() * price);
-
-        String timeStart = time.toString().substring(0,5);
-        System.out.println(timeStart);
-
-        Account account = accountService.findAccountById(ticket.getAccountId());
-        String email = account.getEmail();
-
-
-        BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum,email);
-
-
-
-        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
     }
 
 
@@ -175,19 +195,45 @@ public class BookingRestController {
     @PostMapping ("/checkout")
     public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO){
         LocalDateTime date = LocalDateTime.now();
+        if (checkoutDTO == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (checkoutDTO.getScheduleId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getSeatNumber() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Optional<Schedule> schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId());
+        Account account = accountService.findAccountById(checkoutDTO.getAccountId());
+        if (schedule.isEmpty() || account == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         iBookingService.saveBooking(checkoutDTO.getAccountId(),date);
         Integer id = iBookingService.getBooking();
         Long scheduleId = checkoutDTO.getScheduleId();
+        List<Ticket> checkExist;
         for (Integer seat : checkoutDTO.getSeatNumber()) {
-            ticketService.saveTicket(seat,id,scheduleId);
+            checkExist = ticketService.checkExist(seat,scheduleId);
+            if (checkExist.isEmpty()){
+                ticketService.saveTicket(seat,id,scheduleId);
+            }else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
-        Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
-        Account account = accountService.findAccountById(checkoutDTO.getAccountId());
-        String email = account.getEmail();
+        System.out.println("abc");
+        if (checkoutDTO.getTotalAmount() <= 0 || checkoutDTO.getTotalAmount() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        int accumulatedPoints =(int) Math.floor((checkoutDTO.getTotalAmount() * 3) /100);
+        iBookingService.addAccumulatedPoints(account.getId(),accumulatedPoints);
+        System.out.println(account.getId());
+        System.out.println(accumulatedPoints);
+
         String seat = "";
 
 
         for (Integer s: checkoutDTO.getSeatNumber()) {
+            if (s>schedule.get().getHall().getTotalSeat() || s< 0){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             String result = "";
             String ss = s.toString();
             if (s<=10){
@@ -219,58 +265,12 @@ public class BookingRestController {
                 }
             }
 
-            seat += result;
+            seat = seat +  result + " " ;
         }
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
-        mailMessage.setSubject("Bạn đã đặt vé xem phim thành công");
-        String content = "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <title>Document</title>\n" +
-                "</head>\n" +
-                "\n" +
-                "<body style=\"width: 80%;;margin-left: 10%;\">\n" +
-                "    <img style=\"width: 50%;height: 30%;margin-left: 25%;\"\n" +
-                "        src=\""+ schedule.getMovie().getPoster() +"\" alt=\"Madame Web\n" +
-                "    \n" +
-                "    Xem thêm tại: https://www.galaxycine.vn/\">\n" +
-                "    <table style=\"width: 100%;padding-left: 20%;\">\n" +
-                "        <tr>\n" +
-                "            <td>Phòng chiếu</th>\n" +
-                "            <td>"+schedule.getHall().getName()+"</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Ngày chiếu</th>\n" +
-                "            <td>"+schedule.getDate()+"</td>\n" +
-                "        </tr>\n" +
-                "\n" +
-                "        <tr>\n" +
-                "            <td>Giờ chiếu</th>\n" +
-                "            <td>"+ schedule.getScheduleTime().getScheduleTime()+"</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Ghế </th>\n" +
-                "            <td>"+
-                seat
-                +"</td>\n" +
-                "        </tr>\n" +
-                "    </table>\n" +
-                "    <img style=\"width: 30%;height: 30%;margin-left: 35%;\"\n" +
-                "        src=\"https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSh-wrQu254qFaRcoYktJ5QmUhmuUedlbeMaQeaozAVD4lh4ICsGdBNubZ8UlMvWjKC\"\n" +
-                "        alt=\"\">\n" +
-                "</body>\n" +
-                "\n" +
-                "</html>";
-        mailMessage.setText(content);
-        mailConfig.getJavaMailSender().send(mailMessage);
+        iBookingService.sendMail(checkoutDTO.getAccountId(),checkoutDTO.getScheduleId(),seat,id);
 
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
