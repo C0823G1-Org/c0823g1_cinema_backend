@@ -483,7 +483,7 @@ public class movieRestController_edit {
         movieDTO.setActor("Christian Bale, Heath Ledger");
         movieDTO.setCountry("USA");
         movieDTO.setDuration(120);
-        movieDTO.setDirector("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        movieDTO.setDirector("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean ma");
         movieDTO.setPoster("[Poster link]");
         movieDTO.setPublisher("Warner Bros.");
         movieDTO.setTrailer("[Trailer link]");
