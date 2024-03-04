@@ -126,7 +126,7 @@ public class BookingRestController {
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
-    
+
     /* Created by: DoLV
      * Date created: 03/03/2024
      * Function: Display the list and paginate ticket bookings by search operation, with parameters date and search as the entered values.
@@ -163,7 +163,6 @@ public class BookingRestController {
             if (!iBookingDTO.getPrintStatus()){
                 return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
             } else {
-                System.out.println("thay roi");
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
 
                 return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
@@ -200,9 +199,7 @@ public class BookingRestController {
                             document.open();
                             document.newPage();
                             addBackgroundAndContent(writer, document, temp);
-
                         document.close();
-
                     } catch (DocumentException e) {
                         throw new RuntimeException(e);
                     } catch (FileNotFoundException e) {
@@ -211,33 +208,26 @@ public class BookingRestController {
                         throw new RuntimeException(e);
                     }
                 }
-
-
                 return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
             }
         }
     }
 
-
     /* Created by: DoLV
      * Date created: February 29, 2024
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
+
     private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
         Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
-
-
         float documentWidth = document.getPageSize().getWidth();
         float documentHeight = document.getPageSize().getHeight();
-
         float width = 680;
         float height = 400;
-
         background.scaleToFit(width, height);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
-
         background.setAbsolutePosition(0,0);
         Rectangle rectBackground = new Rectangle(
                 documentWidth ,
@@ -246,9 +236,7 @@ public class BookingRestController {
         rectBackground.setBorder(Rectangle.BOX);
         rectBackground.setBorderWidth(1);
         canvas.rectangle(rectBackground);
-
         canvas.addImage(background);
-
         BaseColor color = BaseColor.BLACK;
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
 //        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, color);
@@ -260,7 +248,6 @@ public class BookingRestController {
         float yTable = yBackground - 70;
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
-
         table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDateTime = ticket.getStartTime().format(formatter);
@@ -271,10 +258,8 @@ public class BookingRestController {
         table.addCell(createCell("Room Number: " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-
         document.add(table);
     }
-
     private PdfPCell createCell(String content, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setBorder(Rectangle.NO_BORDER);
