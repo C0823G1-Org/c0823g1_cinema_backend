@@ -193,7 +193,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "WHERE " +
             "a.is_deleted = 0 " +
             "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
-            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC " +
+            "LIMIT 50",
             nativeQuery = true)
     Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
