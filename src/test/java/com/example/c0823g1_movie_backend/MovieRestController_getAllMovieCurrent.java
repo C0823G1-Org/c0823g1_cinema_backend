@@ -27,6 +27,7 @@ public class MovieRestController_getAllMovieCurrent {
                 andDo(print())
                 .andExpect(status().is4xxClientError());
     }
+
     /**
      * Author: BaoLVN.
      * This method is used to test for function getAllMovieCurrent (return list movies)

@@ -28,14 +28,14 @@ public class MovieRestController_searchMovies {
        mockMvc.perform(MockMvcRequestBuilders.get("/movie/search?name=a&page=0"))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("totalPages").value(1))
-                .andExpect(jsonPath("totalElements").value(6))
-                .andExpect(jsonPath("content[0].description").value("b"))
-                .andExpect(jsonPath("content[0].name").value("Naru"))
-                .andExpect(jsonPath("content[0].poster").value("b"))
-                .andExpect(jsonPath("content[5].description").value("o"))
-                .andExpect(jsonPath("content[5].name").value("Bao"))
-                .andExpect(jsonPath("content[5].poster").value("o"));
+                .andExpect(jsonPath("totalPages").value(2))
+               .andExpect(jsonPath("totalElements").value(6))
+               .andExpect(jsonPath("content[0].description").value("b"))
+               .andExpect(jsonPath("content[0].name").value("Naru"))
+               .andExpect(jsonPath("content[0].poster").value("b"))
+               .andExpect(jsonPath("content[3].description").value("k"))
+               .andExpect(jsonPath("content[3].name").value("Dai"))
+               .andExpect(jsonPath("content[3].poster").value("k"));
     }
 
     /**
@@ -60,7 +60,7 @@ public class MovieRestController_searchMovies {
         mockMvc.perform(MockMvcRequestBuilders.get("/movie/search?page=0&name="))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("totalPages").value(2))
+                .andExpect(jsonPath("totalPages").value(4))
                 .andExpect(jsonPath("totalElements").value(13))
                 .andExpect(jsonPath("content[0].description").value("a"))
                 .andExpect(jsonPath("content[0].name").value("Son"))
@@ -76,6 +76,6 @@ public class MovieRestController_searchMovies {
     public void searchMovies_7() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/movie/search?page=0"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
     }
 }
