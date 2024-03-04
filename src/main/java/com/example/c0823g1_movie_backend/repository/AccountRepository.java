@@ -164,11 +164,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query(value = "select * from account",nativeQuery = true)
     List<Account> getAllAccount();
 
-    @Query(value = "select a.* from account a where a.email like :email limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.email = :email limit 1",nativeQuery = true)
     Account findAccountByEmail(@Param("email") String email);
-    @Query(value = "select a.* from account a where a.phone_number like :phone limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.phone_number = :phone limit 1",nativeQuery = true)
     Account findAccountByPhone(@Param("phone") String phone);
-    @Query(value = "select a.* from account a where a.account_name like :accountName limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.account_name = :accountName limit 1",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
 
     @Query(nativeQuery = true, value = "UPDATE account SET address=:#{#account.address}, birthday=:#{#account.birthday}, email=:#{#account.email}, full_name=:#{#account.fullName}, gender=:#{#account.gender}, id_number=:#{#account.idNumber},  phone_number=:#{#account.phoneNumber} WHERE id=:id")
