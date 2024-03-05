@@ -19,6 +19,16 @@ import java.util.List;
 @Repository
 @Transactional
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+
+    @Query(value = "select movie.name as nameMovie, booking.date_booking as dateBooking, movie.ticket_price * ticket.seat_number as price " +
+            "from booking " +
+            "join ticket on booking.id = ticket.booking_id " +
+            "join schedule on ticket.schedule_id = schedule.id " +
+            "join movie on schedule.movie_id = movie.id " +
+            "where booking.account_id = :id " +
+            "and booking.date_booking between :dateStart and :dateEnd", nativeQuery = true)
+    Page<HistoryBookingDTO> getHistory(@Param("id") Long id, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, Pageable pageable);
+
     @Modifying
     @Query(value = "SELECT movie.name AS nameMovie, booking.date_booking AS dateBooking, movie.ticket_price * ticket.seat_number AS price \n" +
             "FROM booking \n" +
