@@ -46,9 +46,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             nativeQuery = true)
     Page<MovieStatisticDTO> findTop20MoviesByRevenue(Pageable pageable);
 
-    @Query(value = "select count(b.account_id) as accountId,m.name as name, " +
-            "max(m.description )as description," +
-            "max(m.poster) as poster\n" +
+    @Query(value = "select count(b.account_id) as accountId, \n" +
+            " m.name as name, \n" +
+            " max(m.id)  as movieId,\n" +
+            " max(m.description) as description,\n" +
+            " max(m.poster) as poster\n" +
             "from booking b\n" +
             "left join ticket t on b.id = t.booking_id\n" +
             "left join `schedule` sc on t.schedule_id = sc.id\n" +
@@ -66,13 +68,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
-    @Query(value = "select count(m.id) as movieId,max(m.name) as name,\n" +
-            "max(m.description) as description\n" +
-            ", max(m.poster) as poster\n" +
+    @Query(value = "select m.id as movieId,m.name as name,\n" +
+            "m.description as description\n" +
+            ", m.poster as poster\n" +
             "from movie m \n" +
             "join schedule sc on m.id = sc.movie_id\n" +
-            "where sc.`date` = current_date\n" +
-            "group by m.name\n", nativeQuery = true)
+            "where sc.`date` = current_date\n", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrent();
 
 

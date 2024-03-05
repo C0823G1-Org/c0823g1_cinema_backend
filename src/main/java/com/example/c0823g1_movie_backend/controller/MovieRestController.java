@@ -30,11 +30,6 @@ import java.util.List;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
-    /*    Create by: BaoLVN
-     *     Date created : 29/02/2024
-     *     Function: Get a list of movies with many views
-     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
-     * */
 
     /**
      * Created by DuyDD
@@ -50,6 +45,12 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get a list of movies with many views
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
