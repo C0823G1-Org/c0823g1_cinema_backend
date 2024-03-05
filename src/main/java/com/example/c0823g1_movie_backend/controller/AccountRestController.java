@@ -112,6 +112,7 @@ public class AccountRestController {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String result = EntityUtils.toString(entity);
+                System.out.println(result);
                 Gson gson = new Gson();
                 FacebookDTO facebookDTO = gson.fromJson(result, FacebookDTO.class);
                 account = convertAccount(facebookDTO);
