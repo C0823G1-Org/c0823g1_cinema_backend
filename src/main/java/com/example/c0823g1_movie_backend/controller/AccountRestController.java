@@ -312,7 +312,7 @@ public class AccountRestController {
      * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    private ResponseEntity<Page<AccountStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
+    private ResponseEntity<Page<AccountStatisticDTO>> movieStatistics(@PageableDefault(value = 11) Pageable pageable) {
         Page<AccountStatisticDTO> accountList = iAccountService.getAccountStatistic(pageable);
         if (accountList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
