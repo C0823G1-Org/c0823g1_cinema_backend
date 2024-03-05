@@ -209,8 +209,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query(value = "select a.* from account a where a.account_name = :accountName limit 1",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
 
-    @Query(nativeQuery = true, value = "UPDATE account SET address=:#{#account.address}, birthday=:#{#account.birthday}, email=:#{#account.email}, full_name=:#{#account.fullName}, gender=:#{#account.gender}, id_number=:#{#account.idNumber},  phone_number=:#{#account.phoneNumber} WHERE id=:id")
-    void updateAccount(@Param("account") Account account, Long id);
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE account SET address = :#{#account.address}, birthday = :#{#account.birthday}, email = :#{#account.email}, id_number = :#{#account.idNumber}, phone_number = :#{#account.phoneNumber} WHERE id = :id")
+    void updateAccount(@Param("account") Account account, @Param("id") Long id);
+    @Transactional
+    @Modifying
     @Query(nativeQuery = true,value = "UPDATE  account SET password = :password where account_name = :accountName")
     void updatePassword(@Param("password") String password , @Param("accountName") String accountName);
 }

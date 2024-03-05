@@ -19,7 +19,7 @@ public class ChangePasswordDto implements Validator {
     private String currentPassword;
     private String newPassword;
     private String confirmationPassword;
-    private List<Account> accounts;
+//    private List<Account> accounts;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -29,7 +29,7 @@ public class ChangePasswordDto implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ChangePasswordDto changePasswordDto = (ChangePasswordDto) target;
-        ((ChangePasswordDto) target).getAccounts();
+//        ((ChangePasswordDto) target).getAccounts();
         if (changePasswordDto.getCurrentPassword() == null || changePasswordDto.getCurrentPassword().trim().equals("")){
             errors.rejectValue("currentPassword","","Mật Khẩu Hiện Tại Không được để rỗng");
         }
