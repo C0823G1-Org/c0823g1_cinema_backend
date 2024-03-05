@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

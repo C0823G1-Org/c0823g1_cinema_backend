@@ -8,21 +8,37 @@ import com.example.c0823g1_movie_backend.model.Movie;
 
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface IBookingService {
+    Page<HistoryBookingDTO> getHistory(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Pageable pageable);
+
+    List<HistoryBookingDTO> historyBooking(Long id, int number);
+
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time);
 
-    Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time,Pageable pageable);
+    Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time, Pageable pageable);
 
-    IBookingDTO findBookingTicketById(Integer id);
+    IBookingDTO findBookingTicketById(Long id);
 
-    List<IBookingDTO> listBookingTicketDetail(Integer id);
-    List<HistoryBookingDTO> historyBooking(Long id);
+    List<IBookingDTO> listBookingTicketDetail(Long id);
 
-    List<HistoryBookingDTO> searchBookingByDate(LocalDateTime startDate, LocalDateTime endDate);
+    List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page);
 
     void saveBooking(Long accountId, LocalDateTime date);
 
-    Integer getBooking();
+    Long getBooking();
+
+    void sendMail(Long accountId, Long scheduleId, String seat, Long id);
+
+    void addAccumulatedPoints(Long id, int accumulatedPoints);
+
+    void removeBooking(Long bookingId);
+
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable);
+
+    Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
+
+    void setPrintStatus(Long id);
 }

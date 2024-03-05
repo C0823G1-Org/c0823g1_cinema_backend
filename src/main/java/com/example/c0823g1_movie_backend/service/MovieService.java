@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MovieService implements IMovieService {
@@ -62,10 +64,9 @@ public class MovieService implements IMovieService {
         return movieRepository.findByIdMovie(id).get();
     }
 
-
     @Override
-    public Page<Movie> searchMovieByNameAndPublisher(String name, String publisher,
-                                                     LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher,
+                                                              LocalDate startDate, LocalDate endDate, Pageable pageable) {
         return movieRepository.searchMovieByNameAndPublisher("%" + name + "%", "%" + publisher + "%", startDate, endDate, pageable);
     }
 

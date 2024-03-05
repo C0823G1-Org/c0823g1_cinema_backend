@@ -4,5 +4,8 @@ import java.time.LocalDateTime;
 
 public interface HistoryBookingDTO {
     String getNameMovie();
+
     LocalDateTime getDateBooking();
+
+    Long getPrice();
 }
