@@ -68,12 +68,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
-    @Query(value = "select m.id as movieId,m.name as name,\n" +
-            "m.description as description\n" +
-            ", m.poster as poster\n" +
+    @Query(value = "select count(m.id) as countId,max(m.id) as movieId,\n" +
+            "max(m.name) as name,\n" +
+            "max(m.description) as description\n" +
+            ", max(m.poster) as poster\n" +
             "from movie m \n" +
             "join schedule sc on m.id = sc.movie_id\n" +
-            "where sc.`date` = current_date\n", nativeQuery = true)
+            "where sc.`date` = current_date\n" +
+            "group by m.name", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrent();
 
     @Query(value = "select m.id, m.name, m.start_date as startDate, m.publisher, m.duration,group_concat( v.name separator ', ' ) as versions \n" +
