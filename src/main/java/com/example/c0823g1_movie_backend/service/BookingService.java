@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,15 +55,16 @@ public class BookingService implements IBookingService{
         bookingRepository.saveBooking(accountId,date);
     }
 
+
+
     @Override
-    public Integer getBooking() {
+    public Long getBooking() {
         return bookingRepository.getBooking();
     }
 
     @Override
-    public void sendMail(Long accountId, Long scheduleId, String seat, Integer id) {
+    public void sendMail(Long accountId, Long scheduleId, String seat,Long id) {
         Optional<IAccountDTO> account = accountRepository.findByIdAccountDTO(accountId);
-        Integer bookingId = bookingRepository.getBooking();
         Schedule schedule = scheduleRepository.getScheduleById(scheduleId);
 
         if (account.isPresent()) {
@@ -71,11 +73,12 @@ public class BookingService implements IBookingService{
             String templateName = "email-checkout";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("seat", seat);
-            context.setVariable("code", "TB"+bookingId);
+            context.setVariable("code", "TB"+id);
             context.setVariable("screen", schedule.getHall().getName());
             context.setVariable("movie", schedule.getMovie().getName());
             context.setVariable("image", schedule.getMovie().getPoster());
-            context.setVariable("date", schedule.getDate());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            context.setVariable("date", schedule.getDate().format(formatter));
             context.setVariable("time", schedule.getScheduleTime().getScheduleTime());
             accountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
         }
@@ -84,6 +87,11 @@ public class BookingService implements IBookingService{
     @Override
     public void addAccumulatedPoints(Long id, int accumulatedPoints) {
         bookingRepository.addAccumulatedPoints(id,accumulatedPoints);
+    }
+
+    @Override
+    public void removeBooking(Long bookingId) {
+        bookingRepository.removeBooking(bookingId);
     }
 
 }

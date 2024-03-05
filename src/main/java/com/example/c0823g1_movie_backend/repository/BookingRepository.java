@@ -57,13 +57,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     @Query(value = "select max(id) from booking", nativeQuery = true)
-    Integer getBooking();
+    Long getBooking();
 
     @Modifying
     @Query(value = "update account set point = point + :point where id = :id",nativeQuery = true)
     void addAccumulatedPoints(@Param("id") Long id,@Param("point") int point);
 
 
-
+    @Modifying
+    @Query(value = "delete from booking where  id = :id",nativeQuery = true)
+    void removeBooking(@Param("id")Long bookingId);
 
 }

@@ -16,8 +16,19 @@ public class BookingDTO {
 
     private Long accountId;
     private Long scheduleId;
+    private Long bookingId;
 
-    public BookingDTO(String image, String movieName, String screen, String date, String time, List<String> seat, Integer price, Long sum, String email, Long accountId, Long scheduleId, List<Integer> seatNumber) {
+    public Long getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public BookingDTO(String image, String movieName, String screen, String date, String time,
+                      List<String> seat, Integer price, Long sum, String email, Long accountId,
+                      Long scheduleId, List<Integer> seatNumber,Long bookingId) {
         this.image = image;
         this.movieName = movieName;
         this.screen = screen;
@@ -30,6 +41,7 @@ public class BookingDTO {
         this.accountId = accountId;
         this.scheduleId = scheduleId;
         this.seatNumber = seatNumber;
+        this.bookingId = bookingId;
     }
 
     public Long getAccountId() {

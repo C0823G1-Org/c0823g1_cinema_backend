@@ -96,94 +96,6 @@ public class BookingRestController {
      * @Param ticket(idMovie,scheduleId,seatList)
      * @Return object bookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum)
      */
-    @PostMapping("/confirm")
-    public ResponseEntity<BookingDTO> returnInformationTicketBooking(@RequestBody TicketDTO ticket) {
-        if (ticket == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            if (ticket.getIdMovie() == null || ticket.getAccountId() == null || ticket.getScheduleId() == null || ticket.getSeatList().isEmpty()){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }else {
-                Movie movie = movieService.findMovieById(ticket.getIdMovie());
-                Optional<Schedule> schedule = scheduleService.getScheduleById(ticket.getScheduleId());
-                Account account = accountService.findAccountById(ticket.getAccountId());
-
-                if (movie == null || schedule.isEmpty()|| account == null){
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-                List<Integer> seatList = ticket.getSeatList();
-                String image = movie.getPoster();
-                String movieName = movie.getName();
-                String screen = schedule.get().getHall().getName();
-                LocalDate date = schedule.get().getDate();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                String movieDate = date.format(formatter);
-                LocalTime time = schedule.get().getScheduleTime().getScheduleTime();
-                List<String> seat = new ArrayList<>();
-
-                for (Integer s: seatList) {
-                    if (s>schedule.get().getHall().getTotalSeat() || s<0){
-                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                    }
-                    String result = "";
-                    String ss = s.toString();
-                    if (s<=10){
-                        result = "A" + s;
-                    }else if (s<=20){
-                        if (s==20){
-                            result = "B10";
-                        }else {
-                            result = "B" + ss.charAt(ss.length()-1);
-                        }
-
-                    }else if (s<=30){
-                        if (s==30){
-                            result = "C10";
-                        }else {
-                            result = "C" + ss.charAt(ss.length()-1);
-                        }
-                    }else if (s<=40){
-                        if (s==40){
-                            result = "D10";
-                        }else {
-                            result = "D" + ss.charAt(ss.length()-1);
-                        }
-                    }else if (s<=50){
-                        if (s==50){
-                            result = "E10";
-                        }else {
-                            result = "E" + ss.charAt(ss.length()-1);
-                        }
-                    }
-
-                    seat.add(result);
-                }
-
-                Integer price = movie.getTicketPrice();
-
-                Long sum = ((long) seatList.size() * price);
-
-                String timeStart = time.toString().substring(0,5);
-                System.out.println(timeStart);
-
-                String email = account.getEmail();
-
-                Long accountId = ticket.getAccountId();
-                Long scheduleId = ticket.getScheduleId();
-                List<Integer> seatNumber = ticket.getSeatList();
-
-
-                BookingDTO bookingDTO = new BookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum,email,accountId,scheduleId,seatNumber);
-
-
-
-                return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-            }
-
-        }
-
-    }
-
 
     /*
      * Create by HaiNT
@@ -192,86 +104,122 @@ public class BookingRestController {
      * @RequestBody checkoutDTO(accountId,scheduleId,seatList)
      * @Return status
      */
-    @PostMapping ("/checkout")
-    public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO){
-        LocalDateTime date = LocalDateTime.now();
-        if (checkoutDTO == null){
+    @PostMapping("/confirm")
+    public ResponseEntity<BookingDTO> checkout(@RequestBody TicketDTO ticketDTO) {
+        System.out.println("Save Ticket");
+
+        if (ticketDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (checkoutDTO.getScheduleId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getSeatNumber() == null){
+        if (ticketDTO.getAccountId() == null || ticketDTO.getScheduleId() == null || ticketDTO.getSeatList() == null || ticketDTO.getSeatList().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Optional<Schedule> schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId());
-        Account account = accountService.findAccountById(checkoutDTO.getAccountId());
+        Optional<Schedule> schedule = scheduleService.getScheduleById(ticketDTO.getScheduleId());
+        Account account = accountService.findAccountById(ticketDTO.getAccountId());
         if (schedule.isEmpty() || account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        iBookingService.saveBooking(checkoutDTO.getAccountId(),date);
-        Integer id = iBookingService.getBooking();
-        Long scheduleId = checkoutDTO.getScheduleId();
+        String result = "";
+        String seatString = "";
+        List<String> seat = new ArrayList<>();
+        for (Integer s : ticketDTO.getSeatList()) {
+            if (s > schedule.get().getHall().getTotalSeat() || s < 0) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            String ss = s.toString();
+            if (s <= 10) {
+                result = "A" + s;
+            } else if (s <= 20) {
+                if (s == 20) {
+                    result = "B10";
+                } else {
+                    result = "B" + ss.charAt(ss.length() - 1);
+                }
+
+            } else if (s <= 30) {
+                if (s == 30) {
+                    result = "C10";
+                } else {
+                    result = "C" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 40) {
+                if (s == 40) {
+                    result = "D10";
+                } else {
+                    result = "D" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 50) {
+                if (s == 50) {
+                    result = "E10";
+                } else {
+                    result = "E" + ss.charAt(ss.length() - 1);
+                }
+            }
+            seatString = seatString + " ";
+            seat.add(result);
+        }
+        LocalDateTime bookingDate = LocalDateTime.now();
+        iBookingService.saveBooking(account.getId(), bookingDate);
+        Long bookingId = iBookingService.getBooking();
         List<Ticket> checkExist;
-        for (Integer seat : checkoutDTO.getSeatNumber()) {
-            checkExist = ticketService.checkExist(seat,scheduleId);
-            if (checkExist.isEmpty()){
-                ticketService.saveTicket(seat,id,scheduleId);
-            }else {
+        for (Integer seatN : ticketDTO.getSeatList()) {
+            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+            if (checkExist.isEmpty()) {
+                ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        System.out.println("abc");
-        if (checkoutDTO.getTotalAmount() <= 0 || checkoutDTO.getTotalAmount() == null){
+//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
+        Long accountId = ticketDTO.getAccountId();
+        Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
+        String image = movie.getPoster();
+        String movieName = movie.getName();
+        String screen = schedule.get().getHall().getName();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String movieDate = schedule.get().getDate().format(formatter);
+
+        String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
+        Integer price = movie.getTicketPrice();
+        List<Integer> seatNumber = ticketDTO.getSeatList();
+        Long sum = (long) (price * (seatNumber.size()));
+        String email = account.getEmail();
+        Long scheduleId = schedule.get().getId();
+        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/fail")
+    public ResponseEntity<?> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
+        if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
+                || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        int accumulatedPoints =(int) Math.floor((checkoutDTO.getTotalAmount() * 3) /100);
-        iBookingService.addAccumulatedPoints(account.getId(),accumulatedPoints);
-        System.out.println(account.getId());
-        System.out.println(accumulatedPoints);
-
-        String seat = "";
-
-
-        for (Integer s: checkoutDTO.getSeatNumber()) {
-            if (s>schedule.get().getHall().getTotalSeat() || s< 0){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            String result = "";
-            String ss = s.toString();
-            if (s<=10){
-                result = "A" + s;
-            }else if (s<=20){
-                if (s==20){
-                    result = "B10";
-                }else {
-                    result = "B" + ss.charAt(ss.length()-1);
-                }
-
-            }else if (s<=30){
-                if (s==30){
-                    result = "C10";
-                }else {
-                    result = "C" + ss.charAt(ss.length()-1);
-                }
-            }else if (s<=40){
-                if (s==40){
-                    result = "D10";
-                }else {
-                    result = "D" + ss.charAt(ss.length()-1);
-                }
-            }else if (s<=50){
-                if (s==50){
-                    result = "E10";
-                }else {
-                    result = "E" + ss.charAt(ss.length()-1);
-                }
-            }
-
-            seat = seat +  result + " " ;
-        }
-
-        iBookingService.sendMail(checkoutDTO.getAccountId(),checkoutDTO.getScheduleId(),seat,id);
-
+        System.out.println("Fail");
+        ticketService.removeTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
+        iBookingService.removeBooking(checkoutDTO.getBookingId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/success")
+    public ResponseEntity<?> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
+        if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
+        || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        System.out.println("Success");
+        String seat = "";
+        for (String s : checkoutDTO.getSeat()) {
+            seat += s + " ";
+        }
+        iBookingService.sendMail(checkoutDTO.getAccountId(), checkoutDTO.getScheduleId(), seat, checkoutDTO.getBookingId());
+        int accumulatedPoints = (int) Math.floor((checkoutDTO.getTotalAmount() * 3) / 100);
+
+        iBookingService.addAccumulatedPoints(checkoutDTO.getAccountId(), accumulatedPoints);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

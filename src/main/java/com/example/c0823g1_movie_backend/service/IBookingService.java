@@ -20,9 +20,11 @@ public interface IBookingService {
 
     void saveBooking(Long accountId, LocalDateTime date);
 
-    Integer getBooking();
+    Long getBooking();
 
-    void sendMail(Long accountId, Long scheduleId, String seat, Integer id);
+    void sendMail(Long accountId, Long scheduleId, String seat, Long id);
 
     void addAccumulatedPoints(Long id, int accumulatedPoints);
+
+    void removeBooking(Long bookingId);
 }

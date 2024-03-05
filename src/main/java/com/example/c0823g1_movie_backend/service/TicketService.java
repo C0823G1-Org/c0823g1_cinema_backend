@@ -13,12 +13,17 @@ public class TicketService implements ITicketService{
     private TicketRepository ticketRepository;
 
     @Override
-    public void saveTicket(Integer seat, Integer id, Long scheduleId) {
+    public void saveTicket(Integer seat, Long id, Long scheduleId) {
         ticketRepository.saveTicket(seat,id,scheduleId);
     }
 
     @Override
     public List<Ticket> checkExist(Integer seat, Long scheduleId) {
         return ticketRepository.checkExist(seat,scheduleId);
+    }
+
+    @Override
+    public void removeTicket(Long bookingId, Long scheduleId) {
+        ticketRepository.removeTicket(bookingId,scheduleId);
     }
 }
