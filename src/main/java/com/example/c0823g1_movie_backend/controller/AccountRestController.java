@@ -295,7 +295,7 @@ public class AccountRestController {
      * Date created: 29/02/2024
      * Function: Register New account
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
-     */
+     */ 
     @PostMapping("/register")
     public ResponseEntity<?> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
         List<String> listError = new ArrayList<>();

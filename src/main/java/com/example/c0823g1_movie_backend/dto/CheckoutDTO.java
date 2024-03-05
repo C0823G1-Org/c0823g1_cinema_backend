@@ -5,7 +5,25 @@ import java.util.List;
 public class CheckoutDTO {
     private Long accountId;
     private Long scheduleId;
-    private List<Integer> seatNumber;
+    private List<String> seat;
+    private Long totalAmount;
+    private Long bookingId;
+
+    public Long getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public CheckoutDTO() {
     }
@@ -26,11 +44,11 @@ public class CheckoutDTO {
         this.scheduleId = scheduleId;
     }
 
-    public List<Integer> getSeatNumber() {
-        return seatNumber;
+    public List<String> getSeat() {
+        return seat;
     }
 
-    public void setSeatNumber(List<Integer> seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setSeat(List<String> seat) {
+        this.seat = seat;
     }
 }
