@@ -12,6 +12,7 @@ import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
+import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -292,74 +293,6 @@ public class BookingRestController {
      * @Param ticket(idMovie,scheduleId,seatList)
      * @Return object bookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum)
      */
-    @PostMapping("/confirm")
-    public ResponseEntity<BookingDTO> returnInformationTicketBooking(@RequestBody TicketDTO ticket) {
-        System.out.println("abc");
-        Optional<Movie> movie = Optional.ofNullable(movieService.findMovieById(ticket.getIdMovie()));
-        Optional<Schedule> schedule = scheduleService.getScheduleById(ticket.getScheduleId());
-        List<Integer> seatList = ticket.getSeatList();
-
-        String image = movie.get().getPoster();
-        String movieName = movie.get().getName();
-        String screen = schedule.get().getHall().getName();
-        LocalDate date = schedule.get().getDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String movieDate = date.format(formatter);
-        LocalTime time = schedule.get().getScheduleTime().getScheduleTime();
-        List<String> seat = new ArrayList<>();
-
-        for (Integer s : seatList) {
-            String result = "";
-            String ss = s.toString();
-            if (s <= 10) {
-                result = "A" + s;
-            } else if (s <= 20) {
-                if (s == 20) {
-                    result = "B10";
-                } else {
-                    result = "B" + ss.charAt(ss.length() - 1);
-                }
-
-            } else if (s <= 30) {
-                if (s == 30) {
-                    result = "C10";
-                } else {
-                    result = "C" + ss.charAt(ss.length() - 1);
-                }
-            } else if (s <= 40) {
-                if (s == 40) {
-                    result = "D10";
-                } else {
-                    result = "D" + ss.charAt(ss.length() - 1);
-                }
-            } else if (s <= 50) {
-                if (s == 50) {
-                    result = "E10";
-                } else {
-                    result = "E" + ss.charAt(ss.length() - 1);
-                }
-            }
-
-            seat.add(result);
-        }
-
-        Integer price = movie.get().getTicketPrice();
-
-        Long sum = (long) (seat.size() * price);
-
-        String timeStart = time.toString().substring(0, 5);
-        System.out.println(timeStart);
-
-        Account account = accountService.findAccountById(ticket.getAccountId());
-        String email = account.getEmail();
-
-
-        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email);
-
-
-        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-    }
-
 
     /*
      * Create by HaiNT
@@ -368,106 +301,121 @@ public class BookingRestController {
      * @RequestBody checkoutDTO(accountId,scheduleId,seatList)
      * @Return status
      */
-    @PostMapping("/checkout")
-    public ResponseEntity<CheckoutDTO> checkout(@RequestBody CheckoutDTO checkoutDTO) {
-        LocalDateTime date = LocalDateTime.now();
-        iBookingService.saveBooking(checkoutDTO.getAccountId(), date);
-        Integer id = iBookingService.getBooking();
-        Long scheduleId = checkoutDTO.getScheduleId();
-        for (Integer seat : checkoutDTO.getSeatNumber()) {
-            ticketService.saveTicket(seat, id, scheduleId);
+    @PostMapping("/confirm")
+    public ResponseEntity<BookingDTO> checkout(@RequestBody TicketDTO ticketDTO) {
+        System.out.println("Save Ticket");
+
+        if (ticketDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Schedule schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId()).get();
-        Account account = accountService.findAccountById(checkoutDTO.getAccountId());
-        String email = account.getEmail();
-        String seat = "";
+        if (ticketDTO.getAccountId() == null || ticketDTO.getScheduleId() == null || ticketDTO.getSeatList() == null || ticketDTO.getSeatList().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Optional<Schedule> schedule = scheduleService.getScheduleById(ticketDTO.getScheduleId());
+        Account account = accountService.findAccountById(ticketDTO.getAccountId());
+        if (schedule.isEmpty() || account == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        String result = "";
+        String seatString = "";
+        List<String> seat = new ArrayList<>();
+        for (Integer s : ticketDTO.getSeatList()) {
+            if (s > schedule.get().getHall().getTotalSeat() || s < 0) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+                String ss = s.toString();
+                if (s <= 10) {
+                    result = "A" + s;
+                } else if (s <= 20) {
+                    if (s == 20) {
+                        result = "B10";
+                    } else {
+                        result = "B" + ss.charAt(ss.length() - 1);
+                    }
 
-
-        for (Integer s : checkoutDTO.getSeatNumber()) {
-            String result = "";
-            String ss = s.toString();
-            if (s <= 10) {
-                result = "A" + s;
-            } else if (s <= 20) {
-                if (s == 20) {
-                    result = "B10";
-                } else {
-                    result = "B" + ss.charAt(ss.length() - 1);
+                } else if (s <= 30) {
+                    if (s == 30) {
+                        result = "C10";
+                    } else {
+                        result = "C" + ss.charAt(ss.length() - 1);
+                    }
+                } else if (s <= 40) {
+                    if (s == 40) {
+                        result = "D10";
+                    } else {
+                        result = "D" + ss.charAt(ss.length() - 1);
+                    }
+                } else if (s <= 50) {
+                    if (s == 50) {
+                        result = "E10";
+                    } else {
+                        result = "E" + ss.charAt(ss.length() - 1);
+                    }
                 }
-
-            } else if (s <= 30) {
-                if (s == 30) {
-                    result = "C10";
+                seatString = seatString + " ";
+                seat.add(result);
+            }
+            LocalDateTime bookingDate = LocalDateTime.now();
+            iBookingService.saveBooking(account.getId(), bookingDate);
+            Long bookingId = iBookingService.getBooking();
+            List<Ticket> checkExist;
+            for (Integer seatN : ticketDTO.getSeatList()) {
+                checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+                if (checkExist.isEmpty()) {
+                    ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
                 } else {
-                    result = "C" + ss.charAt(ss.length() - 1);
-                }
-            } else if (s <= 40) {
-                if (s == 40) {
-                    result = "D10";
-                } else {
-                    result = "D" + ss.charAt(ss.length() - 1);
-                }
-            } else if (s <= 50) {
-                if (s == 50) {
-                    result = "E10";
-                } else {
-                    result = "E" + ss.charAt(ss.length() - 1);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
+//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
+            Long accountId = ticketDTO.getAccountId();
+            Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
+            String image = movie.getPoster();
+            String movieName = movie.getName();
+            String screen = schedule.get().getHall().getName();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String movieDate = schedule.get().getDate().format(formatter);
+            String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
+            Integer price = movie.getTicketPrice();
+            List<Integer> seatNumber = ticketDTO.getSeatList();
+            Long sum = (long) (price * (seatNumber.size()));
+            String email = account.getEmail();
+            Long scheduleId = schedule.get().getId();
+            BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+            return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
 
-            seat += result;
         }
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
-        mailMessage.setSubject("Bạn đã đặt vé xem phim thành công");
-        String content = "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <title>Document</title>\n" +
-                "</head>\n" +
-                "\n" +
-                "<body style=\"width: 80%;;margin-left: 10%;\">\n" +
-                "    <img style=\"width: 50%;height: 30%;margin-left: 25%;\"\n" +
-                "        src=\"" + schedule.getMovie().getPoster() + "\" alt=\"Madame Web\n" +
-                "    \n" +
-                "    Xem thêm tại: https://www.galaxycine.vn/\">\n" +
-                "    <table style=\"width: 100%;padding-left: 20%;\">\n" +
-                "        <tr>\n" +
-                "            <td>Phòng chiếu</th>\n" +
-                "            <td>" + schedule.getHall().getName() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Ngày chiếu</th>\n" +
-                "            <td>" + schedule.getDate() + "</td>\n" +
-                "        </tr>\n" +
-                "\n" +
-                "        <tr>\n" +
-                "            <td>Giờ chiếu</th>\n" +
-                "            <td>" + schedule.getScheduleTime().getScheduleTime() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>Ghế </th>\n" +
-                "            <td>" +
-                seat
-                + "</td>\n" +
-                "        </tr>\n" +
-                "    </table>\n" +
-                "    <img style=\"width: 30%;height: 30%;margin-left: 35%;\"\n" +
-                "        src=\"https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSh-wrQu254qFaRcoYktJ5QmUhmuUedlbeMaQeaozAVD4lh4ICsGdBNubZ8UlMvWjKC\"\n" +
-                "        alt=\"\">\n" +
-                "</body>\n" +
-                "\n" +
-                "</html>";
-        mailMessage.setText(content);
-        mailConfig.getJavaMailSender().send(mailMessage);
 
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/fail")
+    public ResponseEntity<?> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
+        if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
+                || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        System.out.println("Fail");
+        ticketService.removeTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
+        iBookingService.removeBooking(checkoutDTO.getBookingId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/success")
+    public ResponseEntity<?> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
+        if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
+                || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        System.out.println("Success");
+        String seat = "";
+        for (String s : checkoutDTO.getSeat()) {
+            seat += s + " ";
+        }
+        iBookingService.sendMail(checkoutDTO.getAccountId(), checkoutDTO.getScheduleId(), seat, checkoutDTO.getBookingId());
+        int accumulatedPoints = (int) Math.floor((checkoutDTO.getTotalAmount() * 3) / 100);
+
+        iBookingService.addAccumulatedPoints(checkoutDTO.getAccountId(), accumulatedPoints);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

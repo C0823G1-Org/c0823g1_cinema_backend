@@ -199,6 +199,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query(value = "select * from account where id = :id",nativeQuery = true)
     Account findAccountById(@Param("id") Long id);
+
     @Query(value = "select * from account",nativeQuery = true)
     List<Account> getAllAccount();
 
@@ -213,4 +214,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     void updateAccount(@Param("account") Account account, Long id);
     @Query(nativeQuery = true,value = "UPDATE  account SET password = :password where account_name = :accountName")
     void updatePassword(@Param("password") String password , @Param("accountName") String accountName);
+
 }
