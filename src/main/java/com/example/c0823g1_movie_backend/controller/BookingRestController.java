@@ -100,6 +100,7 @@ public class BookingRestController {
         if (listBookingTicket.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
