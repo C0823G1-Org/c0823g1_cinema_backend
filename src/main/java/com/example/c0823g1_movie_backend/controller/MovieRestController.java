@@ -1,12 +1,8 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.*;
-import com.example.c0823g1_movie_backend.model.Genre;
-import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Version;
-import com.example.c0823g1_movie_backend.service.IGenreService;
-import com.example.c0823g1_movie_backend.service.IMovieService;
-import com.example.c0823g1_movie_backend.service.IVersionService;
+import com.example.c0823g1_movie_backend.model.*;
+import com.example.c0823g1_movie_backend.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +31,10 @@ public class MovieRestController {
     private IGenreService genreService;
     @Autowired
     private IVersionService versionService;
+    @Autowired
+    private IScheduleTimeService scheduleTimeService;
+    @Autowired
+    private IHallService hallService;
     /*    Create by: BaoLVN
      *     Date created : 29/02/2024
      *     Function: Get a list of movies with many views
@@ -152,7 +152,9 @@ public class MovieRestController {
     public ResponseEntity<MovieAttributeDTO> getAllAttributes() {
         List<Genre> genres = genreService.getAll();
         List<Version> versions = versionService.getAll();
-        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions), HttpStatus.OK);
+        List<ScheduleTime> scheduleTimes = scheduleTimeService.getAll();
+        List<Hall> halls = hallService.getAll();
+        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes,halls), HttpStatus.OK);
     }
 
     /**

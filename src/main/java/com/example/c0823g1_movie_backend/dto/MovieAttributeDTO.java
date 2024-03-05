@@ -1,6 +1,8 @@
 package com.example.c0823g1_movie_backend.dto;
 
 import com.example.c0823g1_movie_backend.model.Genre;
+import com.example.c0823g1_movie_backend.model.Hall;
+import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import com.example.c0823g1_movie_backend.model.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,4 +18,6 @@ import java.util.List;
 public class MovieAttributeDTO {
     List<Genre> genres;
     List<Version> versions;
+    List<ScheduleTime> scheduleTimes;
+    List<Hall> halls;
 }
