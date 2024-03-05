@@ -25,8 +25,8 @@ public class RestTicketController {
     @GetMapping("/ticket")
     public ResponseEntity<List<Ticket>> findAllTicketByScheduleId(@RequestParam Long scheduleId){
         List<Ticket> ticketList = ticketService.findAllTicketByScheduleId(scheduleId);
-        if(ticketList == null){
-            return new ResponseEntity<>( HttpStatus.OK);
+        if(ticketList.isEmpty()){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(ticketList,HttpStatus.OK);
     }

@@ -22,6 +22,9 @@ public class ScheduleRestController {
     @Autowired
     IScheduleService scheduleService;
 
+    @Autowired
+    IHallService hallService;
+
     /**
      * Created by: LamNT
      * Date created: 29/2/2024
@@ -31,7 +34,7 @@ public class ScheduleRestController {
      */
 
     @GetMapping("/hall/{id}")
-    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id){
+    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
         List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -43,13 +46,14 @@ public class ScheduleRestController {
      * Return: HttpStatus.BAD_REQUEST if date not found/ HttpStatus.OK and date list
      */
     @GetMapping("/date")
-    public ResponseEntity<List<ScheduleDTO>> findDateByMovieId(@RequestParam Long movieId){
+    public ResponseEntity<List<ScheduleDTO>> findDateByMovieId(@RequestParam Long movieId) {
         List<ScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
-        if(dateList.isEmpty()){
+        if (dateList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(dateList,HttpStatus.OK);
+        return new ResponseEntity<>(dateList, HttpStatus.OK);
     }
+
     /**
      * Create by HuuPT
      * Date create: 29/02/2024
@@ -58,13 +62,14 @@ public class ScheduleRestController {
      */
     @GetMapping("/time")
     public ResponseEntity<List<IScheduleTimeDTO>> findScheduleTimeByMovieAndDate(@RequestParam Long movieId,
-                                                                                 @RequestParam LocalDate date){
-        List<IScheduleTimeDTO> scheduleTimes = scheduleService.findScheduleTimeByMovieAndDate(movieId,date);
-        if(scheduleTimes.isEmpty()){
-            return new ResponseEntity<>(scheduleTimes,HttpStatus.NO_CONTENT);
+                                                                                 @RequestParam LocalDate date) {
+        List<IScheduleTimeDTO> scheduleTimes = scheduleService.findScheduleTimeByMovieAndDate(movieId, date);
+        if (scheduleTimes.isEmpty()) {
+            return new ResponseEntity<>(scheduleTimes, HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(scheduleTimes,HttpStatus.OK);
+        return new ResponseEntity<>(scheduleTimes, HttpStatus.OK);
     }
+
     /**
      * Create by HuuPT
      * Date create: 29/02/2024
@@ -74,13 +79,14 @@ public class ScheduleRestController {
     @GetMapping("/schedule")
     public ResponseEntity<Schedule> getScheduleByMovieIdAndDateAndScheduleTimeId(@RequestParam Long movieId,
                                                                                  @RequestParam LocalDate date,
-                                                                                 @RequestParam Long scheduleTimeId){
-        Schedule schedule = scheduleService.getScheduleByMovieIdAndDateAndScheduleTimeId(movieId,date,scheduleTimeId);
-        if(schedule == null){
+                                                                                 @RequestParam Long scheduleTimeId) {
+        Schedule schedule = scheduleService.getScheduleByMovieIdAndDateAndScheduleTimeId(movieId, date, scheduleTimeId);
+        if (schedule == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(schedule,HttpStatus.OK);
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
+
     /**
      * Create by HuuPT
      * Date create: 29/02/2024
@@ -88,11 +94,12 @@ public class ScheduleRestController {
      * Return: HttpStatus.BAD_REQUEST if hall not found/ HttpStatus.OK and an object hall
      */
     @GetMapping("/hall")
-    public ResponseEntity<HallDTO> getHallByScheduleId(@RequestParam Long scheduleId){
-        HallDTO hall = scheduleService.getHallByScheduleId(scheduleId);
-        if(hall == null){
+    public ResponseEntity<Hall> getHallByScheduleId(@RequestParam Long scheduleId) {
+        HallDTO hallDTO = scheduleService.getHallByScheduleId(scheduleId);
+        Hall hall = hallService.getHallById(hallDTO.getId());
+        if (hall == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(hall,HttpStatus.OK);
+        return new ResponseEntity<>(hall, HttpStatus.OK);
     }
 }

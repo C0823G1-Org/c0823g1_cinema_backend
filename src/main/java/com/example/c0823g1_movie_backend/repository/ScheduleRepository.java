@@ -36,7 +36,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                                                           @Param("date") LocalDate date,
                                                           @Param("scheduleTimeId") Long scheduleTimeId);
 
-    @Query(value = "select name from hall h join schedule on hall_id=(select hall_id from schedule " +
+    @Query(value = "select h.id from hall h join schedule on hall_id=(select hall_id from schedule " +
             "where id =:scheduleId) group by h.id", nativeQuery = true)
     HallDTO getHallByScheduleId(@Param("scheduleId") Long scheduleId);
 

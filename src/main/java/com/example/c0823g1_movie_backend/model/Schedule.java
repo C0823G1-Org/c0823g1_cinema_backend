@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movie;
+    @JsonBackReference
     @OneToMany(mappedBy = "schedule")
     private Set<Ticket> tickets;
     @Column(columnDefinition = "boolean default false")

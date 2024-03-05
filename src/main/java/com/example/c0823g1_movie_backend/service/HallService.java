@@ -23,4 +23,9 @@ public class HallService implements IHallService{
     public HallDTO findById(Long id) {
         return hallRepository.findHallById(id);
     }
+
+    @Override
+    public Hall getHallById(Long id) {
+        return hallRepository.getHallById(id);
+    }
 }

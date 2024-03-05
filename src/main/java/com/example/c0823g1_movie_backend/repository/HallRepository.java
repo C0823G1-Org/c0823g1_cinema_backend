@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface HallRepository extends JpaRepository<Hall,Long> {
     @Query(value = "",nativeQuery = true)
     HallDTO findHallById(@Param("id") Long id);
+    @Query(value = "select * from hall where id = :id",nativeQuery = true)
+    Hall getHallById(@Param("id") Long id);
 }
