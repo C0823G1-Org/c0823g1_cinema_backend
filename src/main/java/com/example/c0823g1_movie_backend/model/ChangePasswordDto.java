@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +19,7 @@ public class ChangePasswordDto implements Validator {
     private String currentPassword;
     private String newPassword;
     private String confirmationPassword;
+//    private List<Account> accounts;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -26,6 +29,7 @@ public class ChangePasswordDto implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ChangePasswordDto changePasswordDto = (ChangePasswordDto) target;
+//        ((ChangePasswordDto) target).getAccounts();
         if (changePasswordDto.getCurrentPassword() == null || changePasswordDto.getCurrentPassword().trim().equals("")){
             errors.rejectValue("currentPassword","","Mật Khẩu Hiện Tại Không được để rỗng");
         }
@@ -38,7 +42,7 @@ public class ChangePasswordDto implements Validator {
         }
         if (changePasswordDto.getConfirmationPassword() == null || changePasswordDto.getConfirmationPassword().trim().equals("")){
             errors.rejectValue("confirmationPassword","","Xác Nhận Mật Khẩu không được rỗng ");
-        }else if (changePasswordDto.getConfirmationPassword().equals(changePasswordDto.getNewPassword())){
+        }else if (!(changePasswordDto.getConfirmationPassword().equals(changePasswordDto.getNewPassword()))){
             errors.rejectValue("confirmationPassword","","Mật Khẩu không trùng khớp");
         }
 

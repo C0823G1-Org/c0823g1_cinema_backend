@@ -34,7 +34,7 @@ public class AccountRestController_AccountDetail {
     public void AccountDetail_get_1() throws Exception {
         Principal principal = null;
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("detailUser", principal)
+                        MockMvcRequestBuilders.get("/detailUser", principal)
                 )
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -49,7 +49,7 @@ public class AccountRestController_AccountDetail {
     @Test
     public void AccountDetail_get_2() throws Exception {
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("detailUser", " ")
+                        MockMvcRequestBuilders.get("/detailUser", " ")
                 )
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -79,9 +79,14 @@ public class AccountRestController_AccountDetail {
      */
     @Test
     public void AccountDetail_get_4() throws Exception {
-
+    Principal principal = new Principal() {
+        @Override
+        public String getName() {
+            return "tuan123456";
+        }
+    };
         this.mockMvc.perform(
-                        MockMvcRequestBuilders.get("detailUser", "tuan123456")
+                        MockMvcRequestBuilders.get("/account/detailUser", principal.getName())
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
