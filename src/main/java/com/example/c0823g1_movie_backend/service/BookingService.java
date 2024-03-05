@@ -40,12 +40,12 @@ public class BookingService implements IBookingService{
     }
 
     @Override
-    public IBookingDTO findBookingTicketById(Integer id) {
+    public IBookingDTO findBookingTicketById(Long id) {
         return bookingRepository.findBookingTicketById(id);
     }
 
     @Override
-    public List<IBookingDTO> listBookingTicketDetail(Integer id) {
+    public List<IBookingDTO> listBookingTicketDetail(Long id) {
         return bookingRepository.listBookingTicketDetail(id);
     }
 
