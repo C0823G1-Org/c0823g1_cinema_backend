@@ -22,8 +22,6 @@ public interface IBookingService {
     IBookingDTO findBookingTicketById(Long id);
 
     List<IBookingDTO> listBookingTicketDetail(Long id);
-    List<HistoryBookingDTO> historyBooking(Long id);
-    List<IBookingDTO> listBookingTicketDetail(Integer id);
 
     List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page);
 

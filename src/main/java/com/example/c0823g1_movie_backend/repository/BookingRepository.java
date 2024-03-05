@@ -80,7 +80,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "  left join movie on movie.id = schedule.movie_id\n" +
             "  where ( booking.id = :idBook) \n" +
             "  group by booking.id;",nativeQuery = true)
-    IBookingDTO findBookingTicketById(@Param("idBook") Integer idBook);
+    IBookingDTO findBookingTicketById(@Param("idBook") Long idBook);
 
 
     @Query(value =
@@ -97,7 +97,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     " WHERE booking.id = :idBook\n" +
                     " GROUP BY booking.id, booking.print_status, account.id, account.full_name, account.id_number, account.phone_number, movie.ticket_price, booking.date_booking, ticket.seat_number;",
             nativeQuery = true)
-    List<IBookingDTO> listBookingTicketDetail(@Param("idBook") Integer idBook);
+    List<IBookingDTO> listBookingTicketDetail(@Param("idBook") Long idBook);
 
     @Modifying
     @Query(value = "INSERT INTO booking(account_id,date_booking,print_status,is_deleted) VALUES (:accountId, :date,0,0)", nativeQuery = true)
