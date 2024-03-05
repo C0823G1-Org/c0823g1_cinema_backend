@@ -15,8 +15,6 @@ import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.service.IEmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

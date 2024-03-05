@@ -1,7 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.model.Ticket;
-
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
