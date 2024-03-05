@@ -355,68 +355,69 @@ public class BookingRestController {
             if (s > schedule.get().getHall().getTotalSeat() || s < 0) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-                String ss = s.toString();
-                if (s <= 10) {
-                    result = "A" + s;
-                } else if (s <= 20) {
-                    if (s == 20) {
-                        result = "B10";
-                    } else {
-                        result = "B" + ss.charAt(ss.length() - 1);
-                    }
-
-                } else if (s <= 30) {
-                    if (s == 30) {
-                        result = "C10";
-                    } else {
-                        result = "C" + ss.charAt(ss.length() - 1);
-                    }
-                } else if (s <= 40) {
-                    if (s == 40) {
-                        result = "D10";
-                    } else {
-                        result = "D" + ss.charAt(ss.length() - 1);
-                    }
-                } else if (s <= 50) {
-                    if (s == 50) {
-                        result = "E10";
-                    } else {
-                        result = "E" + ss.charAt(ss.length() - 1);
-                    }
-                }
-                seatString = seatString + " ";
-                seat.add(result);
-            }
-            LocalDateTime bookingDate = LocalDateTime.now();
-            iBookingService.saveBooking(account.getId(), bookingDate);
-            Long bookingId = iBookingService.getBooking();
-            List<Ticket> checkExist;
-            for (Integer seatN : ticketDTO.getSeatList()) {
-                checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
-                if (checkExist.isEmpty()) {
-                    ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+            String ss = s.toString();
+            if (s <= 10) {
+                result = "A" + s;
+            } else if (s <= 20) {
+                if (s == 20) {
+                    result = "B10";
                 } else {
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    result = "B" + ss.charAt(ss.length() - 1);
+                }
+
+            } else if (s <= 30) {
+                if (s == 30) {
+                    result = "C10";
+                } else {
+                    result = "C" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 40) {
+                if (s == 40) {
+                    result = "D10";
+                } else {
+                    result = "D" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 50) {
+                if (s == 50) {
+                    result = "E10";
+                } else {
+                    result = "E" + ss.charAt(ss.length() - 1);
                 }
             }
-//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
-            Long accountId = ticketDTO.getAccountId();
-            Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
-            String image = movie.getPoster();
-            String movieName = movie.getName();
-            String screen = schedule.get().getHall().getName();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String movieDate = schedule.get().getDate().format(formatter);
-            String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
-            Integer price = movie.getTicketPrice();
-            List<Integer> seatNumber = ticketDTO.getSeatList();
-            Long sum = (long) (price * (seatNumber.size()));
-            String email = account.getEmail();
-            Long scheduleId = schedule.get().getId();
-            BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
-            return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-
+            seatString = seatString + " ";
+            seat.add(result);
         }
+        LocalDateTime bookingDate = LocalDateTime.now();
+        iBookingService.saveBooking(account.getId(), bookingDate);
+        Long bookingId = iBookingService.getBooking();
+        List<Ticket> checkExist;
+        for (Integer seatN : ticketDTO.getSeatList()) {
+            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+            if (checkExist.isEmpty()) {
+                ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
+        Long accountId = ticketDTO.getAccountId();
+        Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
+        String image = movie.getPoster();
+        String movieName = movie.getName();
+        String screen = schedule.get().getHall().getName();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String movieDate = schedule.get().getDate().format(formatter);
+        String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
+        Integer price = movie.getTicketPrice();
+        List<Integer> seatNumber = ticketDTO.getSeatList();
+        Long sum = (long) (price * (seatNumber.size()));
+        String email = account.getEmail();
+        Long scheduleId = schedule.get().getId();
+        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+        System.out.println(bookingDTO);
+        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+
+    }
 
 
 
