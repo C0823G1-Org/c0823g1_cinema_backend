@@ -6,11 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.example.c0823g1_movie_backend.model.Movie;
 
+
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface IBookingService {
+
+    List<HistoryBookingDTO> historyBooking(Long id, int number);
+
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time);
 
     Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time,Pageable pageable);
@@ -19,8 +23,9 @@ public interface IBookingService {
 
     List<IBookingDTO> listBookingTicketDetail(Long id);
     List<HistoryBookingDTO> historyBooking(Long id);
+    List<IBookingDTO> listBookingTicketDetail(Integer id);
 
-    List<HistoryBookingDTO> searchBookingByDate(LocalDateTime startDate, LocalDateTime endDate);
+    List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page);
 
     void saveBooking(Long accountId, LocalDateTime date);
 
