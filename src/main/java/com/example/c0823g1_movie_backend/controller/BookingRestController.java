@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -65,6 +67,15 @@ public class BookingRestController {
     @Autowired
     private MailConfig mailConfig;
 
+    @GetMapping("getListBooking/{id}/{dateStart}/{dateEnd}/{page}")
+    public ResponseEntity<Page<HistoryBookingDTO>> getListBooking(@PathVariable int page,
+                                                                  @PathVariable Long id,
+                                                                  @PathVariable LocalDateTime dateStart,
+                                                                  @PathVariable LocalDateTime dateEnd) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<HistoryBookingDTO> list = iBookingService.getHistory(id, dateStart, dateEnd, pageable);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
     @GetMapping("historyBooking/{id}/{number}")
     public ResponseEntity<List<HistoryBookingDTO>> historyMovie(@PathVariable Long id, @PathVariable int number) {
@@ -78,14 +89,15 @@ public class BookingRestController {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@PageableDefault(size = 2) Pageable pageable ) {
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@PageableDefault(size = 2) Pageable pageable) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         if (listBookingTicket.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(listBookingTicket,HttpStatus.OK);
+        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
 
@@ -103,12 +115,12 @@ public class BookingRestController {
      * Function: Displays list and pagination of ticket booking with search action
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search")String search,@RequestParam(defaultValue = "0") int page){
+    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search") String search, @RequestParam(defaultValue = "0") int page) {
         LocalDateTime time = LocalDateTime.now();
         Pageable pageable = PageRequest.of(page, 2);
-        Page<IBookingDTO>  listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search,time,pageable);
-        if (listBookingTicket.isEmpty()){
-            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable,time);
+        Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, time, pageable);
+        if (listBookingTicket.isEmpty()) {
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, time);
             return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
         }
         System.out.println(listBookingTicket.getSize() + " search");
@@ -121,16 +133,16 @@ public class BookingRestController {
      */
 
     @GetMapping("/exportDetail/{idBookingTicket}")
-    public ResponseEntity<?> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id){
-       IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
+    public ResponseEntity<?> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id) {
+        IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
         LocalDateTime time = LocalDateTime.now();
         Pageable pageable = PageRequest.of(0, 2);
-        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
 
-        if (iBookingDTO == null){
+        if (iBookingDTO == null) {
             return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
         } else {
-            if (!iBookingDTO.getPrintStatus()){
+            if (!iBookingDTO.getPrintStatus()) {
                 return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
@@ -149,26 +161,26 @@ public class BookingRestController {
     public ResponseEntity<?> bookingTicketExportPDF(@PathVariable("idBookingTicket") Integer id) throws FileNotFoundException, DocumentException {
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
 
-        if (iBookingDTO == null){
-            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        if (iBookingDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            if (!iBookingDTO.getPrintStatus()){
-                return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+            if (!iBookingDTO.getPrintStatus()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
 
-                for (IBookingDTO temp : listBookingTicketDetail){
-                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
+                for (IBookingDTO temp : listBookingTicketDetail) {
+                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_" + temp.getSeatNumber() + ".pdf";
                     float customWidth = 650;
                     float customHeight = 396;
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
                     Document document = new Document(pageSize, -50, 0, 130, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
                     // in
-                    try{
-                            document.open();
-                            document.newPage();
-                            addBackgroundAndContent(writer, document, temp);
+                    try {
+                        document.open();
+                        document.newPage();
+                        addBackgroundAndContent(writer, document, temp);
 
                         document.close();
 
@@ -192,7 +204,7 @@ public class BookingRestController {
      * Date created: February 29, 2024
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
-    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
+    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
         Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
 
@@ -207,9 +219,9 @@ public class BookingRestController {
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
 
-        background.setAbsolutePosition(0,0);
+        background.setAbsolutePosition(0, 0);
         Rectangle rectBackground = new Rectangle(
-                documentWidth ,
+                documentWidth,
                 documentHeight
         );
         rectBackground.setBorder(Rectangle.BOX);
@@ -230,7 +242,7 @@ public class BookingRestController {
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
 
-        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
+        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(), font));
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDateTime = ticket.getStartTime().format(formatter);
         table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));

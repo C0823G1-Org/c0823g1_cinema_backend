@@ -1,9 +1,6 @@
 package com.example.c0823g1_movie_backend.controller;
 
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieRequestBodyDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
@@ -35,6 +32,7 @@ public class MovieRestController {
      * Created by DuyDD
      * Date Created: 29/02/2024
      * Function: Get a list of movies that have the highest revenue
+     *
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
@@ -151,14 +149,14 @@ public class MovieRestController {
      * @return HTTPStatus.OK if have list movie and HTTPStatus.NO_CONTENT if list movie null
      */
     @GetMapping("/list")
-    public ResponseEntity<Page<Movie>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "") String publisher,
-                                                    @RequestParam(defaultValue = "") String name,
-                                                    @RequestParam(defaultValue = "1990-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                    @RequestParam(defaultValue = "3000-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "") String publisher,
+                                                           @RequestParam(defaultValue = "") String name,
+                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
-        Page<Movie> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
+        Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
         if (moviePage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

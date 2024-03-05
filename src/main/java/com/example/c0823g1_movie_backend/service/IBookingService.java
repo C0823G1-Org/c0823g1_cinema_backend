@@ -12,12 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface IBookingService {
+    Page<HistoryBookingDTO> getHistory(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, Pageable pageable);
 
     List<HistoryBookingDTO> historyBooking(Long id, int number);
 
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time);
 
-    Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time,Pageable pageable);
+    Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time, Pageable pageable);
 
     IBookingDTO findBookingTicketById(Integer id);
 
