@@ -70,5 +70,10 @@ public class BookingService implements IBookingService{
         return bookingRepository.searchBookingTicketWithParameterDate(dateSearch,pageable);
     }
 
+    @Override
+    public void setPrintStatus(Long id) {
+        bookingRepository.setPrintStatus(id);
+    }
+
 
 }

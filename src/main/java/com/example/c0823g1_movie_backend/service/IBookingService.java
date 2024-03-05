@@ -29,4 +29,6 @@ public interface IBookingService {
     Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable);
 
     Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
+
+    void setPrintStatus(Long id);
 }

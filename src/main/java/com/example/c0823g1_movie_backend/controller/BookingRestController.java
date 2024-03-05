@@ -15,7 +15,6 @@ import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -30,12 +29,9 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,10 +70,8 @@ public class BookingRestController {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         if (listBookingTicket.isEmpty()) {
-            System.out.println("trong");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        System.out.println("co du");
         return new ResponseEntity<>(listBookingTicket,HttpStatus.OK);
     }
 
@@ -96,18 +90,20 @@ public class BookingRestController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(
+    public ResponseEntity<?> searchBookingTicket(
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
-            @PageableDefault(size = 2) Pageable pageable) {
+            @PageableDefault(size = 4) Pageable pageable) {
         LocalDateTime timeNow = LocalDateTime.now();
         if (search == null && localDate == null) {
+            ApiResponse response = new ApiResponse<>();
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
-            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+            response.setData(listBookingTicketNotFound);
+            response.setFlag("FOUND");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         if (search != null && localDate != null) {
-            System.out.println(search + " " + " " + localDate);
             LocalDateTime dateSearch = localDate.atStartOfDay();
             Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearchAndDate(search, dateSearch, pageable);
             return getResponseEntity(listBookingTicket, timeNow, pageable);
@@ -117,18 +113,22 @@ public class BookingRestController {
         } else {
             LocalDateTime dateSearch = localDate.atStartOfDay();
             Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterDate(dateSearch, pageable);
-            return getResponseEntity(listBookingTicket, timeNow, pageable);
+            return getResponseEntity(listBookingTicket, dateSearch, pageable);
         }
     }
 
-    private ResponseEntity<Page<IBookingDTO>> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
+    private ResponseEntity<ApiResponse<Page<IBookingDTO>>> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
+        ApiResponse<Page<IBookingDTO>> response = new ApiResponse<>();
         if (listBookingTicket.isEmpty()) {
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
-            System.out.println("alo alo" + listBookingTicketNotFound.isEmpty() );
-
-            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+            response.setFlag("NOT_FOUND");
+            response.setData(listBookingTicketNotFound);
+        } else {
+            response.setFlag("FOUND");
+            response.setData(listBookingTicket);
         }
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /* Created by: DoLV
@@ -147,13 +147,11 @@ public class BookingRestController {
             Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
 
             if (iBookingDTO == null){
-                System.out.println("bad" + listBookingTicket.isEmpty());
                 return new ResponseEntity<>(listBookingTicket, HttpStatus.BAD_REQUEST);
             } else {
                 if (iBookingDTO.getPrintStatus()){
                     return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
                 } else {
-                    System.out.println("co du");
                     List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(bookingId);
                     return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
                 }
@@ -173,7 +171,6 @@ public class BookingRestController {
             throw new NumberFormatException("Invalid idBooking format. Number exceeds Long.MAX_VALUE.");
         }
         Long idChange =  idBigInt.longValue();
-
         if (idChange <= 0L) {
             throw new NumberFormatException("Invalid idBooking format. Number must not be negative.");
         }
@@ -186,40 +183,46 @@ public class BookingRestController {
      * Date created: February 29, 2024
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
-    @GetMapping("/exportPDF/{idBookingTicket}")
-    public ResponseEntity<?> bookingTicketExportPDF(@PathVariable("idBookingTicket") Long id) throws FileNotFoundException, DocumentException {
+    @GetMapping("/exportPDF")
+    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput) throws FileNotFoundException, DocumentException {
+        Long id = parseLong(idInput);
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
-
         if (iBookingDTO == null){
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
         } else {
-            if (!iBookingDTO.getPrintStatus()){
-                return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+            if (iBookingDTO.getPrintStatus()){
+                return new ResponseEntity<>("printed", HttpStatus.NO_CONTENT);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
-
-                for (IBookingDTO temp : listBookingTicketDetail){
-                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
-                    float customWidth = 650;
-                    float customHeight = 396;
-                    Rectangle pageSize = new Rectangle(customWidth, customHeight);
-                    Document document = new Document(pageSize, -50, 0, 130, 0);
-                    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
-                    // in
-                    try{
+                if (listBookingTicketDetail.isEmpty()){
+                    return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+                } else {
+                    for (IBookingDTO temp : listBookingTicketDetail){
+                        String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
+                        float customWidth = 650;
+                        float customHeight = 396;
+                        Rectangle pageSize = new Rectangle(customWidth, customHeight);
+                        Document document = new Document(pageSize, -50, 0, 130, 0);
+                        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        // in
+                        try{
                             document.open();
                             document.newPage();
                             addBackgroundAndContent(writer, document, temp);
-                        document.close();
-                    } catch (DocumentException e) {
-                        throw new RuntimeException(e);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                            document.close();
+                        } catch (DocumentException e) {
+                            throw new RuntimeException(e);
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    iBookingService.setPrintStatus(id);
+
                 }
-                return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
+
+                return new ResponseEntity<>( HttpStatus.OK);
             }
         }
     }

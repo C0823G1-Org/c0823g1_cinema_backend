@@ -1,6 +1,5 @@
 package com.example.c0823g1_movie_backend.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -17,5 +16,6 @@ public interface IBookingDTO {
     Integer getTicketPrice();
     Integer getSeatNumber();
     String getCinemaHall();
+
 
 }
