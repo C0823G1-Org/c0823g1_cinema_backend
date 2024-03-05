@@ -1,9 +1,9 @@
 package com.example.c0823g1_movie_backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-
-import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Role {
@@ -11,19 +11,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @JsonBackReference
-    @OneToMany(mappedBy = "role")
-    private Set<Account> account;
-
     public Role() {
-    }
-
-    public Set<Account> getAccount() {
-        return account;
-    }
-
-    public void setAccount(Set<Account> account) {
-        this.account = account;
     }
 
     public Long getId() {

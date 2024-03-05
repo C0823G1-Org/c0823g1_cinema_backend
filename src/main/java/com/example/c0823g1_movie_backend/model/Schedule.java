@@ -1,16 +1,11 @@
 package com.example.c0823g1_movie_backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
-@Table(name = "schedule", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"movie_id", "date", "schedule_time_id"}),
-        @UniqueConstraint(columnNames = {"movie_id", "date", "schedule_time_id","hall_id"})
-})
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,22 +20,14 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movie;
-    @JsonBackReference
-    @OneToMany(mappedBy = "schedule")
-    private Set<Ticket> tickets;
+
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Schedule() {
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public Long getId() {
         return id;

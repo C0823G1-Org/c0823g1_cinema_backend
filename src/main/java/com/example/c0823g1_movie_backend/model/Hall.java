@@ -1,9 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
-import java.util.Set;
 
 @Entity
 public class Hall {
@@ -12,22 +9,12 @@ public class Hall {
     private Long id;
     private String name;
     private Integer totalSeat;
-    @JsonBackReference
-    @OneToMany(mappedBy = "hall")
-    private Set<Schedule> schedules;
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
     public Hall() {
     }
 
-    public Set<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
-    }
 
     public Long getId() {
         return id;

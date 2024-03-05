@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Email Template</title>
+</head>
+<body>
+<table>
+  <tr>
+    <td>Xin chào, <span th:text="${fullName}"></span></td>
+  </tr>
+  <tr>
+    <td>Hệ thống rạp chiếu phim C0823G1-Cinema xin thông báo:</td>
+  </tr>
+  <tr>
+    <th style="padding-left: 0">Mã Đăng Kí Tài Khoản ủa bạn Là<span th:text="${randomCode}"></span></th>
+  </tr>
+  <tr>
+    <th>Tài Khoản Của bạn là <span th:text="${account}"></span></th>
+  </tr>
+  <tr>
+    <th>Mật Khẩu Của bạn là <span th:text="${password}"></span></th>
+  </tr>
+  <tr>
+    <td>Xin chúc bạn có những trải nghiệm tốt với hệ thống của chúng tôi!</td>
+  </tr>
+  <tr>
+    <td>Chúng tôi trân trọng cám ơn. Và rất hân hạnh được đón tiếp các bạn.</td>
+  </tr>
+  <tr>
+    <td>Mọi thắc mắc xin liên hệ vào số điện thoại: 0362466363</td>
+  </tr>
+  <tr>
+    <td>Hoặc phản hồi qua email này.</td>
+  </tr>
+</table>
+</body>
+</html>

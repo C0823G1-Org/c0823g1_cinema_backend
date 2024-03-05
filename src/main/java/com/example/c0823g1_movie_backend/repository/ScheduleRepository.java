@@ -5,6 +5,7 @@ import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,5 +42,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     HallDTO getHallByScheduleId(@Param("scheduleId") Long scheduleId);
 
     @Query(value = "select * from schedule where date>=current_date and hall_id=:id", nativeQuery = true)
-    List<ScheduleDTO> getScheduleByHallId(@Param("id") Long id);
+    List<IScheduleDTO> getScheduleByHallId(@Param("id") Long id);
+
+    @Query(value = "select * from schedule where id=:id", nativeQuery = true)
+    Schedule getScheduleById(@Param("id") Long id);
+
 }

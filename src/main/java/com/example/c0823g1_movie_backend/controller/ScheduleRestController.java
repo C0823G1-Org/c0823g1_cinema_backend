@@ -2,6 +2,7 @@ package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
+import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.model.Schedule;
@@ -37,6 +38,10 @@ public class ScheduleRestController {
     public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
         List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<IScheduleDTO>> getScheduleByHallId(@PathVariable("id") Long id) {
+        List<IScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
+        System.out.println(scheduleList.get(0).getDate());
+        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
     }
 
     /**
