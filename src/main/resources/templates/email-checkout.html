@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+<div style="width: 80%;;margin-left: 10%;">
+    <img style="width: 50%;height: 15%;margin-left: 25%;"
+         th:src="${image}" alt="Madame Web
+
+    Xem thêm tại: https://www.galaxycine.vn/">
+    <table style="width: 50%;margin-left: 25%;border: 3px black solid;">
+        <tr>
+            <td>Mã đặt vé</td>
+            <td th:text="${code}"></td>
+        </tr>
+        <tr>
+            <td>Phòng chiếu</td>
+            <td th:text="${screen}"></td>
+        </tr>
+        <tr>
+            <td>Ngày chiếu</td>
+            <td th:text="${date}"></td>
+        </tr>
+
+        <tr>
+            <td>Giờ chiếu</td>
+            <td th:text="${time}"></td>
+
+        </tr>
+        <tr>
+            <td>Ghế </td>
+            <td th:text="${seat}"></td>
+        </tr>
+    </table>
+    <img style="width: 30%;height: 30%;margin-left: 35%;"
+         src="https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSh-wrQu254qFaRcoYktJ5QmUhmuUedlbeMaQeaozAVD4lh4ICsGdBNubZ8UlMvWjKC"
+         alt="">
+    <p style="color: red;text-align: center">Vui lòng đến trước 30 phút để nhận vé. Chúc quý khách xem phim vui vẻ</p>
+</div>
+</body>
+
+</html>

@@ -783,7 +783,7 @@ public class AccountRestController_register {
         accountDTO.setPhoneNumber("0387274038");
         accountDTO.setGender(false);
         accountDTO.setEmail("tatuan08122k4@gmail.com");
-        accountDTO.setAddress("");
+        accountDTO.setAddress("cxz");
         accountDTO.setMemberCode("TV-1");
         accountDTO.setPoint(0);
         accountDTO.setIsDeleted(false);
@@ -804,6 +804,34 @@ public class AccountRestController_register {
     @Test
     public void register_Success_18() throws Exception {
         AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAccountName("tuan98765");
+        accountDTO.setFullName("Trần Anh Tuấn");
+        accountDTO.setPassword("cxzcxzcx");
+        accountDTO.setPhoneNumber("0387276789");
+        accountDTO.setGender(false);
+        accountDTO.setEmail("cx@gmail.com");
+        accountDTO.setAddress("cxzcxz");
+        accountDTO.setMemberCode("TV-1");
+        accountDTO.setPoint(0);
+        accountDTO.setIsDeleted(false);
+        accountDTO.setVerificationCode("123456");
+        LocalDate localDate = LocalDate.now();
+        accountDTO.setBirthday(localDate);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/account/register").content(this.objectMapper.writeValueAsString(accountDTO)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    /**
+     * Creator : TuanTA
+     * Duplicate AccountName
+     * Goal : HttpStatus = 400
+     * date create : 01-03-2024
+     * @throws Exception
+     */
+    @Test
+    public void register_DuplicateAccountName_100() throws Exception {
+        AccountDTO accountDTO = new AccountDTO();
         accountDTO.setAccountName("tuan123456");
         accountDTO.setFullName("Trần Anh Tuấn");
         accountDTO.setPassword("cxzcxzcx");
@@ -820,7 +848,63 @@ public class AccountRestController_register {
         this.mockMvc.perform(
                         MockMvcRequestBuilders.post("/account/register").content(this.objectMapper.writeValueAsString(accountDTO)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
+    }
+    /**
+     * Creator : TuanTA
+     * Duplicate Email
+     * Goal : HttpStatus = 400
+     * date create : 01-03-2024
+     * @throws Exception
+     */
+    @Test
+    public void register_DuplicateEmail_101() throws Exception {
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAccountName("tuan123456");
+        accountDTO.setFullName("Trần Anh Tuấn");
+        accountDTO.setPassword("cxzcxzcx");
+        accountDTO.setPhoneNumber("0387274038");
+        accountDTO.setGender(false);
+        accountDTO.setEmail("tatuan08122k4@gmail.com");
+        accountDTO.setAddress("");
+        accountDTO.setMemberCode("TV-1");
+        accountDTO.setPoint(0);
+        accountDTO.setIsDeleted(false);
+        accountDTO.setVerificationCode("123456");
+        LocalDate localDate = LocalDate.now();
+        accountDTO.setBirthday(localDate);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/account/register").content(this.objectMapper.writeValueAsString(accountDTO)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+    /**
+     * Creator : TuanTA
+     * Duplicate Phone Number
+     * Goal : HttpStatus = 400
+     * date create : 01-03-2024
+     * @throws Exception
+     */
+    @Test
+    public void register_DuplicatePhoneNumber_102() throws Exception {
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAccountName("tuan123456");
+        accountDTO.setFullName("Trần Anh Tuấn");
+        accountDTO.setPassword("cxzcxzcx");
+        accountDTO.setPhoneNumber("0387274038");
+        accountDTO.setGender(false);
+        accountDTO.setEmail("tatuan08122k4@gmail.com");
+        accountDTO.setAddress("");
+        accountDTO.setMemberCode("TV-1");
+        accountDTO.setPoint(0);
+        accountDTO.setIsDeleted(false);
+        accountDTO.setVerificationCode("123456");
+        LocalDate localDate = LocalDate.now();
+        accountDTO.setBirthday(localDate);
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/account/register").content(this.objectMapper.writeValueAsString(accountDTO)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
 }

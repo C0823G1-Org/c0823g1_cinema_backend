@@ -27,11 +27,6 @@ import java.util.List;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
-    /*    Create by: BaoLVN
-     *     Date created : 29/02/2024
-     *     Function: Get a list of movies with many views
-     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
-     * */
 
     /**
      * Created by DuyDD
@@ -49,6 +44,11 @@ public class MovieRestController {
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
 
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get a list of movies with many views
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
@@ -81,14 +81,13 @@ public class MovieRestController {
      *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
      * */
     @GetMapping("/search")
-    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
+    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name",defaultValue = "") String value,
                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 4);
         Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
         if (searchMovies == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        System.out.println(searchMovies.getSize());
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
     }
 
@@ -149,7 +148,6 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if have list movie and HTTPStatus.NO_CONTENT if list movie null
      */
-
     @GetMapping("/list")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "") String publisher,
