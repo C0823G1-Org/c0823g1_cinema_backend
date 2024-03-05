@@ -49,18 +49,20 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where booking.account_id = :id and booking.date_booking between :dateStart and :dateEnd limit :page,5", nativeQuery = true)
     List<HistoryBookingDTO> searchMovieBookingByDate(@Param("id") Long id, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, @Param("page") int page);
 
-      @Query(value =
-              " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
-              " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
-              " booking.date_booking as dateBooking ,MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
-              " FROM booking\n" +
-              "  left join account on booking.account_id  = account.id\n" +
-              "  left join ticket on booking.id = ticket.booking_id \n" +
-              "  left join schedule on ticket.schedule_id = schedule.id\n" +
-              "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
-              "  left join movie on movie.id = schedule.movie_id\n" +
-              "  group by booking.id", nativeQuery = true)
-      Page<IBookingDTO> findAllBookingTicket(Pageable pageable,LocalDateTime time);
+    @Query(value =
+            " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
+            " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+            " booking.date_booking as dateBooking ,MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+                    ", booking.print_status as printStatus\n"+
+            " FROM booking\n" +
+            "  left join account on booking.account_id  = account.id\n" +
+            "  left join ticket on booking.id = ticket.booking_id \n" +
+            "  left join schedule on ticket.schedule_id = schedule.id\n" +
+            "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+            "  left join movie on movie.id = schedule.movie_id\n" +
+                    "where booking.print_status = 0\n" +
+            "  group by booking.id", nativeQuery = true)
+    Page<IBookingDTO> findAllBookingTicket(Pageable pageable,LocalDateTime time);
 
 
     @Query(value =
@@ -88,7 +90,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "  left join movie on movie.id = schedule.movie_id\n" +
             "  where ( booking.id = :idBook) \n" +
             "  group by booking.id;",nativeQuery = true)
-    IBookingDTO findBookingTicketById(@Param("idBook") Integer idBook);
+    IBookingDTO findBookingTicketById(@Param("idBook") Long idBook);
 
 
     @Query(value =
@@ -105,7 +107,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     " WHERE booking.id = :idBook\n" +
                     " GROUP BY booking.id, booking.print_status, account.id, account.full_name, account.id_number, account.phone_number, movie.ticket_price, booking.date_booking, ticket.seat_number;",
             nativeQuery = true)
-    List<IBookingDTO> listBookingTicketDetail(@Param("idBook") Integer idBook);
+    List<IBookingDTO> listBookingTicketDetail(@Param("idBook") Long idBook);
 
     @Modifying
     @Query(value = "INSERT INTO booking(account_id,date_booking,print_status,is_deleted) VALUES (:accountId, :date,0,0)", nativeQuery = true)
@@ -125,4 +127,36 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "delete from booking where  id = :id",nativeQuery = true)
     void removeBooking(@Param("id")Long bookingId);
 
+@Query(value =
+        " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
+                " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+                " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+                " FROM booking\n" +
+                "  left join account on booking.account_id  = account.id\n" +
+                "  left join ticket on booking.id = ticket.booking_id \n" +
+                "  left join schedule on ticket.schedule_id = schedule.id\n" +
+                "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+                "  left join movie on movie.id = schedule.movie_id\n" +
+                " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and ( booking.date_booking >= %:dateSearch%) and (booking.print_status = 0)\n " +
+                "  group by booking.id", nativeQuery = true)
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(@Param("search") String search, @Param("dateSearch") LocalDateTime dateNow, Pageable pageable);
+
+    @Query(value =
+            " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
+                    " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+                    " booking.date_booking as dateBooking , MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+                    " FROM booking\n" +
+                    "  left join account on booking.account_id  = account.id\n" +
+                    "  left join ticket on booking.id = ticket.booking_id \n" +
+                    "  left join schedule on ticket.schedule_id = schedule.id\n" +
+                    "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+                    "  left join movie on movie.id = schedule.movie_id\n" +
+                    " where  (booking.date_booking >= %:dateSearch%) and (booking.print_status = 0)\n" +
+                    "  group by booking.id", nativeQuery = true)
+    Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE booking SET print_status = 1 where id  =:id", nativeQuery = true)
+    void setPrintStatus(@Param("id") long id);
 }

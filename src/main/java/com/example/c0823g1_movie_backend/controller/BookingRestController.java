@@ -29,10 +29,12 @@ import java.time.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,12 +94,13 @@ public class BookingRestController {
     }
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket(@PageableDefault(size = 2) Pageable pageable) {
+    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 4) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         if (listBookingTicket.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
     }
 
@@ -111,46 +114,93 @@ public class BookingRestController {
      */
 
 
-    /* Create by: DoLV
-     * Date created: 29/02/2024
-     * Function: Displays list and pagination of ticket booking with search action
-     */
-    @GetMapping("/search/{search}")
-    public ResponseEntity<Page<IBookingDTO>> searchBookingTicket(@PathVariable("search") String search, @RequestParam(defaultValue = "0") int page) {
-        LocalDateTime time = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(page, 2);
-        Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, time, pageable);
-        if (listBookingTicket.isEmpty()) {
-            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, time);
-            return new ResponseEntity<>(listBookingTicketNotFound, HttpStatus.NOT_FOUND);
+    @GetMapping("/search")
+    public ResponseEntity<?> searchBookingTicket(
+            @RequestParam(value = "searchInput", required = false) String search,
+            @RequestParam(value = "date", required = false) LocalDate localDate,
+            @PageableDefault(size = 4) Pageable pageable) {
+        LocalDateTime timeNow = LocalDateTime.now();
+        if (search == null && localDate == null) {
+            ApiResponse response = new ApiResponse<>();
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
+            response.setData(listBookingTicketNotFound);
+            response.setFlag("FOUND");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        System.out.println(listBookingTicket.getSize() + " search");
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
+
+        if (search != null && localDate != null) {
+            LocalDateTime dateSearch = localDate.atStartOfDay();
+            Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearchAndDate(search, dateSearch, pageable);
+            return getResponseEntity(listBookingTicket, timeNow, pageable);
+        } else if (search != null) {
+            Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterSearch(search, timeNow, pageable);
+            return getResponseEntity(listBookingTicket, timeNow, pageable);
+        } else {
+            LocalDateTime dateSearch = localDate.atStartOfDay();
+            Page<IBookingDTO> listBookingTicket = iBookingService.searchBookingTicketWithParameterDate(dateSearch, pageable);
+            return getResponseEntity(listBookingTicket, dateSearch, pageable);
+        }
+    }
+
+    private ResponseEntity<ApiResponse<Page<IBookingDTO>>> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
+        ApiResponse<Page<IBookingDTO>> response = new ApiResponse<>();
+        if (listBookingTicket.isEmpty()) {
+            Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
+            response.setFlag("NOT_FOUND");
+            response.setData(listBookingTicketNotFound);
+        } else {
+            response.setFlag("FOUND");
+            response.setData(listBookingTicket);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /* Created by: DoLV
      * Date created: February 29, 2024
-     * Function: Select a booking ticket detail . If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, it returns the booking ticket object to be printed.
+     * Function: Select a booking ticket detail . If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false,
+     * it returns the booking ticket object to be printed.
      */
 
-    @GetMapping("/exportDetail/{idBookingTicket}")
-    public ResponseEntity<?> bookingTicketDetail(@PathVariable("idBookingTicket") Integer id) {
-        IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
-        LocalDateTime time = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
+    @GetMapping("/exportDetail")
+    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 2) Pageable pageable){
+        try{
+            Long bookingId = parseLong(id);
 
-        if (iBookingDTO == null) {
-            return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
-        } else {
-            if (!iBookingDTO.getPrintStatus()) {
-                return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
+            IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(bookingId);
+            LocalDateTime time = LocalDateTime.now();
+            Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+
+            if (iBookingDTO == null){
+                return new ResponseEntity<>(listBookingTicket, HttpStatus.BAD_REQUEST);
             } else {
-                List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
-
-                return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
+                if (iBookingDTO.getPrintStatus()){
+                    return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
+                } else {
+                    List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(bookingId);
+                    return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
+                }
             }
+
+        } catch (NumberFormatException e){
+            return new ResponseEntity<>("Invalid idBooking format", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private Long parseLong(String id) throws NumberFormatException {
+        if (!id.matches("\\d+")) {
+            throw new NumberFormatException("Invalid idBooking format");
+        }
+        BigInteger idBigInt = new BigInteger(id);
+        if (idBigInt.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+            throw new NumberFormatException("Invalid idBooking format. Number exceeds Long.MAX_VALUE.");
+        }
+        Long idChange =  idBigInt.longValue();
+        if (idChange <= 0L) {
+            throw new NumberFormatException("Invalid idBooking format. Number must not be negative.");
+        }
+
+        return idChange;
     }
 
 
@@ -158,79 +208,74 @@ public class BookingRestController {
      * Date created: February 29, 2024
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
-    @GetMapping("/exportPDF/{idBookingTicket}")
-    public ResponseEntity<?> bookingTicketExportPDF(@PathVariable("idBookingTicket") Integer id) throws FileNotFoundException, DocumentException {
+    @GetMapping("/exportPDF")
+    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput) throws FileNotFoundException, DocumentException {
+        Long id = parseLong(idInput);
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
-
-        if (iBookingDTO == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (iBookingDTO == null){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
         } else {
-            if (!iBookingDTO.getPrintStatus()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (iBookingDTO.getPrintStatus()){
+                return new ResponseEntity<>("printed", HttpStatus.NO_CONTENT);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
-
-                for (IBookingDTO temp : listBookingTicketDetail) {
-                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_" + temp.getSeatNumber() + ".pdf";
-                    float customWidth = 650;
-                    float customHeight = 396;
-                    Rectangle pageSize = new Rectangle(customWidth, customHeight);
-                    Document document = new Document(pageSize, -50, 0, 130, 0);
-                    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
-                    // in
-                    try {
-                        document.open();
-                        document.newPage();
-                        addBackgroundAndContent(writer, document, temp);
-
-                        document.close();
-
-                    } catch (DocumentException e) {
-                        throw new RuntimeException(e);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                if (listBookingTicketDetail.isEmpty()){
+                    return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+                } else {
+                    for (IBookingDTO temp : listBookingTicketDetail){
+                        String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
+                        float customWidth = 650;
+                        float customHeight = 396;
+                        Rectangle pageSize = new Rectangle(customWidth, customHeight);
+                        Document document = new Document(pageSize, -50, 0, 130, 0);
+                        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+                        // in
+                        try{
+                            document.open();
+                            document.newPage();
+                            addBackgroundAndContent(writer, document, temp);
+                            document.close();
+                        } catch (DocumentException e) {
+                            throw new RuntimeException(e);
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    iBookingService.setPrintStatus(id);
+
                 }
 
-
-                return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
+                return new ResponseEntity<>( HttpStatus.OK);
             }
         }
     }
-
 
     /* Created by: DoLV
      * Date created: February 29, 2024
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
-    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO) throws IOException, DocumentException {
+
+    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
         Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
-
-
         float documentWidth = document.getPageSize().getWidth();
         float documentHeight = document.getPageSize().getHeight();
-
         float width = 680;
         float height = 400;
-
         background.scaleToFit(width, height);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
-
-        background.setAbsolutePosition(0, 0);
+        background.setAbsolutePosition(0,0);
         Rectangle rectBackground = new Rectangle(
-                documentWidth,
+                documentWidth ,
                 documentHeight
         );
         rectBackground.setBorder(Rectangle.BOX);
         rectBackground.setBorderWidth(1);
         canvas.rectangle(rectBackground);
-
         canvas.addImage(background);
-
         BaseColor color = BaseColor.BLACK;
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
 //        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, color);
@@ -242,8 +287,7 @@ public class BookingRestController {
         float yTable = yBackground - 70;
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
-
-        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(), font));
+        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDateTime = ticket.getStartTime().format(formatter);
         table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));
@@ -253,10 +297,8 @@ public class BookingRestController {
         table.addCell(createCell("Room Number: " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-
         document.add(table);
     }
-
     private PdfPCell createCell(String content, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setBorder(Rectangle.NO_BORDER);
@@ -288,15 +330,6 @@ public class BookingRestController {
     /*
      * Create by HaiNT
      * Date create: 29/02/2024
-     * Method: Receive request from the client when clicking
-     * to book a ticket and return information to the Booking Confirmation page
-     * @Param ticket(idMovie,scheduleId,seatList)
-     * @Return object bookingDTO(image,movieName,screen,movieDate,timeStart,seat,price,sum)
-     */
-
-    /*
-     * Create by HaiNT
-     * Date create: 29/02/2024
      * Method: Receive request from the client when checkout successfully
      * @RequestBody checkoutDTO(accountId,scheduleId,seatList)
      * @Return status
@@ -323,68 +356,69 @@ public class BookingRestController {
             if (s > schedule.get().getHall().getTotalSeat() || s < 0) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-                String ss = s.toString();
-                if (s <= 10) {
-                    result = "A" + s;
-                } else if (s <= 20) {
-                    if (s == 20) {
-                        result = "B10";
-                    } else {
-                        result = "B" + ss.charAt(ss.length() - 1);
-                    }
-
-                } else if (s <= 30) {
-                    if (s == 30) {
-                        result = "C10";
-                    } else {
-                        result = "C" + ss.charAt(ss.length() - 1);
-                    }
-                } else if (s <= 40) {
-                    if (s == 40) {
-                        result = "D10";
-                    } else {
-                        result = "D" + ss.charAt(ss.length() - 1);
-                    }
-                } else if (s <= 50) {
-                    if (s == 50) {
-                        result = "E10";
-                    } else {
-                        result = "E" + ss.charAt(ss.length() - 1);
-                    }
-                }
-                seatString = seatString + " ";
-                seat.add(result);
-            }
-            LocalDateTime bookingDate = LocalDateTime.now();
-            iBookingService.saveBooking(account.getId(), bookingDate);
-            Long bookingId = iBookingService.getBooking();
-            List<Ticket> checkExist;
-            for (Integer seatN : ticketDTO.getSeatList()) {
-                checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
-                if (checkExist.isEmpty()) {
-                    ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+            String ss = s.toString();
+            if (s <= 10) {
+                result = "A" + s;
+            } else if (s <= 20) {
+                if (s == 20) {
+                    result = "B10";
                 } else {
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    result = "B" + ss.charAt(ss.length() - 1);
+                }
+
+            } else if (s <= 30) {
+                if (s == 30) {
+                    result = "C10";
+                } else {
+                    result = "C" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 40) {
+                if (s == 40) {
+                    result = "D10";
+                } else {
+                    result = "D" + ss.charAt(ss.length() - 1);
+                }
+            } else if (s <= 50) {
+                if (s == 50) {
+                    result = "E10";
+                } else {
+                    result = "E" + ss.charAt(ss.length() - 1);
                 }
             }
-//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
-            Long accountId = ticketDTO.getAccountId();
-            Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
-            String image = movie.getPoster();
-            String movieName = movie.getName();
-            String screen = schedule.get().getHall().getName();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String movieDate = schedule.get().getDate().format(formatter);
-            String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
-            Integer price = movie.getTicketPrice();
-            List<Integer> seatNumber = ticketDTO.getSeatList();
-            Long sum = (long) (price * (seatNumber.size()));
-            String email = account.getEmail();
-            Long scheduleId = schedule.get().getId();
-            BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
-            return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-
+            seatString = seatString + " ";
+            seat.add(result);
         }
+        LocalDateTime bookingDate = LocalDateTime.now();
+        iBookingService.saveBooking(account.getId(), bookingDate);
+        Long bookingId = iBookingService.getBooking();
+        List<Ticket> checkExist;
+        for (Integer seatN : ticketDTO.getSeatList()) {
+            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+            if (checkExist.isEmpty()) {
+                ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
+        Long accountId = ticketDTO.getAccountId();
+        Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
+        String image = movie.getPoster();
+        String movieName = movie.getName();
+        String screen = schedule.get().getHall().getName();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String movieDate = schedule.get().getDate().format(formatter);
+        String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
+        Integer price = movie.getTicketPrice();
+        List<Integer> seatNumber = ticketDTO.getSeatList();
+        Long sum = (long) (price * (seatNumber.size()));
+        String email = account.getEmail();
+        Long scheduleId = schedule.get().getId();
+        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+        System.out.println(bookingDTO);
+        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+
+    }
 
 
 

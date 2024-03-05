@@ -67,12 +67,12 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public IBookingDTO findBookingTicketById(Integer id) {
+    public IBookingDTO findBookingTicketById(Long id) {
         return bookingRepository.findBookingTicketById(id);
     }
 
     @Override
-    public List<IBookingDTO> listBookingTicketDetail(Integer id) {
+    public List<IBookingDTO> listBookingTicketDetail(Long id) {
         return bookingRepository.listBookingTicketDetail(id);
     }
 
@@ -120,5 +120,20 @@ public class BookingService implements IBookingService {
     public void removeBooking(Long bookingId) {
         bookingRepository.removeBooking(bookingId);
     }
+    @Override
+    public Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterSearchAndDate(search,dateSearch,pageable);
+    }
+
+    @Override
+    public Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterDate(dateSearch,pageable);
+    }
+
+    @Override
+    public void setPrintStatus(Long id) {
+        bookingRepository.setPrintStatus(id);
+    }
+
 
 }

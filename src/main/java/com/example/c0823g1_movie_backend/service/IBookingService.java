@@ -20,9 +20,9 @@ public interface IBookingService {
 
     Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time, Pageable pageable);
 
-    IBookingDTO findBookingTicketById(Integer id);
+    IBookingDTO findBookingTicketById(Long id);
 
-    List<IBookingDTO> listBookingTicketDetail(Integer id);
+    List<IBookingDTO> listBookingTicketDetail(Long id);
 
     List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page);
 
@@ -35,4 +35,10 @@ public interface IBookingService {
     void addAccumulatedPoints(Long id, int accumulatedPoints);
 
     void removeBooking(Long bookingId);
+
+    Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable);
+
+    Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
+
+    void setPrintStatus(Long id);
 }
