@@ -94,14 +94,19 @@ public class BookingRestController {
     }
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Page<IBookingDTO>> listBookingTicket( @PageableDefault(size = 4) Pageable pageable ) {
+    public ResponseEntity<?> listBookingTicket( @PageableDefault(size = 4) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
-        if (listBookingTicket.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiResponse response = new ApiResponse<>();
+        if (listBookingTicket.isEmpty()){
+            response.setFlag("NOT_FOUND");
+            response.setData(listBookingTicket);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
+        response.setFlag("FOUND");
+        response.setData(listBookingTicket);
 
-        return new ResponseEntity<>(listBookingTicket, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
@@ -163,22 +168,29 @@ public class BookingRestController {
      */
 
     @GetMapping("/exportDetail")
-    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 2) Pageable pageable){
+    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 4) Pageable pageable){
         try{
+            ApiResponse response = new ApiResponse<>();
             Long bookingId = parseLong(id);
-
             IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(bookingId);
             LocalDateTime time = LocalDateTime.now();
             Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
 
             if (iBookingDTO == null){
-                return new ResponseEntity<>(listBookingTicket, HttpStatus.BAD_REQUEST);
+                response.setData(listBookingTicket);
+                response.setFlag("BAD_REQUEST");
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
+
                 if (iBookingDTO.getPrintStatus()){
-                    return new ResponseEntity<>(listBookingTicket, HttpStatus.NOT_FOUND);
+                    response.setData(listBookingTicket);
+                    response.setFlag("BAD_REQUEST");
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
+                    response.setFlag("FOUND");
                     List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(bookingId);
-                    return new ResponseEntity<>(listBookingTicketDetail, HttpStatus.OK);
+                    response.setData(listBookingTicketDetail);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 }
             }
 
@@ -209,19 +221,28 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
-    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput) throws FileNotFoundException, DocumentException {
+    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 4) Pageable pageable) throws FileNotFoundException, DocumentException {
         Long id = parseLong(idInput);
+        LocalDateTime time = LocalDateTime.now();
+        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+        ApiResponse response = new ApiResponse<>();
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
+        response.setData(listBookingTicket);
+
         if (iBookingDTO == null){
-            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+            response.setFlag("BAD_REQUEST");
+            return new ResponseEntity<>( response,HttpStatus.OK);
         } else {
             if (iBookingDTO.getPrintStatus()){
-                return new ResponseEntity<>("printed", HttpStatus.NO_CONTENT);
+                response.setFlag("NO_CONTENT");
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
                 if (listBookingTicketDetail.isEmpty()){
-                    return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+                    response.setFlag("NO_FOUND");
+                    return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
+                    response.setFlag("OK");
                     for (IBookingDTO temp : listBookingTicketDetail){
                         String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
                         float customWidth = 650;
@@ -247,7 +268,7 @@ public class BookingRestController {
 
                 }
 
-                return new ResponseEntity<>( HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
     }
