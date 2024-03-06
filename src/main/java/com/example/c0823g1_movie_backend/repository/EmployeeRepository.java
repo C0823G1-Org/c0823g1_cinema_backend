@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Account,Long> {
-    @Query(value = "select * from account where account.full_name like :name and is_deleted = 0", nativeQuery = true)
+    @Query(value = "select * from account where account.full_name like :name and role_id = 2 and is_deleted = 0", nativeQuery = true)
     Page<Account> searchByName(@Param("name") String name, Pageable pageable);
     @Transactional
     @Modifying
