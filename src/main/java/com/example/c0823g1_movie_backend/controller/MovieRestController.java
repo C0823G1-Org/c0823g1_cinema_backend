@@ -65,10 +65,7 @@ public class MovieRestController {
      * */
     @GetMapping("/current")
     public ResponseEntity<List<IMovieDTO>> getAllMovieCurrent() {
-        LocalDate localDate = LocalDate.now();
-        System.out.println(localDate);
         List<IMovieDTO> list = movieService.getAllMovieCurrent();
-        System.out.println(list.size());
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -81,10 +78,10 @@ public class MovieRestController {
      *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
      * */
     @GetMapping("/search")
-    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name",defaultValue = "") String value,
+    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 4);
-        Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
+        Page<IMovieDTO> searchMovies = movieService.searchMovie(value.trim(), pageable);
         if (searchMovies == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -154,7 +151,7 @@ public class MovieRestController {
                                                            @RequestParam(defaultValue = "") String name,
                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
         if (moviePage.isEmpty()) {

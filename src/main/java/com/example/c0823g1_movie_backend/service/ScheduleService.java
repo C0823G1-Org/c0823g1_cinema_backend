@@ -6,6 +6,7 @@ import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import com.example.c0823g1_movie_backend.repository.ScheduleRepository;
@@ -60,5 +61,9 @@ public class ScheduleService implements IScheduleService {
     @Override
     public Optional<Schedule> getScheduleById(Long scheduleId) {
         return Optional.ofNullable(scheduleRepository.getScheduleById(scheduleId));
+    }
+    @Override
+    public List<Schedule> getScheduleByMovieId(Long movieId) {
+        return scheduleRepository.getScheduleByMovieId(movieId);
     }
 }

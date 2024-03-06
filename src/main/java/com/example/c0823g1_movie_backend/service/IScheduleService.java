@@ -6,6 +6,7 @@ import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,6 @@ public interface IScheduleService extends IGeneralService<Schedule> {
     Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(Long movieId,LocalDate date,Long scheduleTimeId);
     HallDTO getHallByScheduleId(Long scheduleId);
     List<ScheduleDTO> getScheduleByHallId(Long id);
+
+    List<Schedule> getScheduleByMovieId(Long movieId);
 }

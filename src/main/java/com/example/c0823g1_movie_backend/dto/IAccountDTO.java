@@ -19,4 +19,5 @@ public interface IAccountDTO {
     String getFacebookId();
     String getGoogleId();
     String getPhoneNumber();
+    String getProfilePicture();
 }
