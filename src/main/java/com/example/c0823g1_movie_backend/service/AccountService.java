@@ -58,7 +58,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public Account getAllInfoUser(String name) {
-        return accountRepository.getAllInforUser('%'+name+'%');
+        return accountRepository.getAllInforUser('%' + name + '%');
     }
 
     @Override
@@ -68,7 +68,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public void register(Account account, Long role) {
-        accountRepository.register(account,role);
+        accountRepository.register(account, role);
     }
 
 
@@ -212,6 +212,17 @@ public class AccountService implements IAccountService {
         }
     }
 
+    @Override
+    public void updateAccount(Account account, Long id) {
+        accountRepository.updateAccount(account, id);
+
+    }
+
+    @Override
+    public void updatePassword(String password, String accountName) {
+        accountRepository.updatePassword(password, accountName);
+    }
+
 
     @Override
     public boolean checkLoginByEmail(Account account) {
@@ -238,6 +249,8 @@ public class AccountService implements IAccountService {
         return accountRepository.findAccountById(accountId);
     }
 
+
+
 //    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
 //        MimeMessage mimeMessage = emailSender.createMimeMessage();
 //        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -251,4 +264,18 @@ public class AccountService implements IAccountService {
 //            e.printStackTrace();
 //        }
 //    }
+//    public void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context) {
+//        MimeMessage mimeMessage = emailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+//        try {
+//            helper.setTo(to);
+//            helper.setSubject(subject);
+//            String htmlContent = templateEngine.process(templateName, context);
+//            helper.setText(htmlContent, true);
+//            emailSender.send(mimeMessage);
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }
