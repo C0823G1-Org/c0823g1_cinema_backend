@@ -94,7 +94,7 @@ public class BookingRestController {
     }
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<?> listBookingTicket( @PageableDefault(size = 4) Pageable pageable ) {
+    public ResponseEntity<?> listBookingTicket( @PageableDefault(size = 5) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         ApiResponse response = new ApiResponse<>();
@@ -123,7 +123,8 @@ public class BookingRestController {
     public ResponseEntity<?> searchBookingTicket(
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
-            @PageableDefault(size = 4) Pageable pageable) {
+            @PageableDefault(size = 5) Pageable pageable) {
+        search = search.trim();
         LocalDateTime timeNow = LocalDateTime.now();
         if (search == null && localDate == null) {
             ApiResponse response = new ApiResponse<>();
@@ -168,7 +169,7 @@ public class BookingRestController {
      */
 
     @GetMapping("/exportDetail")
-    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 4) Pageable pageable){
+    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 5) Pageable pageable){
         try{
             ApiResponse response = new ApiResponse<>();
             Long bookingId = parseLong(id);
@@ -221,7 +222,7 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
-    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 4) Pageable pageable) throws FileNotFoundException, DocumentException {
+    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws FileNotFoundException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
@@ -243,19 +244,20 @@ public class BookingRestController {
                     return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
                     response.setFlag("OK");
+                    String fileName = "D:\\filePdf\\ticket.pdf";
+                    float customWidth = 650;
+                    float customHeight = 396;
+                    Rectangle pageSize = new Rectangle(customWidth, customHeight);
+                    Document document = new Document(pageSize, -50, 0, 40, 0);
+                    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+//                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
+                    document.open();
                     for (IBookingDTO temp : listBookingTicketDetail){
-                        String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
-                        float customWidth = 650;
-                        float customHeight = 396;
-                        Rectangle pageSize = new Rectangle(customWidth, customHeight);
-                        Document document = new Document(pageSize, -50, 0, 130, 0);
-                        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
                         // in
                         try{
-                            document.open();
                             document.newPage();
                             addBackgroundAndContent(writer, document, temp);
-                            document.close();
+
                         } catch (DocumentException e) {
                             throw new RuntimeException(e);
                         } catch (FileNotFoundException e) {
@@ -264,6 +266,7 @@ public class BookingRestController {
                             throw new RuntimeException(e);
                         }
                     }
+                    document.close();
                     iBookingService.setPrintStatus(id);
 
                 }
@@ -286,6 +289,7 @@ public class BookingRestController {
         float width = 680;
         float height = 400;
         background.scaleToFit(width, height);
+        background.setRotationDegrees(-270);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
         background.setAbsolutePosition(0,0);
@@ -301,13 +305,15 @@ public class BookingRestController {
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
 //        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, color);
 
-        PdfPTable table = new PdfPTable(2);
+        PdfPTable table = new PdfPTable(1);
         // khoang cach 2 col
         table.setWidthPercentage(65);
         table.setTotalWidth(width);
         float yTable = yBackground - 70;
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
+        table.addCell(createTitleCell("Vé xem phim", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
+
         table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDateTime = ticket.getStartTime().format(formatter);
@@ -323,6 +329,12 @@ public class BookingRestController {
     private PdfPCell createCell(String content, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setBorder(Rectangle.NO_BORDER);
+        return cell;
+    }
+    private PdfPCell createTitleCell(String content, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
     }
 
