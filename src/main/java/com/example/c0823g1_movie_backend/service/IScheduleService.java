@@ -24,8 +24,6 @@ public interface IScheduleService extends IGeneralService<Schedule> {
     List<ScheduleDTO> findDateByMovieId(Long movieId);
     List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(Long movieId, LocalDate date);
     Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(Long movieId,LocalDate date,Long scheduleTimeId);
-    HallDTO getHallByScheduleId(Long scheduleId);
-    List<ScheduleDTO> getScheduleByHallId(Long id);
+    List<Schedule> getScheduleByMovieId( Long movieId);
 
-    List<Schedule> getScheduleByMovieId(Long movieId);
 }

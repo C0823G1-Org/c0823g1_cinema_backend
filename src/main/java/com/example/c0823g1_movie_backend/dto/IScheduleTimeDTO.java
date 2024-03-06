@@ -7,4 +7,5 @@ import java.time.LocalTime;
 
 public interface IScheduleTimeDTO {
     LocalTime getScheduleTime();
+    Long getId();
 }

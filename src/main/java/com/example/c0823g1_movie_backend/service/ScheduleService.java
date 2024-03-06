@@ -48,10 +48,6 @@ public class ScheduleService implements IScheduleService {
         return scheduleRepository.getScheduleByMovieIdAndDateAndScheduleTimeId(movieId, date, scheduleTimeId);
     }
 
-    @Override
-    public HallDTO getHallByScheduleId(Long scheduleId) {
-        return scheduleRepository.getHallByScheduleId(scheduleId);
-    }
 
     @Override
     public List<IScheduleDTO> getScheduleByHallId(Long id) {
@@ -66,4 +62,5 @@ public class ScheduleService implements IScheduleService {
     public List<Schedule> getScheduleByMovieId(Long movieId) {
         return scheduleRepository.getScheduleByMovieId(movieId);
     }
+
 }

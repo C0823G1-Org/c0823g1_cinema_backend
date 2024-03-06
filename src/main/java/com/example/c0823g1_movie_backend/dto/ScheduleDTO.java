@@ -4,4 +4,5 @@ import java.time.LocalDate;
 
 public interface ScheduleDTO {
     LocalDate getDateTime();
+
 }

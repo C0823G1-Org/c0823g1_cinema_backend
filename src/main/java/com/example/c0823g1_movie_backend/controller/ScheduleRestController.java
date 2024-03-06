@@ -35,15 +35,15 @@ public class ScheduleRestController {
      * @return HTTPStatus.OK and the list of schedules
      */
 
-    @GetMapping("/hall/{id}")
-    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
-        List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    public ResponseEntity<List<IScheduleDTO>> getScheduleByHallId(@PathVariable("id") Long id) {
-        List<IScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
-        System.out.println(scheduleList.get(0).getDate());
-        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
-    }
+//    @GetMapping("/hall/{id}")
+//    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
+//        List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    public ResponseEntity<List<IScheduleDTO>> getScheduleByHallId(@PathVariable("id") Long id) {
+//        List<IScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
+//        System.out.println(scheduleList.get(0).getDate());
+//        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
+//    }
 
     @GetMapping("/movie")
     public ResponseEntity<List<Schedule>> getScheduleByMovieId(@RequestParam Long movieId) {
@@ -108,13 +108,13 @@ public class ScheduleRestController {
      * Function: to find an object hall by schedule id
      * Return: HttpStatus.BAD_REQUEST if hall not found/ HttpStatus.OK and an object hall
      */
-    @GetMapping("/hall")
-    public ResponseEntity<Hall> getHallByScheduleId(@RequestParam Long scheduleId) {
-        HallDTO hallDTO = scheduleService.getHallByScheduleId(scheduleId);
-        Hall hall = hallService.getHallById(hallDTO.getId());
-        if (hall == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(hall, HttpStatus.OK);
-    }
+//    @GetMapping("/hall")
+//    public ResponseEntity<Hall> getHallByScheduleId(@RequestParam Long scheduleId) {
+//        HallDTO hallDTO = scheduleService.getHallByScheduleId(scheduleId);
+//        Hall hall = hallService.getHallById(hallDTO.getId());
+//        if (hall == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(hall, HttpStatus.OK);
+//    }
 }

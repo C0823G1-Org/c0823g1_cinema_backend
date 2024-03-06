@@ -24,12 +24,21 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query(value = "select date as dateTime from schedule where movie_id = :movieId ; ", nativeQuery = true)
+    @Query(value = "select date as dateTime from schedule where movie_id = :movieId and date>= current_date group by dateTime order by dateTime; ", nativeQuery = true)
     List<ScheduleDTO> findDateByMovieId(@Param("movieId") Long movieId);
 
-    @Query(value = "select st.schedule_time as scheduleTime from schedule_time st join schedule s on st.id in" +
-            "(select schedule_time_id from schedule where movie_id = :movieId and date = :dateTime) group by st.id", nativeQuery = true)
-    List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(@Param("movieId")Long movieId,
+    @Query(value = "select st.id, st.schedule_time as scheduleTime\n" +
+            "from schedule_time st\n" +
+            "join schedule s on st.id in\n" +
+            "   (select schedule_time_id from schedule where movie_id = :movieId and date = :dateTime)\n" +
+            "where \n" +
+            "   ((date = CURRENT_DATE() and st.schedule_time >= TIMESTAMPADD(MINUTE, -15, NOW())" +
+            "and movie_id = :movieId and date = :dateTime)\n" +
+            "   or\n" +
+            "   (date > CURRENT_DATE())and movie_id = :movieId and date = :dateTime)\n" +
+            "group by st.id\n" +
+            "order by st.schedule_time;", nativeQuery = true)
+    List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(@Param("movieId") Long movieId,
                                                           @Param("dateTime") LocalDate dateTime);
 
     @Query(value = "select * from schedule where movie_id = :movieId and date =:date " +
