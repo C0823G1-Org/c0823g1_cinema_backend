@@ -52,17 +52,10 @@ public class MovieRestController {
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
-        List<IMovieDTO> newList = new ArrayList<>();
-        LocalDate localDate = LocalDate.now();
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        for (IMovieDTO movieDTO : list) {
-            if (movieDTO.getStartDate().plusDays(12).isAfter(localDate) == true || movieDTO.getStartDate() == localDate) {
-                newList.add(movieDTO);
-            }
-        }
-        return new ResponseEntity<>(newList, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     /*    Create by: BaoLVN
@@ -72,10 +65,7 @@ public class MovieRestController {
      * */
     @GetMapping("/current")
     public ResponseEntity<List<IMovieDTO>> getAllMovieCurrent() {
-        LocalDate localDate = LocalDate.now();
-        System.out.println(localDate);
         List<IMovieDTO> list = movieService.getAllMovieCurrent();
-        System.out.println(list.size());
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -91,7 +81,7 @@ public class MovieRestController {
     public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 4);
-        Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
+        Page<IMovieDTO> searchMovies = movieService.searchMovie(value.trim(), pageable);
         if (searchMovies == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
