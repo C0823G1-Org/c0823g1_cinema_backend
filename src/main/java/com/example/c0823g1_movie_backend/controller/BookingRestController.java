@@ -79,7 +79,7 @@ public class BookingRestController {
 
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<?> listBookingTicket( @PageableDefault(size = 5) Pageable pageable ) {
+    public ResponseEntity<Object> listBookingTicket( @PageableDefault(size = 5) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         ApiResponse response = new ApiResponse<>();
@@ -105,7 +105,7 @@ public class BookingRestController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchBookingTicket(
+    public ResponseEntity<Object> searchBookingTicket(
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
             @PageableDefault(size = 5) Pageable pageable) {
@@ -133,7 +133,7 @@ public class BookingRestController {
         }
     }
 
-    private ResponseEntity<ApiResponse<Page<IBookingDTO>>> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
+    private ResponseEntity<Object> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
         ApiResponse<Page<IBookingDTO>> response = new ApiResponse<>();
         if (listBookingTicket.isEmpty()) {
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
@@ -154,7 +154,7 @@ public class BookingRestController {
      */
 
     @GetMapping("/exportDetail")
-    public ResponseEntity<?> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<Object> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 5) Pageable pageable){
         try{
             ApiResponse response = new ApiResponse<>();
             Long bookingId = parseLong(id);
@@ -207,7 +207,7 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
-    public ResponseEntity<?> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws FileNotFoundException, DocumentException {
+    public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws FileNotFoundException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
