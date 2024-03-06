@@ -67,7 +67,7 @@ public class MovieService implements IMovieService {
     @Override
     public Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher,
                                                               LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        return movieRepository.searchMovieByNameAndPublisher("%" + name + "%", "%" + publisher + "%", startDate, endDate, pageable);
+        return movieRepository.searchMovieByNameAndPublisher("%" + name.trim() + "%", "%" + publisher.trim() + "%", startDate, endDate, pageable);
     }
 
     @Override

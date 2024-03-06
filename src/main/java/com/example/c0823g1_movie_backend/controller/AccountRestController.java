@@ -112,6 +112,7 @@ public class AccountRestController {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String result = EntityUtils.toString(entity);
+                System.out.println(result);
                 Gson gson = new Gson();
                 FacebookDTO facebookDTO = gson.fromJson(result, FacebookDTO.class);
                 account = convertAccount(facebookDTO);
@@ -297,46 +298,45 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */ 
     @PostMapping("/register")
-    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
-        List<String> listError = new ArrayList<>();
+    public ResponseEntity<?> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
+        Map<String,String> listError = new HashMap<>();
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) == null){
-                      listError.add("Email Đã Tồn Tại");
+            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) != null){
+                      listError.put("email","Email Đã Tồn Tại");
             }
-            if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) == null){
-                listError.add(" Số Điện Thoại Đã Tồn Tại ");
+            if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) != null){
+                listError.put("phoneNumber","Số Điện Thoại Đã Tồn Tại");
             }
-            if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) == null){
-                listError.add("Tài Khoản Đã Tồn Tại");
+            if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) != null){
+                listError.put("accountName","Tài Khoản Đã Tồn Tại");
             }
             if (listError.size() > 0){
                 return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
             }
-
-
-            String to = accountDTO.getEmail();
-            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
-            String templateName = "email-register";
-            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
-            String randomCode = RandomStringUtils.random(6,true,true);
-            System.out.println(randomCode);
-            context.setVariable("fullName",accountDTO.getFullName());
-            context.setVariable("account",accountDTO.getAccountName());
-            context.setVariable("password",accountDTO.getPassword());
-            context.setVariable("randomCode",randomCode);
-            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
-            if (!accountDTO.getVerificationCode().equals(randomCode)){
-                listError.add("Mã Xác Nhận không đúng");
-            }
+//            String to = accountDTO.getEmail();
+//            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
+//            String templateName = "email-register";
+//            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
+//            String randomCode = RandomStringUtils.random(6,true,true);
+//            System.out.println(randomCode);
+//            context.setVariable("fullName",accountDTO.getFullName());
+//            context.setVariable("account",accountDTO.getAccountName());
+//            context.setVariable("password",accountDTO.getPassword());
+//            context.setVariable("randomCode",randomCode);
+//            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
+//            if (!accountDTO.getVerificationCode().equals(randomCode)){
+//                listError.add("Mã Xác Nhận không đúng");
+//            }
             String encode = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
             account.setPassword(encode);
             Account account1 = iAccountService.getLastUser();
             account.setPoint(0);
-            account.setMemberCode(account1.getMemberCode());
+            int memberCode = Integer.parseInt(account1.getMemberCode());
+            account.setMemberCode(String.valueOf(memberCode + 1));
             iAccountService.register(account, 2L);
             System.out.println("Success");
             return new ResponseEntity<>(account, HttpStatus.OK);
@@ -348,12 +348,20 @@ public class AccountRestController {
      * Function: Show Detail User Account
      * @Return HttpStatus.NO_CONTENT if userName of User is Null , @Return HttpStatus.OK if userName of User is not Null
      */
-    @GetMapping("/detailUser")
-    public ResponseEntity<Account> detailAccountUser(Principal principal){
-        if (principal.getName() == null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    @GetMapping("/detailUser")
+//    public ResponseEntity<Account> detailAccountUser(Principal principal){
+//        if (principal.getName() == null){
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        Account account1 = iAccountService.getAllInfoUser(principal.getName());
+//        return new ResponseEntity<>(account1,HttpStatus.OK);
+//    }
+    @GetMapping("/detailUser/{id}")
+    public ResponseEntity<Account> detailAccountUser(@PathVariable long id){
+        Account account1 = iAccountService.findAccountById(id);
+        if (account1 == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Account account1 = iAccountService.getAllInfoUser(principal.getName());
         return new ResponseEntity<>(account1,HttpStatus.OK);
     }
     /* Create by: TuanTA
@@ -361,15 +369,29 @@ public class AccountRestController {
      * Function: Change Infor Of User Account
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */
-    @PatchMapping("/changeInfoUser")
-    public ResponseEntity<?> changeInfoUserAccount(@Valid @RequestBody AccountDTO accountDTO , BindingResult bindingResult){
+    @PatchMapping("/changeInfoUser/{id}")
+    public ResponseEntity<?> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO , BindingResult bindingResult,@PathVariable Long id){
+        Map<String,String> listError = new HashMap<>();
+        Account account3 = iAccountService.findAccountById(id);
+        Account account = iAccountService.findAccountByEmail(changeAccountDTO.getEmail());
+        Account account1 = iAccountService.findAccountByPhone(changeAccountDTO.getPhoneNumber());
         if (bindingResult.hasFieldErrors()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else {
-            Account account = new Account();
-            BeanUtils.copyProperties(accountDTO,account);
-            iAccountService.updateAccount(account,account.getId());
-            return new ResponseEntity<>(account,HttpStatus.OK);
+            if (iAccountService.findAccountByEmail(changeAccountDTO.getEmail()) != null && !(account3.getEmail().equals(account.getEmail()))){
+                listError.put("email","Email Đã Tồn Tại");
+            }
+            if (iAccountService.findAccountByPhone(changeAccountDTO.getPhoneNumber()) != null && !(account3.getPhoneNumber().equals(account1.getPhoneNumber()))){
+                listError.put("phoneNumber","Số Điện Thoại Đã Tồn Tại");
+            }
+            if (listError.size() > 0){
+                return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
+            }
+
+            Account account2 = new Account();
+            BeanUtils.copyProperties(changeAccountDTO,account2);
+            iAccountService.updateAccount(account2,account2.getId());
+            return new ResponseEntity<>(account2,HttpStatus.OK);
         }
 
     }
@@ -426,21 +448,25 @@ public class AccountRestController {
      */
     @PatchMapping("/changePassword")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult,Principal principal){
-        List<String> listErrors = new ArrayList<>();
+        Map<String,String> listErrors = new HashMap<>();
+        List<Account> accounts = new ArrayList<>();
+//        changePasswordDto.setAccounts(accounts);
         changePasswordDto.validate(changePasswordDto,bindingResult);
         if (bindingResult.hasErrors()){
             for (FieldError error : bindingResult.getFieldErrors()){
-                listErrors.add(error.getDefaultMessage());
+                listErrors.put(error.getField(),error.getDefaultMessage());
             }
             return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
         }
-       Account account = iAccountService.findAccountByAccountName(principal.getName());
-        if (account.getPassword().equals(changePasswordDto.getCurrentPassword())){
-            account.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-            iAccountService.updatePassword(account.getPassword(),principal.getName());
+       Account account = iAccountService.findAccountByAccountName("hieu123456");
+        String passwordToEncode = passwordEncoder.encode(changePasswordDto.getNewPassword());
+        String passwordToCompare = passwordEncoder.encode(changePasswordDto.getCurrentPassword());
+        if (passwordEncoder.matches(changePasswordDto.getCurrentPassword(),account.getPassword())){
+            account.setPassword(passwordToEncode);
+            iAccountService.updatePassword(account.getPassword(),account.getAccountName());
             return new ResponseEntity<>("Đổi Mật Khẩu Thành Công",HttpStatus.OK);
         }else {
-            listErrors.add("Mật Khẩu Hiện Tại Không Đúng");
+            listErrors.put("currentPassword","Mật Khẩu Hiện Tại Không Đúng");
             return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
         }
     }

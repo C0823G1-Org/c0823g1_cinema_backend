@@ -33,10 +33,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,18 +77,6 @@ public class BookingRestController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("historyBooking/{id}/{number}")
-    public ResponseEntity<List<HistoryBookingDTO>> historyMovie(@PathVariable Long id, @PathVariable int number) {
-        Account account = accountService.findAccountById(id);
-        if (account == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        List<HistoryBookingDTO> list = iBookingService.historyBooking(id, number);
-        if (list == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
 
     @GetMapping(value = {"/", "/list"})
     public ResponseEntity<?> listBookingTicket( @PageableDefault(size = 5) Pageable pageable ) {
@@ -338,26 +323,6 @@ public class BookingRestController {
         return cell;
     }
 
-
-    @GetMapping("searchMovieBooking/{id}/{start}/{end}/{pages}")
-    public ResponseEntity<Iterable<HistoryBookingDTO>> searchMovieBooking(@PathVariable("id") Long id, @PathVariable("start") LocalDateTime startDate, @PathVariable("end") LocalDateTime endDate, @PathVariable("pages") int page) {
-        List<HistoryBookingDTO> list = iBookingService.searchBookingByDate(id, startDate, endDate, page);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-
-    /**
-     * Create by TuanNM
-     * Date create: 29/02/2024
-     * Method: Search by start date and end date
-     *
-     * @param startDate is the starting date
-     * @param endDate   is the end date
-     * @return a search list
-     */
 
 
     /*

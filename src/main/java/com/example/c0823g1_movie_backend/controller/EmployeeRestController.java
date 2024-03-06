@@ -4,6 +4,7 @@
  * This controller class is annotated with Spring's @RestController and @RequestMapping annotations
  * to define the base URL path for handling employee-related requests.
  * This class was created on: February 29, 2024
+ *
  * @author [HungVXK]
  * @version 1.0
  * @since 1.0
@@ -39,9 +40,12 @@ public class EmployeeRestController {
      */
     @GetMapping("/employee/list")
     public ResponseEntity<Page<Account>> getEmployeeList(@RequestParam(defaultValue = "") String searchName,
-                                                 @RequestParam(defaultValue = "0") int page) {
+                                                         @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<Account> accountPage = employeeService.getAllEmployee(searchName, pageable);
+        if (accountPage.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return ResponseEntity.ok(accountPage);
     }
 
@@ -51,16 +55,11 @@ public class EmployeeRestController {
      * @return a ResponseEntity with an HTTP status indicating success or failure of the operation
      */
 
-//    @GetMapping("/employee/{id}")
-//    public ResponseEntity<Optional<IAccountDTO>> findById(@PathVariable Long id) {
-//        Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
-//        return new ResponseEntity<>(account,HttpStatus.OK);
-//    }
 
     @DeleteMapping("/employee/delete/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Account> deleteEmployee(@PathVariable Long id) {
         Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
-        if (account == null) {
+        if (account.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         employeeService.deleteEmployee(account.get().getId());

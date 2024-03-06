@@ -8,4 +8,6 @@ public interface HistoryBookingDTO {
     LocalDateTime getDateBooking();
 
     Long getPrice();
+
+
 }
