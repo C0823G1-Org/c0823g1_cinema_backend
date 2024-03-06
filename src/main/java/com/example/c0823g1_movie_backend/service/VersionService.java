@@ -15,4 +15,9 @@ public class VersionService implements IVersionService{
     public List<Version> getAll() {
         return versionRepository.getAll();
     }
+
+    @Override
+    public void addMovieHasVersion(Long newMovieId, Long versionId) {
+        versionRepository.addMovieHasVersion(newMovieId,versionId);
+    }
 }

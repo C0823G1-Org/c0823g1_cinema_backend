@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IVersionService {
     List<Version> getAll();
+
+    void addMovieHasVersion(Long newMovieId, Long versionId);
 }

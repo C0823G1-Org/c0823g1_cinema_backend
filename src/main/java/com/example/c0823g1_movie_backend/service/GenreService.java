@@ -22,4 +22,9 @@ public class GenreService implements IGenreService {
         return genreRepository.getAll();
     }
 
+    @Override
+    public void addMovieHasGenre(Long newMovieId, Long genreId) {
+        genreRepository.addMovieHasGenre(newMovieId,genreId);
+    }
+
 }

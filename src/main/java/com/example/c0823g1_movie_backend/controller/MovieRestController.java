@@ -114,7 +114,9 @@ public class MovieRestController {
         }
         MovieDTO newMovie = movieRequestBodyDTO.getMovieDTO();
         Set<ScheduleDTO> newScheduleDTOS = movieRequestBodyDTO.getScheduleDTO();
-        movieService.createMovie(newMovie, newScheduleDTOS);
+        List<Long> versions = newMovie.getVersion();
+        List<Long> genres = newMovie.getGenre();
+        movieService.createMovie(newMovie, newScheduleDTOS,versions,genres);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -154,7 +156,7 @@ public class MovieRestController {
         List<Version> versions = versionService.getAll();
         List<ScheduleTime> scheduleTimes = scheduleTimeService.getAll();
         List<Hall> halls = hallService.getAll();
-        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes,halls), HttpStatus.OK);
+        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes, halls), HttpStatus.OK);
     }
 
     /**

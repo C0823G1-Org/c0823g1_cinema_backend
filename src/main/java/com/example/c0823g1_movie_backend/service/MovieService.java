@@ -21,6 +21,10 @@ public class MovieService implements IMovieService {
     private MovieRepository movieRepository;
     @Autowired
     private IScheduleService scheduleService;
+    @Autowired
+    private IVersionService versionService;
+    @Autowired
+    private IGenreService genreService;
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -76,12 +80,18 @@ public class MovieService implements IMovieService {
         return false;
     }
 
-    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS) {
+    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres) {
         movieRepository.create(movie);
         Long newMovieId = movieRepository.returnLastInsertId();
         for (ScheduleDTO scheduleDTO : scheduleDTOS) {
             scheduleDTO.setMovie(newMovieId);
             scheduleService.createSchedule(scheduleDTO);
+        }
+        for (Long versionId : versions) {
+            versionService.addMovieHasVersion(newMovieId,versionId);
+        }
+        for (Long genreId:genres){
+            genreService.addMovieHasGenre(newMovieId,genreId);
         }
         System.out.println(newMovieId);
     }

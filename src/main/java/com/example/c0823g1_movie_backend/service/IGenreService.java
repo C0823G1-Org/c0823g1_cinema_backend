@@ -8,4 +8,6 @@ public interface IGenreService {
     Iterable<Genre> getListMovieHasGenreById(Long id);
 
     List<Genre> getAll();
+
+    void addMovieHasGenre(Long newMovieId, Long genreId);
 }

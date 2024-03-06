@@ -26,11 +26,6 @@ public class ScheduleService implements IScheduleService {
 
     @Override
     public List<Schedule> getScheduleByHallId(Long id) {
-        List<Schedule> schedules = scheduleRepository.getScheduleByHallId(id);
-        for (Schedule schedule : schedules) {
-            System.out.println(schedule.getId());
-        }
-
         return scheduleRepository.getScheduleByHallId(id);
     }
 
