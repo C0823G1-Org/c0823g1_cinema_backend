@@ -56,7 +56,7 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Page<Account> getAllEmployee(String name, Pageable pageable) {
-        return employeeRepository.searchByName("%" + name + "%", pageable);
+        return employeeRepository.searchByName("%" + name.trim() + "%", pageable);
     }
 
 }
