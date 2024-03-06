@@ -50,7 +50,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             " m.name as name, \n" +
             " max(m.id)  as movieId,\n" +
             " max(m.description) as description,\n" +
-            " max(m.poster) as poster\n" +
+            " max(m.poster) as poster,\n" +
+            " max(m.start_date) as startDate \n" +
             "from booking b\n" +
             "left join ticket t on b.id = t.booking_id\n" +
             "left join `schedule` sc on t.schedule_id = sc.id\n" +
@@ -68,7 +69,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
-    @Query(value = "select m.id as movieId,m.name as name, m.description as description , m.poster as poster from movie m  join schedule sc on m.id = sc.movie_id where sc.`date` = current_date group by movie_id", nativeQuery = true)
+    @Query(value = "select count(m.id) as countId,max(m.id) as movieId,\n" +
+            "max(m.name) as name,\n" +
+            "max(m.description) as description\n" +
+            ", max(m.poster) as poster\n" +
+            "from movie m \n" +
+            "join schedule sc on m.id = sc.movie_id\n" +
+            "where sc.`date` = current_date\n" +
+            "group by m.name", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrent();
 
     @Query(value = "select m.id, m.name, m.start_date as startDate, m.publisher, m.duration,group_concat( v.name separator ', ' ) as versions \n" +
