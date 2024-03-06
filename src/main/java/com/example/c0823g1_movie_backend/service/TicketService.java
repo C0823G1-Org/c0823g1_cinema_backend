@@ -26,4 +26,8 @@ public class TicketService implements ITicketService{
     public void removeTicket(Long bookingId, Long scheduleId) {
         ticketRepository.removeTicket(bookingId,scheduleId);
     }
+    @Override
+    public List<Ticket> findAllTicketByScheduleId(Long scheduleId) {
+        return ticketRepository.findAllTicketByScheduleId(scheduleId);
+    }
 }

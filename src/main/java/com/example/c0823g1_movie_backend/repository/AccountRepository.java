@@ -30,6 +30,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.id_number as idNumber,\n" +
             " account.is_deleted as isDeleted,\n" +
             " account.member_code as memberCode,\n" +
+            " account.profile_picture as profilePicture,\n" +
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id " +
             "where account.account_name = :accountName and account.facebook_id is null and account.google_id is null", nativeQuery = true)
@@ -47,6 +48,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.id_number as idNumber,\n" +
             " account.is_deleted as isDeleted,\n" +
             " account.member_code as memberCode,\n" +
+            " account.profile_picture as profilePicture,\n" +
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id where account.facebook_id = :facebookId", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOFB(@Param("facebookId") String facebookId);
@@ -63,6 +65,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.id_number as idNumber,\n" +
             " account.is_deleted as isDeleted,\n" +
             " account.member_code as memberCode,\n" +
+            " account.profile_picture as profilePicture,\n" +
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id where account.google_id = :googleId", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTOGG(@Param("googleId") String googleId);
@@ -110,6 +113,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.id_number as idNumber,\n" +
             " account.is_deleted as isDeleted,\n" +
             " account.member_code as memberCode,\n" +
+            " account.profile_picture as profilePicture,\n" +
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id " +
             " where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
@@ -127,6 +131,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " account.id_number as idNumber,\n" +
             " account.is_deleted as isDeleted,\n" +
             " account.member_code as memberCode,\n" +
+            " account.profile_picture as profilePicture,\n" +
             " account.password as password,\n" +
             " role.name as role from account join role on account.role_id = role.id " +
             "where account.email = :email and account.facebook_id is null and account.google_id is null", nativeQuery = true)
