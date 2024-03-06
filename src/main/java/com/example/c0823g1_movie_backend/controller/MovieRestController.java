@@ -52,10 +52,17 @@ public class MovieRestController {
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
+        List<IMovieDTO> newList = new ArrayList<>();
+        LocalDate localDate = LocalDate.now();
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        for (IMovieDTO movieDTO : list) {
+            if (movieDTO.getStartDate().plusDays(12).isAfter(localDate) == true || movieDTO.getStartDate() == localDate) {
+                newList.add(movieDTO);
+            }
+        }
+        return new ResponseEntity<>(newList, HttpStatus.OK);
     }
 
     /*    Create by: BaoLVN
@@ -81,7 +88,7 @@ public class MovieRestController {
      *     @return HttpStatus.NOT_FOUND movies not found/ HttpStatus.OK movies has been found
      * */
     @GetMapping("/search")
-    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name",defaultValue = "") String value,
+    public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 4);
         Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
@@ -150,10 +157,10 @@ public class MovieRestController {
      */
     @GetMapping("/list")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "") String publisher,
-                                                           @RequestParam(defaultValue = "") String name,
-                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                                            @RequestParam(defaultValue = "") String publisher,
+                                                            @RequestParam(defaultValue = "") String name,
+                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);

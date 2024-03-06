@@ -50,7 +50,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             " m.name as name, \n" +
             " max(m.id)  as movieId,\n" +
             " max(m.description) as description,\n" +
-            " max(m.poster) as poster\n" +
+            " max(m.poster) as poster,\n" +
+            " max(m.start_date) as startDate \n" +
             "from booking b\n" +
             "left join ticket t on b.id = t.booking_id\n" +
             "left join `schedule` sc on t.schedule_id = sc.id\n" +
