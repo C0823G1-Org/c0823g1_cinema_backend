@@ -157,11 +157,11 @@ public class MovieRestController {
      */
     @GetMapping("/list")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "") String publisher,
-                                                            @RequestParam(defaultValue = "") String name,
-                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
+                                                           @RequestParam(defaultValue = "") String publisher,
+                                                           @RequestParam(defaultValue = "") String name,
+                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
         if (moviePage.isEmpty()) {
