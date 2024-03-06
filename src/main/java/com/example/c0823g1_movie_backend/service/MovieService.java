@@ -1,10 +1,6 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieDTO;
-import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import java.util.NoSuchElementException;
 
 @Service
 public class MovieService implements IMovieService {
@@ -90,10 +85,10 @@ public class MovieService implements IMovieService {
             scheduleService.createSchedule(scheduleDTO);
         }
         for (Long versionId : versions) {
-            versionService.addMovieHasVersion(newMovieId,versionId);
+            versionService.addMovieHasVersion(newMovieId, versionId);
         }
-        for (Long genreId:genres){
-            genreService.addMovieHasGenre(newMovieId,genreId);
+        for (Long genreId : genres) {
+            genreService.addMovieHasGenre(newMovieId, genreId);
         }
         System.out.println(newMovieId);
     }
@@ -105,7 +100,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher,
-                                                              LocalDate startDate, LocalDate endDate, Pageable pageable) {
+                                                             LocalDate startDate, LocalDate endDate, Pageable pageable) {
         return movieRepository.searchMovieByNameAndPublisher("%" + name.trim() + "%", "%" + publisher.trim() + "%", startDate, endDate, pageable);
     }
 

@@ -1,6 +1,7 @@
 package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
 import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
