@@ -40,6 +40,7 @@ public interface IAccountService extends IGeneralService<Account>{
     String getRoleUserEmail(Account account);
 
     Account findAccountById(Long accountId);
+
 //    void registerAndSendMail(AccountDTO accountDTO);
     List<Account> getAllAccount();
     Account findAccountByAccountName(String accountName);
@@ -48,4 +49,5 @@ public interface IAccountService extends IGeneralService<Account>{
     void sendEmailWithHtmlTemplate(String to, String subject, String templateName, Context context);
     void updateAccount(Account account, Long id);
     void updatePassword( String password ,String accountName);
+
 }

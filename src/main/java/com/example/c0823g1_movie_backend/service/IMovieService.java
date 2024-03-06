@@ -2,6 +2,7 @@ package com.example.c0823g1_movie_backend.service;
 
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
+import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
@@ -27,7 +28,7 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     void createMovie(Movie movie, List<Schedule> schedules);
 
-    Page<Movie> searchMovieByNameAndPublisher(String name, String publisher, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 
     Movie findMovieById(long id);

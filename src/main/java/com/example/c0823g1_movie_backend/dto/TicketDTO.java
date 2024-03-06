@@ -4,20 +4,8 @@ import java.util.List;
 
 public class TicketDTO {
     private List<Integer> seatList;
-    private Long idMovie;
     private Long scheduleId;
     private Long accountId;
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public TicketDTO() {
-    }
 
     public List<Integer> getSeatList() {
         return seatList;
@@ -27,19 +15,19 @@ public class TicketDTO {
         this.seatList = seatList;
     }
 
-    public Long getIdMovie() {
-        return idMovie;
-    }
-
-    public void setIdMovie(Long idMovie) {
-        this.idMovie = idMovie;
-    }
-
     public Long getScheduleId() {
         return scheduleId;
     }
 
     public void setScheduleId(Long scheduleId) {
         this.scheduleId = scheduleId;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 }

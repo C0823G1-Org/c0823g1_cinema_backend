@@ -112,6 +112,7 @@ public class AccountRestController {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String result = EntityUtils.toString(entity);
+                System.out.println(result);
                 Gson gson = new Gson();
                 FacebookDTO facebookDTO = gson.fromJson(result, FacebookDTO.class);
                 account = convertAccount(facebookDTO);
@@ -295,7 +296,7 @@ public class AccountRestController {
      * Date created: 29/02/2024
      * Function: Register New account
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
-     */
+     */ 
     @PostMapping("/register")
     public ResponseEntity<?> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
         Map<String,String> listError = new HashMap<>();
