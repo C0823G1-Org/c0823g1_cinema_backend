@@ -2,8 +2,10 @@ package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
+import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.model.Hall;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IHallService;
 import com.example.c0823g1_movie_backend.service.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,14 @@ public class ScheduleRestController {
         List<IScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
         System.out.println(scheduleList.get(0).getDate());
         return new ResponseEntity<>(scheduleList, HttpStatus.OK);
+    }
+
+    @GetMapping("/movie")
+    public ResponseEntity<List<Schedule>> getScheduleByMovieId(@RequestParam Long movieId) {
+        List<Schedule> schedule = scheduleService.getScheduleByMovieId(movieId);
+        if (schedule.isEmpty()) {
+            return new ResponseEntity<>(schedule, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 }
