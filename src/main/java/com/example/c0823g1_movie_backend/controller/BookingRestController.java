@@ -42,6 +42,10 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/booking")
 public class BookingRestController {
+    private static final String FOUND = "FOUND";
+    private static final String BAD_REQUEST = "BAD_REQUEST";
+    private static final String NO_CONTENT = "NO_CONTENT";
+    private static final String OK = "OK";
 
 
     /* Create by: DoLV
@@ -88,7 +92,7 @@ public class BookingRestController {
             response.setData(listBookingTicket);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        response.setFlag("FOUND");
+        response.setFlag(FOUND);
         response.setData(listBookingTicket);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -115,7 +119,7 @@ public class BookingRestController {
             ApiResponse response = new ApiResponse<>();
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
             response.setData(listBookingTicketNotFound);
-            response.setFlag("FOUND");
+            response.setFlag(FOUND);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -140,7 +144,7 @@ public class BookingRestController {
             response.setFlag("NOT_FOUND");
             response.setData(listBookingTicketNotFound);
         } else {
-            response.setFlag("FOUND");
+            response.setFlag(FOUND);
             response.setData(listBookingTicket);
         }
 
@@ -164,16 +168,16 @@ public class BookingRestController {
 
             if (iBookingDTO == null){
                 response.setData(listBookingTicket);
-                response.setFlag("BAD_REQUEST");
+                response.setFlag(BAD_REQUEST);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
 
                 if (iBookingDTO.getPrintStatus()){
                     response.setData(listBookingTicket);
-                    response.setFlag("BAD_REQUEST");
+                    response.setFlag(BAD_REQUEST);
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
-                    response.setFlag("FOUND");
+                    response.setFlag(FOUND);
                     List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(bookingId);
                     response.setData(listBookingTicketDetail);
                     return new ResponseEntity<>(response, HttpStatus.OK);
@@ -216,19 +220,19 @@ public class BookingRestController {
         response.setData(listBookingTicket);
 
         if (iBookingDTO == null){
-            response.setFlag("BAD_REQUEST");
+            response.setFlag(BAD_REQUEST);
             return new ResponseEntity<>( response,HttpStatus.OK);
         } else {
             if (iBookingDTO.getPrintStatus()){
-                response.setFlag("NO_CONTENT");
+                response.setFlag(NO_CONTENT);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
                 if (listBookingTicketDetail.isEmpty()){
-                    response.setFlag("NO_FOUND");
+                    response.setFlag(NO_CONTENT);
                     return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
-                    response.setFlag("OK");
+                    response.setFlag(OK);
                     String fileName = "D:\\filePdf\\ticket.pdf";
                     float customWidth = 650;
                     float customHeight = 396;
