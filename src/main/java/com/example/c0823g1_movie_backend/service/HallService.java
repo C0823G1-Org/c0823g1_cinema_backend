@@ -6,6 +6,8 @@ import com.example.c0823g1_movie_backend.repository.HallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HallService implements IHallService{
     @Autowired
@@ -24,4 +26,8 @@ public class HallService implements IHallService{
         return hallRepository.findHallById(id);
     }
 
+    @Override
+    public List<Hall> getAll() {
+        return hallRepository.findAll();
+    }
 }

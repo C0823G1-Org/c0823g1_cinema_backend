@@ -2,6 +2,7 @@ package com.example.c0823g1_movie_backend.repository;
 
 import com.example.c0823g1_movie_backend.dto.IMovieDTO;
 import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
+import com.example.c0823g1_movie_backend.dto.MovieDTO;
 import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
 import com.example.c0823g1_movie_backend.model.Movie;
 import org.springframework.data.domain.Page;
@@ -65,4 +66,28 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(value = "select id, actor, country, description, director, duration, is_deleted, name,poster, publisher, start_date, ticket_price,trailer from movie " + "where id  =:id and is_deleted =0", nativeQuery = true)
     Movie findMovieById(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "insert into movie(actor, country, description, director, duration, name, poster, publisher, start_date, ticket_price, trailer) " +
+            "values (:#{#movie.actor},:#{#movie.country},:#{#movie.description},:#{#movie.director},:#{#movie.duration},:#{#movie.name}" +
+            ",:#{#movie.poster},:#{#movie.publisher},:#{#movie.startDate},:#{#movie.ticketPrice},:#{#movie.trailer});", nativeQuery = true)
+    void create(MovieDTO movie);
+
+    @Query(value = "select last_insert_id()", nativeQuery = true)
+    Long returnLastInsertId();
+
+    @Modifying
+    @Query(value = "update movie " +
+            "set actor=:#{#editedMovie.actor}, country= :#{#editedMovie.country}, description=:#{#editedMovie.description}" +
+            ", director=:#{#editedMovie.director}, duration=:#{#editedMovie.duration}, name=:#{#editedMovie.name}" +
+            ", poster=:#{#editedMovie.poster}, publisher=:#{#editedMovie.publisher}, start_date=:#{#editedMovie.startDate}" +
+            ", ticket_price=:#{#editedMovie.ticketPrice}, trailer=:#{#editedMovie.trailer} " +
+            "where id=:#{#editedMovie.id}", nativeQuery = true)
+    void editMovie(MovieDTO editedMovie);
+    @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, MAX(m.name) as name, MAX(m.description) as description, MAX(m.poster) as poster " +
+            "FROM movie m " +
+            "JOIN schedule sc ON m.id = sc.movie_id " +
+            "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY) " +
+            "GROUP BY m.name", nativeQuery = true)
+    List<IMovieDTO> getAllMovieCurrentTo3Day();
 }

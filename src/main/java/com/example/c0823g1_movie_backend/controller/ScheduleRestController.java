@@ -5,6 +5,7 @@ import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IHallService;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin
 @RequestMapping("/schedule")
 public class ScheduleRestController {
     @Autowired
@@ -35,6 +36,10 @@ public class ScheduleRestController {
      * @return HTTPStatus.OK and the list of schedules
      */
 
+    @GetMapping("/hall/{id}")
+    public ResponseEntity<List<Schedule>> getListScheduleByHallId(@PathVariable("id") Long id) {
+        List<Schedule> scheduleDTOList = scheduleService.getScheduleByHallId(id);
+        return new ResponseEntity<>(scheduleDTOList, HttpStatus.OK);
 //    @GetMapping("/hall/{id}")
 //    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
 //        List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
@@ -44,7 +49,7 @@ public class ScheduleRestController {
 //        System.out.println(scheduleList.get(0).getDate());
 //        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
 //    }
-
+    }
     @GetMapping("/movie")
     public ResponseEntity<List<Schedule>> getScheduleByMovieId(@RequestParam Long movieId) {
         List<Schedule> schedule = scheduleService.getScheduleByMovieId(movieId);
@@ -61,8 +66,8 @@ public class ScheduleRestController {
      * Return: HttpStatus.BAD_REQUEST if date not found/ HttpStatus.OK and date list
      */
     @GetMapping("/date")
-    public ResponseEntity<List<ScheduleDTO>> findDateByMovieId(@RequestParam Long movieId) {
-        List<ScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
+    public ResponseEntity<List<IScheduleDTO>> findDateByMovieId(@RequestParam Long movieId) {
+        List<IScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
         if (dateList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
