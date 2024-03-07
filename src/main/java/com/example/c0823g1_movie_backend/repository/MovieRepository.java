@@ -41,8 +41,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "GROUP BY s.movie_id) t ON t.movie_id = m.id " +
             "WHERE " +
             "m.is_deleted = 0 " +
-            "ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC " +
-            "LIMIT 20",
+            "ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC ",
             nativeQuery = true)
     Page<MovieStatisticDTO> findTop20MoviesByRevenue(Pageable pageable);
 
