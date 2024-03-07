@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class ScheduleTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonFormat(pattern = "HH:mm")
     LocalTime scheduleTime;
 
 

@@ -1,10 +1,7 @@
 package com.example.c0823g1_movie_backend.service;
 
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.IMovieListDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class MovieService implements IMovieService {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private IScheduleService scheduleService;
+    @Autowired
+    private IVersionService versionService;
+    @Autowired
+    private IGenreService genreService;
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -55,8 +58,39 @@ public class MovieService implements IMovieService {
         return movieRepository.findTop20MoviesByRevenue(pageable);
     }
 
-    public void createMovie(Movie movie, List<Schedule> schedules) {
-//        movieRepository.createMovie(movie, schedules);
+    @Override
+    public boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO) {
+        Movie currentMovie = findMovieById(movie.getId());
+        if (currentMovie != null) {
+            for (ScheduleDTO schedule : scheduleDTO) {
+                if (schedule.getId() != null) {
+                    if (!scheduleService.editSchedule(schedule)) {
+                        return false;
+                    }
+                } else {
+                    scheduleService.createSchedule(schedule);
+                }
+            }
+            movieRepository.editMovie(movie);
+            return true;
+        }
+        return false;
+    }
+
+    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres) {
+        movieRepository.create(movie);
+        Long newMovieId = movieRepository.returnLastInsertId();
+        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
+            scheduleDTO.setMovie(newMovieId);
+            scheduleService.createSchedule(scheduleDTO);
+        }
+        for (Long versionId : versions) {
+            versionService.addMovieHasVersion(newMovieId, versionId);
+        }
+        for (Long genreId : genres) {
+            genreService.addMovieHasGenre(newMovieId, genreId);
+        }
+        System.out.println(newMovieId);
     }
 
     @Override
@@ -66,7 +100,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher,
-                                                              LocalDate startDate, LocalDate endDate, Pageable pageable) {
+                                                             LocalDate startDate, LocalDate endDate, Pageable pageable) {
         return movieRepository.searchMovieByNameAndPublisher("%" + name.trim() + "%", "%" + publisher.trim() + "%", startDate, endDate, pageable);
     }
 

@@ -1,0 +1,32 @@
+INSERT INTO schedule_time (schedule_time) VALUES ('09:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('09:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('10:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('10:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('11:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('11:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('12:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('12:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('13:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('13:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('14:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('14:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('15:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('15:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('16:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('16:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('17:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('17:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('18:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('18:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('19:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('19:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('20:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('20:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('21:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('21:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('22:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('22:30:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('23:00:00');
+INSERT INTO schedule_time (schedule_time) VALUES ('23:30:00');
+
+
