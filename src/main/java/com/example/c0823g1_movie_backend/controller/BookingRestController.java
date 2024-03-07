@@ -402,6 +402,7 @@ public class BookingRestController {
             }
         }
 //        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
+
         Long accountId = ticketDTO.getAccountId();
         Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
         String image = movie.getPoster();
@@ -418,6 +419,7 @@ public class BookingRestController {
         BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
         System.out.println(bookingDTO);
         return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+
 
     }
 
