@@ -208,7 +208,7 @@ public class AccountRestController_ChangePassword {
     }
     /**
      * Creator : TuanTA
-     * changePasswordDTO.newPassword  is not equal changePasswordDTO.confirmationPassword
+     * Success
      * Goal : HttpStatus = 200
      * date create : 01-03-2024
      * @throws Exception
