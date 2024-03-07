@@ -1,11 +1,14 @@
-
 package com.example.c0823g1_movie_backend.controller;
 
-
-import com.example.c0823g1_movie_backend.dto.IMovieDTO;
-import com.example.c0823g1_movie_backend.dto.MovieStatisticDTO;
+import com.example.c0823g1_movie_backend.dto.*;
+import com.example.c0823g1_movie_backend.model.*;
+import com.example.c0823g1_movie_backend.service.*;
+import jakarta.validation.Valid;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,10 +18,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -27,6 +32,14 @@ import java.util.List;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
+    @Autowired
+    private IGenreService genreService;
+    @Autowired
+    private IVersionService versionService;
+    @Autowired
+    private IScheduleTimeService scheduleTimeService;
+    @Autowired
+    private IHallService hallService;
     /*    Create by: BaoLVN
      *     Date created : 29/02/2024
      *     Function: Get a list of movies with many views
@@ -37,6 +50,7 @@ public class MovieRestController {
      * Created by DuyDD
      * Date Created: 29/02/2024
      * Function: Get a list of movies that have the highest revenue
+     *
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
@@ -47,6 +61,12 @@ public class MovieRestController {
         }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get a list of movies with many views
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
     @GetMapping
     public ResponseEntity<List<IMovieDTO>> getAllMovieHot() {
         List<IMovieDTO> list = movieService.getAllMovieHot();
@@ -63,10 +83,7 @@ public class MovieRestController {
      * */
     @GetMapping("/current")
     public ResponseEntity<List<IMovieDTO>> getAllMovieCurrent() {
-        LocalDate localDate = LocalDate.now();
-        System.out.println(localDate);
         List<IMovieDTO> list = movieService.getAllMovieCurrent();
-        System.out.println(list.size());
         if (list == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -81,22 +98,71 @@ public class MovieRestController {
     @GetMapping("/search")
     public ResponseEntity<Page<IMovieDTO>> searchMovies(@RequestParam(name = "name", defaultValue = "") String value,
                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 8);
-        Page<IMovieDTO> searchMovies = movieService.searchMovie(value, pageable);
+        Pageable pageable = PageRequest.of(page, 4);
+        Page<IMovieDTO> searchMovies = movieService.searchMovie(value.trim(), pageable);
         if (searchMovies == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        System.out.println(searchMovies.getSize());
         return new ResponseEntity<>(searchMovies, HttpStatus.OK);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Movie movie) {
-        System.out.println(movie.toString());
-        if (movie.getId() == null) {
-            movieService.createMovie(movie);
+    /**
+     * Created by: LamNT
+     * Date created: 29/02/2024
+     * Function: save new movie and schedule to database
+     *
+     * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
+     */
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        MovieDTO newMovie = movieRequestBodyDTO.getMovieDTO();
+        Set<ScheduleDTO> newScheduleDTOS = movieRequestBodyDTO.getScheduleDTO();
+        List<Long> versions = newMovie.getVersion();
+        List<Long> genres = newMovie.getGenre();
+        movieService.createMovie(newMovie, newScheduleDTOS,versions,genres);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 03/03/2024
+     * Function: update movie and schedule in database
+     *
+     * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
+     */
+    @PatchMapping("/edit")
+    public ResponseEntity<?> edit(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        MovieDTO movie = movieRequestBodyDTO.getMovieDTO();
+        Set<ScheduleDTO> scheduleDTO = movieRequestBodyDTO.getScheduleDTO();
+        boolean result = movieService.editMovie(movie, scheduleDTO);
+        if (result) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 04/03/2024
+     * Function: return all the attributes that get data from database
+     *
+     * @return HTTPStatus.OK
+     */
+    @GetMapping("/attributes")
+    public ResponseEntity<MovieAttributeDTO> getAllAttributes() {
+        List<Genre> genres = genreService.getAll();
+        List<Version> versions = versionService.getAll();
+        List<ScheduleTime> scheduleTimes = scheduleTimeService.getAll();
+        List<Hall> halls = hallService.getAll();
+        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes, halls), HttpStatus.OK);
     }
 
     /**
@@ -109,7 +175,21 @@ public class MovieRestController {
      */
     @GetMapping("/find/{id}")
     public ResponseEntity<Movie> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(movieService.findById(id), HttpStatus.OK);
+        String checkId = String.valueOf(id);
+        if (id == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (checkId.equals("")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Movie movie = movieService.findById(id);
+        if (movie == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (id == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 
 
@@ -121,16 +201,15 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if have list movie and HTTPStatus.NO_CONTENT if list movie null
      */
-
     @GetMapping("/list")
-    public ResponseEntity<Page<Movie>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "") String publisher,
-                                                    @RequestParam(defaultValue = "") String name,
-                                                    @RequestParam(defaultValue = "1990-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                    @RequestParam(defaultValue = "3000-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
+    public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "") String publisher,
+                                                           @RequestParam(defaultValue = "") String name,
+                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
-        Page<Movie> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
+        Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
         if (moviePage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -144,7 +223,7 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if movie delete and HTTPStatus.NOT_FOUND if  movie not found
      */
-    @DeleteMapping("/delete/{id}")
+    @PatchMapping("/delete/{id}")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
         if (movie == null) {
@@ -152,5 +231,13 @@ public class MovieRestController {
         }
         movieService.deleteMovieById(id);
         return new ResponseEntity<>(movie, HttpStatus.OK);
+    }
+    @GetMapping("/current1")
+    public ResponseEntity<List<IMovieDTO>> getAllMovieCurrentTo3Day() {
+        List<IMovieDTO> list = movieService.getAllMovieCurrentTo3Day();
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

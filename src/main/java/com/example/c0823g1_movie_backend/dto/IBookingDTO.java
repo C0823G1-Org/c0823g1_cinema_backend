@@ -17,5 +17,8 @@ public interface IBookingDTO {
     Integer getTicketPrice();
     Integer getSeatNumber();
     String getCinemaHall();
+    LocalDate getScheduleDate();
+    String getPosterFilm();
+
 
 }
