@@ -35,7 +35,7 @@ public class ScheduleService implements IScheduleService {
         return null;
     }
     @Override
-    public List<ScheduleDTO> findDateByMovieId(Long movieId) {
+    public List<IScheduleDTO> findDateByMovieId(Long movieId) {
         return scheduleRepository.findDateByMovieId(movieId);
     }
 
