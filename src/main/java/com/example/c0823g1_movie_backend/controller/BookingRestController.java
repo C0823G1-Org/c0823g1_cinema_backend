@@ -244,11 +244,14 @@ public class BookingRestController {
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 //                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
                     document.open();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE-MM-dd HH:mm:ss");
+
                     for (IBookingDTO temp : listBookingTicketDetail){
                         // in
+                        String formattedDateTime = temp.getDateBooking().format(formatter);
                         try{
                             document.newPage();
-                            addBackgroundAndContent(writer, document, temp);
+                            addBackgroundAndContent(writer, document, temp, formattedDateTime);
 
                         } catch (DocumentException e) {
                             throw new RuntimeException(e);
@@ -274,7 +277,7 @@ public class BookingRestController {
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
 
-    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
+    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO , String formattedDateTime) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
         Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
         float documentWidth = document.getPageSize().getWidth();
@@ -295,10 +298,9 @@ public class BookingRestController {
         canvas.addImage(background);
         BaseColor color = BaseColor.BLACK;
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
-//        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, color);
+        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, color);
 
         PdfPTable table = new PdfPTable(1);
-        // khoang cach 2 col
         table.setWidthPercentage(65);
         table.setTotalWidth(width);
         float yTable = yBackground - 70;
@@ -306,13 +308,13 @@ public class BookingRestController {
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
         table.addCell(createTitleCell("Vé xem phim", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
 
-        table.addCell(createCell("=====================================================",font));
-        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
-        table.addCell(createCell("Show Time: " + iBookingDTO.getDateBooking(), font));
-        table.addCell(createCell("Customer: " + iBookingDTO.getNameCustomer(), font));
-        table.addCell(createCell("Seat Number: " + iBookingDTO.getSeatNumber(), font));
-        table.addCell(createCell("Ticket Price:" + iBookingDTO.getTicketPrice(), font));
-        table.addCell(createCell("Room Number: " + iBookingDTO.getCinemaHall(), font));
+        table.addCell(createCell("                           ---------------------------------------------------------",font));
+        table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), boldFont));
+        table.addCell(createCell("         Ngày chếu:  " + iBookingDTO.getScheduleDate(), boldFont));
+        table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), boldFont));
+        table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), boldFont));
+        table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", boldFont));
+        table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), boldFont));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(createCell("=====================================================",font));
 
