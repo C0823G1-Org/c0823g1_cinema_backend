@@ -403,22 +403,23 @@ public class BookingRestController {
         }
 //        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
 
-            Long accountId = ticketDTO.getAccountId();
-            Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
-            String image = movie.getPoster();
-            String movieName = movie.getName();
-            String screen = schedule.get().getHall().getName();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String movieDate = schedule.get().getDate().format(formatter);
-            String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
-            Integer price = movie.getTicketPrice();
-            List<Integer> seatNumber = ticketDTO.getSeatList();
-            Long sum = (long) (price * (seatNumber.size()));
-            String email = account.getEmail();
-            Long scheduleId = schedule.get().getId();
-            BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+        Long accountId = ticketDTO.getAccountId();
+        Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
+        String image = movie.getPoster();
+        String movieName = movie.getName();
+        String screen = schedule.get().getHall().getName();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String movieDate = schedule.get().getDate().format(formatter);
+        String timeStart = schedule.get().getScheduleTime().getScheduleTime().toString().substring(0, 5);
+        Integer price = movie.getTicketPrice();
+        List<Integer> seatNumber = ticketDTO.getSeatList();
+        Long sum = (long) (price * (seatNumber.size()));
+        String email = account.getEmail();
+        Long scheduleId = schedule.get().getId();
+        BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
         System.out.println(bookingDTO);
-            return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+        return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
+
 
     }
 
