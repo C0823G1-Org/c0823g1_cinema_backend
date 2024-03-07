@@ -48,21 +48,9 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public List<HistoryBookingDTO> historyBooking(Long id, int number) {
-        return bookingRepository.getListMovieByHistoryBooking(id, number);
-    }
-
-    @Override
     public Page<IBookingDTO> findAllBookingTicket(Pageable pageable, LocalDateTime time) {
         return bookingRepository.findAllBookingTicket(pageable, time);
     }
-
-
-    @Override
-    public List<HistoryBookingDTO> searchBookingByDate(Long id, LocalDateTime startDate, LocalDateTime endDate, int page) {
-        return bookingRepository.searchMovieBookingByDate(id, startDate, endDate, page);
-    }
-
 
     @Override
     public Page<IBookingDTO> searchBookingTicketWithParameterSearch(String search, LocalDateTime time, Pageable pageable) {
@@ -70,12 +58,12 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public IBookingDTO findBookingTicketById(Integer id) {
+    public IBookingDTO findBookingTicketById(Long id) {
         return bookingRepository.findBookingTicketById(id);
     }
 
     @Override
-    public List<IBookingDTO> listBookingTicketDetail(Integer id) {
+    public List<IBookingDTO> listBookingTicketDetail(Long id) {
         return bookingRepository.listBookingTicketDetail(id);
     }
 
@@ -131,5 +119,20 @@ public class BookingService implements IBookingService {
     public void removeBooking(Long bookingId) {
         bookingRepository.removeBooking(bookingId);
     }
+    @Override
+    public Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(String search, LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterSearchAndDate(search,dateSearch,pageable);
+    }
+
+    @Override
+    public Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable) {
+        return bookingRepository.searchBookingTicketWithParameterDate(dateSearch,pageable);
+    }
+
+    @Override
+    public void setPrintStatus(Long id) {
+        bookingRepository.setPrintStatus(id);
+    }
+
 
 }
