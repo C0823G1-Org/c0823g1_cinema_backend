@@ -308,7 +308,7 @@ public class BookingRestController {
 
         table.addCell(createCell("=====================================================",font));
         table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
-        table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));
+        table.addCell(createCell("Show Time: " + iBookingDTO.getDateBooking(), font));
         table.addCell(createCell("Customer: " + iBookingDTO.getNameCustomer(), font));
         table.addCell(createCell("Seat Number: " + iBookingDTO.getSeatNumber(), font));
         table.addCell(createCell("Ticket Price:" + iBookingDTO.getTicketPrice(), font));
