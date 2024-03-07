@@ -14,17 +14,25 @@ import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.service.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -214,7 +222,7 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
-    public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws FileNotFoundException, DocumentException {
+    public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws IOException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
@@ -236,22 +244,19 @@ public class BookingRestController {
                     return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
                     response.setFlag(OK);
-                    String fileName = "C:\\Users\\Public\\ticket" + id + ".pdf";
+                    String fileName = "C:\\pdfPrint\\ticket" + id + ".pdf";
                     float customWidth = 650;
                     float customHeight = 396;
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
                     Document document = new Document(pageSize, -50, 0, 110, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
-//                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
+                    System.out.println("zzaz");
                     document.open();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE-MM-dd HH:mm:ss");
-
                     for (IBookingDTO temp : listBookingTicketDetail){
                         // in
-                        String formattedDateTime = temp.getDateBooking().format(formatter);
                         try{
                             document.newPage();
-                            addBackgroundAndContent(writer, document, temp, formattedDateTime);
+                            addBackgroundAndContent(writer, document, temp);
 
                         } catch (DocumentException e) {
                             throw new RuntimeException(e);
@@ -263,11 +268,20 @@ public class BookingRestController {
                     }
                     document.close();
                     iBookingService.setPrintStatus(id);
-                    response.setData(fileName);
+                    System.out.println("alo " + " " + fileName);
+                    Resource resource = new FileSystemResource(fileName);
+                    System.out.println("alo " + " " + fileName);
+                    try (InputStream inputStream = resource.getInputStream()) {
+                        byte[] pdfContent = inputStream.readAllBytes();
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.setContentType(MediaType.APPLICATION_PDF);
+                        headers.setContentDispositionFormData("attachment", "ticket.pdf");
+                        response.setBase64(Base64.encodeBase64String(pdfContent));
+                        response.setFlag(OK);
+                        return new ResponseEntity<>(response,HttpStatus.OK);
+                    }
 
                 }
-
-                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
     }
@@ -277,9 +291,9 @@ public class BookingRestController {
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
 
-    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO , String formattedDateTime) throws IOException, DocumentException {
+    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
-        Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
+        Image background = Image.getInstance("C:\\pdfPrint\\ticketImg.jpg");
         float documentWidth = document.getPageSize().getWidth();
         float documentHeight = document.getPageSize().getHeight();
         float width = 680;
@@ -310,7 +324,7 @@ public class BookingRestController {
 
         table.addCell(createCell("                           ---------------------------------------------------------",font));
         table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), boldFont));
-        table.addCell(createCell("         Ngày chếu:  " + iBookingDTO.getScheduleDate(), boldFont));
+        table.addCell(createCell("         Ngày chếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), boldFont));
         table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), boldFont));
         table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), boldFont));
         table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", boldFont));
