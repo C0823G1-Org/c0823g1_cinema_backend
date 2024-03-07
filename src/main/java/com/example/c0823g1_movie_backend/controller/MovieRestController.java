@@ -232,4 +232,12 @@ public class MovieRestController {
         movieService.deleteMovieById(id);
         return new ResponseEntity<>(movie, HttpStatus.OK);
     }
+    @GetMapping("/current1")
+    public ResponseEntity<List<IMovieDTO>> getAllMovieCurrentTo3Day() {
+        List<IMovieDTO> list = movieService.getAllMovieCurrentTo3Day();
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 }

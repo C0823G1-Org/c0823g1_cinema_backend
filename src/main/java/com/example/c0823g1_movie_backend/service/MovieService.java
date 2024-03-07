@@ -116,5 +116,8 @@ public class MovieService implements IMovieService {
         return movieRepository.findMovieById(id);
     }
 
-
+    @Override
+    public List<IMovieDTO> getAllMovieCurrentTo3Day() {
+        return movieRepository.getAllMovieCurrentTo3Day();
+    }
 }
