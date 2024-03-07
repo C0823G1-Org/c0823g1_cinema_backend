@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .body {
+            background-color: Thistle;
+            font-family: "Yanone Kaffeesatz", sans-serif;
+            font-weight: 600;
+        }
+
+        .img {
+            width: 100%;
+            height: auto;
+        }
+
+        .ticket {
+            width: 50%;
+            height:50%;
+            background-color: white;
+            margin: 25px auto;
+            position: relative;
+        }
+
+        .holes-top {
+            height: 50px;
+            width: 50px;
+            background-color: Thistle;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            margin-left: -25px;
+            top: -25px;
+        }
+
+        .holes-top:before,
+        .holes-top:after {
+            content: "";
+            height: 50px;
+            width: 50px;
+            background-color: Thistle;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .holes-top:before {
+            left: -200px;
+        }
+
+        .holes-top:after {
+            left: 200px;
+        }
+
+        .holes-lower {
+            position: relative;
+            margin: 25px;
+            border: 1px dashed #aaa;
+        }
+
+        .holes-lower:before,
+        .holes-lower:after {
+            content: "";
+            height: 50px;
+            width: 50px;
+            background-color: Thistle;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .holes-lower:before {
+            top: -25px;
+            left: -50px;
+        }
+
+        .holes-lower:after {
+            top: -25px;
+            left: 350px;
+        }
+
+        .title {
+            height: 10%;
+        }
+
+        .cinema {
+            color: #aaa;
+            font-size: 22px;
+        }
+
+        .movie-title {
+            color: black;
+            font-size: 30px;
+        }
+
+        .info {
+            padding: 15px 25px;
+        }
+
+        .tableTicket {
+            width: 100%;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .table__tr {
+            margin-bottom: 10px;
+        }
+
+        .table__th {
+            text-align: left;
+        }
+
+        .table__th:nth-of-type(1) {
+            width: 38%;
+        }
+
+        .table__th:nth-of-type(2) {
+            width: 40%;
+        }
+
+        .table__th:nth-of-type(3) {
+            width: 15%;
+        }
+
+        .table__td {
+            width: 33%;
+            font-size: 20px;
+        }
+
+    </style>
+</head>
+<body class="body">
+<div class="ticket">
+<!--    <div class="holes-top"></div>-->
+    <div class="title">
+        <p class="cinema">C08-CINEMA</p>
+        <p class="movie-title" th:text="${name}"></p>
+    </div>
+    <div class="poster">
+        <img class="img" th:src="${image}"
+             alt="Movie: Only God Forgives" />
+    </div>
+    <div class="info">
+        <table class="tableTicket">
+            <tr class="table__tr">
+                <th class="table__th">Mã Đặt Vé</th>
+                <th class="table__th">Phòng chiếu</th>
+                <th class="table__th">Ghế</th>
+            </tr>
+            <tr class="table__tr">
+                <td class="table__td" th:text="${code}"></td>
+                <td class="table__td" th:text="${screen}"></td>
+                <td class="table__td" th:text="${seat}"></td>
+            </tr>
+            <tr class="table__tr">
+                <th class="table__th">Tổng tiền</th>
+                <th class="table__th">Ngày chiếu</th>
+                <th class="table__th">Giờ chiếu</th>
+            </tr>
+            <tr class="table__tr">
+                <td class="table__td" th:text="${price}"> </td>
+                <td class="table__td" th:text="${date}"></td>
+                <td class="table__td" th:text="${time}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="holes-lower"></div>
+</div>
+</body>
+</html>

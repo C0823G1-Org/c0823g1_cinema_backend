@@ -24,7 +24,7 @@ public interface IBookingService {
 
     Long getBooking();
 
-    void sendMail(Long accountId, Long scheduleId, String seat, Long id);
+    void sendMail(Long accountId, Long scheduleId, String seat, Long id, Long total);
 
     void addAccumulatedPoints(Long id, int accumulatedPoints);
 
