@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
@@ -23,6 +25,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -90,17 +93,25 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public void sendMail(Long accountId, Long scheduleId, String seat,Long id) {
+    public void sendMail(Long accountId, Long scheduleId, String seat,Long id, Long total) {
         Optional<IAccountDTO> account = accountRepository.findByIdAccountDTO(accountId);
         Schedule schedule = scheduleRepository.getScheduleById(scheduleId);
 
         if (account.isPresent()) {
             String to = account.get().getEmail();
             String subject = "[C0823G1-Cinema]-Đặt vé thành công";
-            String templateName = "email-checkout";
+            String templateName = "ticket-gmail";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
+            context.setVariable("name", schedule.getMovie().getName());
+
             context.setVariable("seat", seat);
             context.setVariable("code", "TB"+id);
+
+
+            // Định dạng tiền tệ với NumberFormat và Locale của Việt Nam
+            NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String ticketPrice = numberFormat.format(total);
+            context.setVariable("price",ticketPrice );
             context.setVariable("screen", schedule.getHall().getName());
             context.setVariable("movie", schedule.getMovie().getName());
             context.setVariable("image", schedule.getMovie().getPoster());

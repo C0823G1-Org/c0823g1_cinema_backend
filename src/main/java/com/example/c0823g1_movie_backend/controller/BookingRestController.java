@@ -303,7 +303,6 @@ public class BookingRestController {
      */
     @PostMapping("/confirm")
     public ResponseEntity<BookingDTO> checkout(@RequestBody TicketDTO ticketDTO) {
-        System.out.println("Save Ticket");
 
         if (ticketDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -382,6 +381,7 @@ public class BookingRestController {
             String email = account.getEmail();
             Long scheduleId = schedule.get().getId();
             BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
+        System.out.println(bookingDTO);
             return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
 
         }
@@ -389,29 +389,33 @@ public class BookingRestController {
 
 
     @PostMapping("/fail")
-    public ResponseEntity<?> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
+    public ResponseEntity<Long> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        System.out.println("Fail");
+        Optional<Schedule> schedule = scheduleService.getScheduleById(checkoutDTO.getScheduleId());
+        if (schedule.get().getMovie() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+            Long movieId = schedule.get().getMovie().getId();
         ticketService.removeTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
+
         iBookingService.removeBooking(checkoutDTO.getBookingId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(movieId, HttpStatus.OK);
     }
 
     @PostMapping("/success")
-    public ResponseEntity<?> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
+    public ResponseEntity<Object> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        System.out.println("Success");
         String seat = "";
         for (String s : checkoutDTO.getSeat()) {
             seat += s + " ";
         }
-        iBookingService.sendMail(checkoutDTO.getAccountId(), checkoutDTO.getScheduleId(), seat, checkoutDTO.getBookingId());
+        iBookingService.sendMail(checkoutDTO.getAccountId(), checkoutDTO.getScheduleId(), seat, checkoutDTO.getBookingId(), checkoutDTO.getTotalAmount());
         int accumulatedPoints = (int) Math.floor((checkoutDTO.getTotalAmount() * 3) / 100);
 
         iBookingService.addAccumulatedPoints(checkoutDTO.getAccountId(), accumulatedPoints);
