@@ -28,32 +28,26 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "select * from schedule where date between curdate() and curdate() + interval 7 day and hall_id=:id and is_deleted=0", nativeQuery = true)
     List<Schedule> getScheduleByHallId(@Param("id") Long id);
-    @Query(value = "SELECT date AS dateTime FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY) GROUP BY dateTime ORDER BY dateTime", nativeQuery = true)
+    @Query(value = "SELECT date AS dateTime FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY) and is_deleted=0 GROUP BY dateTime ORDER BY dateTime", nativeQuery = true)
     List<IScheduleDTO> findDateByMovieId(@Param("movieId") Long movieId);
 
     @Query(value = "select st.id, st.schedule_time as scheduleTime\n" +
             "from schedule_time st\n" +
             "join schedule s on st.id in\n" +
-            "   (select schedule_time_id from schedule where movie_id = :movieId and date = :dateTime)\n" +
+            "   (select schedule_time_id from schedule where movie_id = :movieId and date = :dateTime and is_deleted=0)\n" +
             "where \n" +
-            "   ((date = CURRENT_DATE() and st.schedule_time >= TIMESTAMPADD(MINUTE, -15, NOW())" +
-            "and movie_id = :movieId and date = :dateTime)\n" +
-            "   or\n" +
-            "   (date > CURRENT_DATE())and movie_id = :movieId and date = :dateTime)\n" +
+            "  ( (date >= CURRENT_DATE())and movie_id = :movieId and date = :dateTime and is_deleted=0)\n" +
             "group by st.id\n" +
             "order by st.schedule_time;", nativeQuery = true)
     List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(@Param("movieId") Long movieId,
                                                           @Param("dateTime") LocalDate dateTime);
 
     @Query(value = "select * from schedule where movie_id = :movieId and date =:date " +
-            " and schedule_time_id =:scheduleTimeId", nativeQuery = true)
+            " and schedule_time_id =:scheduleTimeId and is_deleted=0", nativeQuery = true)
     Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(@Param("movieId")Long movieId,
                                                           @Param("date") LocalDate date,
                                                           @Param("scheduleTimeId") Long scheduleTimeId);
 
-    @Query(value = "select h.id from hall h join schedule on hall_id=(select hall_id from schedule " +
-            "where id =:scheduleId) group by h.id", nativeQuery = true)
-    HallDTO getHallByScheduleId(@Param("scheduleId") Long scheduleId);
 
 
 
@@ -70,7 +64,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "set date=:#{#schedule.date}, hall_id=:#{#schedule.hall}, movie_id=:#{#schedule.movie}, schedule_time_id=:#{#schedule.scheduleTime} " +
             "where id=:#{#schedule.id}", nativeQuery = true)
     void editSchedule(ScheduleDTO schedule);
-    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY) ORDER BY schedule.date", nativeQuery = true)
+    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY) and is_deleted=0 ORDER BY schedule.date", nativeQuery = true)
     List<Schedule> getScheduleByMovieId(@Param("movieId") Long movieId);
 
 }
