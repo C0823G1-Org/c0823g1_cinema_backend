@@ -113,7 +113,10 @@ public class BookingRestController {
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
             @PageableDefault(size = 5) Pageable pageable) {
-        search = search.trim();
+        if (search != null){
+            search = search.trim();
+        }
+
         LocalDateTime timeNow = LocalDateTime.now();
         if (search == null && localDate == null) {
             ApiResponse response = new ApiResponse<>();
@@ -233,11 +236,11 @@ public class BookingRestController {
                     return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
                     response.setFlag(OK);
-                    String fileName = "D:\\filePdf\\ticket.pdf";
+                    String fileName = "C:\\Users\\Public\\ticket" + id + ".pdf";
                     float customWidth = 650;
                     float customHeight = 396;
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
-                    Document document = new Document(pageSize, -50, 0, 40, 0);
+                    Document document = new Document(pageSize, -50, 0, 110, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 //                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
                     document.open();
@@ -257,6 +260,7 @@ public class BookingRestController {
                     }
                     document.close();
                     iBookingService.setPrintStatus(id);
+                    response.setData(fileName);
 
                 }
 
@@ -278,7 +282,6 @@ public class BookingRestController {
         float width = 680;
         float height = 400;
         background.scaleToFit(width, height);
-        background.setRotationDegrees(-270);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
         background.setAbsolutePosition(0,0);
@@ -303,15 +306,16 @@ public class BookingRestController {
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
         table.addCell(createTitleCell("Vé xem phim", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
 
+        table.addCell(createCell("=====================================================",font));
         table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String formattedDateTime = ticket.getStartTime().format(formatter);
         table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));
         table.addCell(createCell("Customer: " + iBookingDTO.getNameCustomer(), font));
         table.addCell(createCell("Seat Number: " + iBookingDTO.getSeatNumber(), font));
         table.addCell(createCell("Ticket Price:" + iBookingDTO.getTicketPrice(), font));
         table.addCell(createCell("Room Number: " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(createCell("=====================================================",font));
+
 
         document.add(table);
     }
