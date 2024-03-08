@@ -286,6 +286,13 @@ public class AccountRestController {
     private void createAccountGG(Account account) {
         if (!iAccountService.checkLoginByGg(account)) {
             account.setAccountName(account.getEmail());
+            Account account1 = iAccountService.getLastUser();
+            if (account1 != null){
+                int memberCode = Integer.parseInt(account1.getMemberCode());
+                account.setMemberCode(String.valueOf(memberCode + 1));
+            }else {
+                account.setMemberCode("1");
+            }
             iAccountService.register(account);
         }
     }
@@ -313,20 +320,6 @@ public class AccountRestController {
             if (listError.size() > 0){
                 return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
             }
-//            String to = accountDTO.getEmail();
-//            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
-//            String templateName = "email-register";
-//            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
-//            String randomCode = RandomStringUtils.random(6,true,true);
-//            System.out.println(randomCode);
-//            context.setVariable("fullName",accountDTO.getFullName());
-//            context.setVariable("account",accountDTO.getAccountName());
-//            context.setVariable("password",accountDTO.getPassword());
-//            context.setVariable("randomCode",randomCode);
-//            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
-//            if (!accountDTO.getVerificationCode().equals(randomCode)){
-//                listError.add("Mã Xác Nhận không đúng");
-//            }
             String encode = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
@@ -350,16 +343,7 @@ public class AccountRestController {
      * Function: Show Detail User Account
      * @Return HttpStatus.NO_CONTENT if userName of User is Null , @Return HttpStatus.OK if userName of User is not Null
      */
-//    @GetMapping("/detailUser")
-//    public ResponseEntity<Account> detailAccountUser(Principal principal){
-//        if (principal.getName() == null){
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        Account account1 = iAccountService.getAllInfoUser(principal.getName());
-//        return new ResponseEntity<>(account1,HttpStatus.OK);
-//    }
     @GetMapping("/detailUser/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
     public ResponseEntity<Account> detailAccountUser(@PathVariable long id){
         Account account1 = iAccountService.findAccountById(id);
         if (account1 == null){
@@ -373,7 +357,6 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */
     @PatchMapping("/changeInfoUser/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
     public ResponseEntity<Object> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO , BindingResult bindingResult,@PathVariable Long id){
         Map<String,String> listError = new HashMap<>();
         Account account3 = iAccountService.findAccountById(id);
@@ -410,6 +393,13 @@ public class AccountRestController {
                 account.setAccountName(account.getFacebookId());
             } else {
                 account.setAccountName(account.getEmail());
+            }
+            Account account1 = iAccountService.getLastUser();
+            if (account1 != null){
+                int memberCode = Integer.parseInt(account1.getMemberCode());
+                account.setMemberCode(String.valueOf(memberCode + 1));
+            }else {
+                account.setMemberCode("1");
             }
             iAccountService.register(account);
         }

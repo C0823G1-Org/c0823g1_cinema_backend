@@ -66,6 +66,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query(value = "select m.name as name,"
             + "m.description as description,"
+            + "m.id as movieId,"
             + "m.poster as poster,\n"
             + "m.is_deleted as isDelete \n"
             + "from movie m\n"

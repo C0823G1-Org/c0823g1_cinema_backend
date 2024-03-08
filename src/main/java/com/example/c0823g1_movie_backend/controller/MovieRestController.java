@@ -225,7 +225,7 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if movie delete and HTTPStatus.NOT_FOUND if  movie not found
      */
-    @PatchMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
