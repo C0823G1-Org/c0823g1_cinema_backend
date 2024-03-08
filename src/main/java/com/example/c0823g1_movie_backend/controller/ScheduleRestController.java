@@ -66,8 +66,8 @@ public class ScheduleRestController {
      * Return: HttpStatus.BAD_REQUEST if date not found/ HttpStatus.OK and date list
      */
     @GetMapping("/date")
-    public ResponseEntity<List<ScheduleDTO>> findDateByMovieId(@RequestParam Long movieId) {
-        List<ScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
+    public ResponseEntity<List<IScheduleDTO>> findDateByMovieId(@RequestParam Long movieId) {
+        List<IScheduleDTO> dateList = scheduleService.findDateByMovieId(movieId);
         if (dateList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

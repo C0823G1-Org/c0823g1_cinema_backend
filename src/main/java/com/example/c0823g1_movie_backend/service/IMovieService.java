@@ -38,4 +38,5 @@ public interface IMovieService extends IGeneralService<Movie> {
     Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable);
 
     boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO);
+    List<IMovieDTO> getAllMovieCurrentTo3Day();
 }
