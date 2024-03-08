@@ -64,7 +64,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "limit 8", nativeQuery = true)
     List<IMovieDTO> getAllMovieHot();
 
-    @Query(value = "select m.name as name," + "m.description as description," + "m.poster as poster\n" + "from movie m\n" + "where m.name like :title", nativeQuery = true)
+    @Query(value = "select m.name as name,"
+            + "m.description as description,"
+            + "m.poster as poster,\n"
+            + "m.is_deleted as isDelete \n"
+            + "from movie m\n"
+            + "where m.name like :title and m.is_deleted = false ", nativeQuery = true)
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
