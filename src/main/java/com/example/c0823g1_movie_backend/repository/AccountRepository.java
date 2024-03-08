@@ -214,6 +214,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountByPhone(@Param("phone") String phone);
     @Query(value = "select a.* from account a where a.account_name = :accountName limit 1",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
+    @Query(value = "select a.* from account a where a.password = :password limit 1",nativeQuery = true)
+    Account findAccountByPassword(@Param("password") String password);
 
     @Transactional
     @Modifying

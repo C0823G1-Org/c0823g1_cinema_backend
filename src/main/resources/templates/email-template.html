@@ -1,31 +1,352 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
     <title>Email Template</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!--><!--<![endif]-->
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff0e3;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: inherit !important;
+        }
+
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        p {
+            line-height: inherit
+        }
+
+        .desktop_hide table {
+            mso-hide: all;
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .image_block img+div {
+            display: none;
+        }
+
+        @media (max-width:700px) {
+            .desktop_hide table.icons-inner {
+                display: inline-block !important;
+            }
+
+            .icons-inner {
+                text-align: center;
+            }
+
+            .icons-inner td {
+                margin: 0 auto;
+            }
+
+            .image_block div.fullWidth {
+                max-width: 100% !important;
+            }
+
+            .row-content {
+                width: 100% !important;
+            }
+
+            .stack .column {
+                width: 100%;
+                display: block;
+            }
+
+            .desktop_hide table {
+                display: table !important;
+                max-height: none !important;
+            }
+        }
+    </style>
 </head>
-<body>
-<table>
+<body style="background-color: #fff0e3">
+<table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" width="100%">
+    <tbody>
     <tr>
-        <td>Xin chào, <span th:text="${fullName}"></span></td>
+        <td>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <div class="spacer_block block-1" style="height:30px;line-height:30px;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="33.333333333333336%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                                <td class="column column-2" width="33.333333333333336%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="width:100%;padding-right:0;padding-left:0;">
+                                                <div align="center" class="alignment" style="line-height:10px">
+                                                    <div style="max-width: 145px;"><img alt="Company Logo" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/7631/logo_password_header.png" style="display: block; height: auto; border: 0; width: 100%;" title="Company Logo" width="404"/></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="column column-3" width="33.333333333333336%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <div class="spacer_block block-1" style="height:10px;line-height:10px;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="width:100%;">
+                                                <div align="center" class="alignment" style="line-height:10px">
+                                                    <div style="max-width: 680px;"><img alt="Top round corners" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/7631/round_corner_top.png" style="display: block; height: auto; border: 0; width: 100%;" title="Top round corners" width="680"/></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="background-color: #ffffff;" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <table border="0" cellpadding="15" cellspacing="0" class="image_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad">
+                                                <div align="center" class="alignment" style="line-height:10px">
+                                                    <div class="fullWidth" style="max-width: 374px;"><img alt="Resetting Password" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/7631/password_reset.png" style="display: block; height: auto; border: 0; width: 100%;" title="Resetting Password" width="509"/></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="spacer_block block-2" style="height:35px;line-height:35px;font-size:1px;"> </div>
+                                    <table border="0" cellpadding="0" cellspacing="0" class="heading_block block-3" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="text-align:center;width:100%;">
+                                                <h1 style="color: #101010; direction: ltr; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 27px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin: 0;mso-line-height-alt: 32px;"><span class="tinyMce-placeholder">Phản hồi yêu cầu cấp lại mật khẩu !</span></h1>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="background-color: #ffffff;" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="16.666666666666668%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                                <td class="column column-2" width="66.66666666666667%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="padding: 10px 10px 10px 20px;">
+                                                <div style="color:#848484;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:14px;font-weight:400;line-height:180%;text-align:center;mso-line-height-alt:25px;">
+                                                    <p style="margin: 0; word-break: break-word;"><span>Chào <span th:text="${fullName}"></span> !<br/>Hệ thống rạp chiếu phim C08 Cinema xin thông báo !<br/>Mật khẩu mới bạn được cung cấp là: <span th:text="${password}"></span><br/>Xin cám ơn và chúc bạn có những trải nghiệm thật tốt với <br/>hệ thống của chúng tôi !</span></p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="spacer_block block-2" style="height:10px;line-height:10px;font-size:1px;"> </div>
+                                    <div class="spacer_block block-3" style="height:20px;line-height:20px;font-size:1px;"> </div>
+                                </td>
+                                <td class="column column-3" width="16.666666666666668%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="background-color: #ffffff;" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="width:100%;">
+                                                <div align="center" class="alignment" style="line-height:10px">
+                                                    <div style="max-width: 680px;"><img alt="Bottom round corners" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/7631/round_corner_bottom.png" style="display: block; height: auto; border: 0; width: 100%;" title="Bottom round corners" width="680"/></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" width="100%">
+                                        <tr>
+                                            <td class="pad" style="width:100%;">
+                                                <div align="center" class="alignment" style="line-height:10px">
+                                                    <div style="max-width: 680px;"><img alt="Top round corners" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/7631/round_corner_bottom.png" style="display: block; height: auto; border: 0; width: 100%;" title="Top round corners" width="680"/></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <div class="spacer_block block-1" style="height:20px;line-height:20px;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-9" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="16.666666666666668%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                                <td class="column column-2" width="66.66666666666667%">
+                                    <div class="spacer_block block-1" style="height:35px;line-height:35px;font-size:1px;"> </div>
+                                </td>
+                                <td class="column column-3" width="16.666666666666668%">
+                                    <div class="spacer_block block-1" style="height:0;line-height:0;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-11" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1" width="100%">
+                                    <div class="spacer_block block-1" style="height:20px;line-height:20px;font-size:1px;"> </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
     </tr>
-    <tr>
-        <td>Hệ thống rạp chiếu phim C0823G1-Cinema xin thông báo:</td>
-    </tr>
-    <tr>
-        <th style="padding-left: 0">Mật khẩu mới bạn được cung cấp là: <span th:text="${password}"></span></th>
-    </tr>
-    <tr>
-        <td>Xin chúc bạn có những trải nghiệm tốt với hệ thống của chúng tôi!</td>
-    </tr>
-    <tr>
-        <td>Chúng tôi trân trọng cám ơn. Và rất hân hạnh được đón tiếp các bạn.</td>
-    </tr>
-    <tr>
-        <td>Mọi thắc mắc xin liên hệ vào số điện thoại: 0362466363</td>
-    </tr>
-    <tr>
-        <td>Hoặc phản hồi qua email này.</td>
-    </tr>
+    </tbody>
 </table>
 </body>
 </html>
