@@ -52,22 +52,37 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             " max(m.id)  as movieId,\n" +
             " max(m.description) as description,\n" +
             " max(m.poster) as poster,\n" +
-            " max(m.start_date) as startDate\n" +
+            " max(m.start_date) as startDate,\n" +
+            "max(m.is_deleted) as isDelete " +
             "from booking b\n" +
             "left join ticket t on b.id = t.booking_id\n" +
             "left join `schedule` sc on t.schedule_id = sc.id\n" +
             "left join  movie m on sc.movie_id = m.id\n" +
-            "where m.is_deleted = 0 && date_sub(curdate(), INTERVAL 12 DAY) <= m.start_date\n" +
+            "where m.is_deleted = false && date_sub(curdate(), INTERVAL 12 DAY) <= m.start_date\n" +
             "group by m.name \n" +
             "order by count(b.account_id) desc\n" +
             "limit 8", nativeQuery = true)
     List<IMovieDTO> getAllMovieHot();
 
-    @Query(value = "select m.name as name," + "m.description as description," + "m.poster as poster\n" + "from movie m\n" + "where m.name like :title", nativeQuery = true)
+    @Query(value = "select m.name as name,"
+            + "m.description as description,"
+            + "m.poster as poster,\n"
+            + "m.is_deleted as isDelete \n"
+            + "from movie m\n"
+            + "where m.name like :title and m.is_deleted = false ", nativeQuery = true)
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
 
-    @Query(value = "select count(m.id) as countId,max(m.id) as movieId,\n" + "max(m.name) as name,\n" + "max(m.description) as description\n" + ", max(m.poster) as poster\n" + "from movie m \n" + "join schedule sc on m.id = sc.movie_id\n" + "where sc.`date` = current_date\n" + "group by m.name", nativeQuery = true)
+    @Query(value = "select count(m.id) as countId," +
+            "max(m.id) as movieId,\n"
+            + "max(m.name) as name,\n"
+            + "max(m.description) as description\n"
+            + ", max(m.poster) as poster\n"
+            + ", max(m.is_deleted) as isDelete \n"
+            + "from movie m \n"
+            + "join schedule sc on m.id = sc.movie_id\n"
+            + "where m.is_deleted = false and sc.`date` = current_date\n"
+            + "group by m.name", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrent();
 
     @Query(value = "select m.id, m.name, m.start_date as startDate, m.publisher, m.duration,group_concat( v.name separator ', ' ) as versions \n" + "from movie m\n" + "join movie_has_version mv  on mv.movie_id = m.id\n" + "join version v on v.id = mv.version_id  \n" + "where (m.name like :name or m.publisher like :publisher) and m.start_date BETWEEN :startDate  AND :endDate and m.is_deleted = 0\n" + "group by m.id", nativeQuery = true)
@@ -102,10 +117,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             ", ticket_price=:#{#editedMovie.ticketPrice}, trailer=:#{#editedMovie.trailer} " +
             "where id=:#{#editedMovie.id}", nativeQuery = true)
     void editMovie(MovieDTO editedMovie);
-    @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, MAX(m.name) as name, MAX(m.description) as description, MAX(m.poster) as poster " +
-            "FROM movie m " +
-            "JOIN schedule sc ON m.id = sc.movie_id " +
-            "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY) " +
-            "GROUP BY m.name", nativeQuery = true)
+    @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, m.name, MAX(m.description) as description, MAX(m.poster) as poster, MAX(sc.date) as date\n" +
+            "FROM movie m\n" +
+            "JOIN schedule sc ON m.id = sc.movie_id\n" +
+            "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY)\n" +
+            "GROUP BY m.id, m.name\n" +
+            "ORDER BY MAX(sc.date);\n", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrentTo3Day();
 }
