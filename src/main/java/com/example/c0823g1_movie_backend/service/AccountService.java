@@ -223,6 +223,11 @@ public class AccountService implements IAccountService {
         accountRepository.updatePassword(password, accountName);
     }
 
+    @Override
+    public Account findAccountByPassword(String password) {
+        return accountRepository.findAccountByPassword(password);
+    }
+
 
     @Override
     public boolean checkLoginByEmail(Account account) {
