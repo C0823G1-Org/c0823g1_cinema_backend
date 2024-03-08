@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -39,9 +40,10 @@ public class EmployeeRestController {
      * @return a ResponseEntity containing the paginated list of employees and an HTTP status code
      */
     @GetMapping("/employee/list")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Page<Account>> getEmployeeList(@RequestParam(defaultValue = "") String searchName,
                                                          @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 6);
         Page<Account> accountPage = employeeService.getAllEmployee(searchName, pageable);
         if (accountPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -57,6 +59,7 @@ public class EmployeeRestController {
 
 
     @DeleteMapping("/employee/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Account> deleteEmployee(@PathVariable Long id) {
         Optional<IAccountDTO> account = employeeService.getEmployeeById(id);
         if (account.isEmpty()) {

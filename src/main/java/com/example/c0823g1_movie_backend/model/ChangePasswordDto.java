@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ChangePasswordDto implements Validator {
 //    private String email;
+    private long id;
     private String currentPassword;
     private String newPassword;
     private String confirmationPassword;
