@@ -16,24 +16,20 @@ import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.service.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.time.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -80,6 +76,7 @@ public class BookingRestController {
     private MailConfig mailConfig;
 
     @GetMapping("getListBooking/{id}/{dateStart}/{dateEnd}/{page}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
     public ResponseEntity<Page<HistoryBookingDTO>> getListBooking(@PathVariable int page,
                                                                   @PathVariable Long id,
                                                                   @PathVariable LocalDateTime dateStart,
@@ -91,7 +88,8 @@ public class BookingRestController {
 
 
     @GetMapping(value = {"/", "/list"})
-    public ResponseEntity<Object> listBookingTicket( @PageableDefault(size = 5) Pageable pageable ) {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
+    public ResponseEntity<Object> listBookingTicket( @PageableDefault(size = 6) Pageable pageable ) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         ApiResponse response = new ApiResponse<>();
@@ -117,10 +115,11 @@ public class BookingRestController {
 
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity<Object> searchBookingTicket(
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
-            @PageableDefault(size = 5) Pageable pageable) {
+            @PageableDefault(size = 6) Pageable pageable) {
         if (search != null){
             search = search.trim();
         }
@@ -169,7 +168,8 @@ public class BookingRestController {
      */
 
     @GetMapping("/exportDetail")
-    public ResponseEntity<Object> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 5) Pageable pageable){
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
+    public ResponseEntity<Object> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 6) Pageable pageable){
         try{
             ApiResponse response = new ApiResponse<>();
             Long bookingId = parseLong(id);
@@ -222,6 +222,7 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
     public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws IOException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
