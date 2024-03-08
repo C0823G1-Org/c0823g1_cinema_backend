@@ -30,4 +30,9 @@ public class TicketService implements ITicketService{
     public List<Ticket> findAllTicketByScheduleId(Long scheduleId) {
         return ticketRepository.findAllTicketByScheduleId(scheduleId);
     }
+
+    @Override
+    public void updateTicket(Long bookingId, Long scheduleId) {
+        ticketRepository.updateTicket(bookingId,scheduleId);
+    }
 }
