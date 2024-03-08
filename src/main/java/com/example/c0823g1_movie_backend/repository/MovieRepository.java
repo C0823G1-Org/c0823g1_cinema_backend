@@ -102,10 +102,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             ", ticket_price=:#{#editedMovie.ticketPrice}, trailer=:#{#editedMovie.trailer} " +
             "where id=:#{#editedMovie.id}", nativeQuery = true)
     void editMovie(MovieDTO editedMovie);
-    @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, MAX(m.name) as name, MAX(m.description) as description, MAX(m.poster) as poster " +
-            "FROM movie m " +
-            "JOIN schedule sc ON m.id = sc.movie_id " +
-            "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY) " +
-            "GROUP BY m.name", nativeQuery = true)
+    @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, m.name, MAX(m.description) as description, MAX(m.poster) as poster, MAX(sc.date) as date\n" +
+            "FROM movie m\n" +
+            "JOIN schedule sc ON m.id = sc.movie_id\n" +
+            "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY)\n" +
+            "GROUP BY m.id, m.name\n" +
+            "ORDER BY MAX(sc.date);\n", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrentTo3Day();
 }
