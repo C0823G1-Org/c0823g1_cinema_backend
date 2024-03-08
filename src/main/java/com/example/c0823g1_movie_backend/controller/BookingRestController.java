@@ -250,7 +250,6 @@ public class BookingRestController {
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
                     Document document = new Document(pageSize, -50, 0, 110, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
-                    System.out.println("zzaz");
                     document.open();
                     for (IBookingDTO temp : listBookingTicketDetail){
                         // in
@@ -268,9 +267,7 @@ public class BookingRestController {
                     }
                     document.close();
                     iBookingService.setPrintStatus(id);
-                    System.out.println("alo " + " " + fileName);
                     Resource resource = new FileSystemResource(fileName);
-                    System.out.println("alo " + " " + fileName);
                     try (InputStream inputStream = resource.getInputStream()) {
                         byte[] pdfContent = inputStream.readAllBytes();
                         HttpHeaders headers = new HttpHeaders();
