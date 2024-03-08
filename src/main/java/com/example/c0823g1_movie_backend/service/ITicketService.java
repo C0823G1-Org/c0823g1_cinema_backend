@@ -14,4 +14,6 @@ public interface ITicketService {
     void removeTicket(Long bookingId,Long scheduleId);
 
     List<Ticket> findAllTicketByScheduleId(Long scheduleId);
+
+    void updateTicket(Long bookingId, Long scheduleId);
 }
