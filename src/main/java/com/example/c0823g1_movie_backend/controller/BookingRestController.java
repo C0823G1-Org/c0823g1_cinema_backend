@@ -3,10 +3,7 @@ package com.example.c0823g1_movie_backend.controller;
 import com.example.c0823g1_movie_backend.dto.IBookingDTO;
 import com.example.c0823g1_movie_backend.service.IBookingService;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import com.example.c0823g1_movie_backend.config.MailConfig;
 import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Account;
@@ -244,6 +241,7 @@ public class BookingRestController {
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
                     Document document = new Document(pageSize, -50, 0, 110, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+
                     document.open();
                     for (IBookingDTO temp : listBookingTicketDetail){
                         // in
@@ -301,25 +299,23 @@ public class BookingRestController {
         rectBackground.setBorderWidth(1);
         canvas.rectangle(rectBackground);
         canvas.addImage(background);
-        BaseColor color = BaseColor.BLACK;
-        Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
-        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, color);
-
+        BaseFont baseFont = BaseFont.createFont("C:\\pdfPrint\\arial-unicode-ms.ttf",BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font font = new Font(baseFont,14);
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(65);
         table.setTotalWidth(width);
         float yTable = yBackground - 70;
 
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
-        table.addCell(createTitleCell("Vé xem phim", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
+        table.addCell(createTitleCell(FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
 
         table.addCell(createCell("                           ---------------------------------------------------------",font));
-        table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), boldFont));
-        table.addCell(createCell("         Ngày chếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), boldFont));
-        table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), boldFont));
-        table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), boldFont));
-        table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", boldFont));
-        table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), boldFont));
+        table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), font));
+        table.addCell(createCell("         Ngày chiếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), font));
+        table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), font));
+        table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), font));
+        table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", font));
+        table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(createCell("=====================================================",font));
 
@@ -331,8 +327,8 @@ public class BookingRestController {
         cell.setBorder(Rectangle.NO_BORDER);
         return cell;
     }
-    private PdfPCell createTitleCell(String content, Font font) {
-        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+    private PdfPCell createTitleCell(Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase("Vé xem phim", font));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
