@@ -198,7 +198,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "WHERE " +
             "a.is_deleted = 0 " +
             "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
-            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC ",
             nativeQuery = true)
     Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
@@ -214,6 +214,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountByPhone(@Param("phone") String phone);
     @Query(value = "select a.* from account a where a.account_name = :accountName limit 1",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
+    @Query(value = "select a.* from account a where a.password = :password limit 1",nativeQuery = true)
+    Account findAccountByPassword(@Param("password") String password);
 
     @Transactional
     @Modifying
