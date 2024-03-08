@@ -14,17 +14,25 @@ import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.service.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -113,7 +121,10 @@ public class BookingRestController {
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
             @PageableDefault(size = 5) Pageable pageable) {
-        search = search.trim();
+        if (search != null){
+            search = search.trim();
+        }
+
         LocalDateTime timeNow = LocalDateTime.now();
         if (search == null && localDate == null) {
             ApiResponse response = new ApiResponse<>();
@@ -211,7 +222,7 @@ public class BookingRestController {
      * Function: Print ticket to file pdf. If the booking ticket is not found, it returns the default booking ticket list. If the booking ticket exists and the printing status is false, will print the ticket and set the print status to true.
      */
     @GetMapping("/exportPDF")
-    public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws FileNotFoundException, DocumentException {
+    public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws IOException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
@@ -233,13 +244,12 @@ public class BookingRestController {
                     return new ResponseEntity<>( response,HttpStatus.OK);
                 } else {
                     response.setFlag(OK);
-                    String fileName = "D:\\filePdf\\ticket.pdf";
+                    String fileName = "C:\\pdfPrint\\ticket" + id + ".pdf";
                     float customWidth = 650;
                     float customHeight = 396;
                     Rectangle pageSize = new Rectangle(customWidth, customHeight);
-                    Document document = new Document(pageSize, -50, 0, 40, 0);
+                    Document document = new Document(pageSize, -50, 0, 110, 0);
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
-//                    String fileName = "D:\\filePdf\\ticket_" + temp.getBookingCode() + "_MV_"+ temp.getSeatNumber() + ".pdf";
                     document.open();
                     for (IBookingDTO temp : listBookingTicketDetail){
                         // in
@@ -257,10 +267,18 @@ public class BookingRestController {
                     }
                     document.close();
                     iBookingService.setPrintStatus(id);
+                    Resource resource = new FileSystemResource(fileName);
+                    try (InputStream inputStream = resource.getInputStream()) {
+                        byte[] pdfContent = inputStream.readAllBytes();
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.setContentType(MediaType.APPLICATION_PDF);
+                        headers.setContentDispositionFormData("attachment", "ticket.pdf");
+                        response.setBase64(Base64.encodeBase64String(pdfContent));
+                        response.setFlag(OK);
+                        return new ResponseEntity<>(response,HttpStatus.OK);
+                    }
 
                 }
-
-                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
     }
@@ -272,13 +290,12 @@ public class BookingRestController {
 
     private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
-        Image background = Image.getInstance("D:\\Pictures\\ticket.jpg");
+        Image background = Image.getInstance("C:\\pdfPrint\\ticketImg.jpg");
         float documentWidth = document.getPageSize().getWidth();
         float documentHeight = document.getPageSize().getHeight();
         float width = 680;
         float height = 400;
         background.scaleToFit(width, height);
-        background.setRotationDegrees(-270);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
         background.setAbsolutePosition(0,0);
@@ -292,10 +309,9 @@ public class BookingRestController {
         canvas.addImage(background);
         BaseColor color = BaseColor.BLACK;
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 14, color);
-//        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, color);
+        Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, color);
 
         PdfPTable table = new PdfPTable(1);
-        // khoang cach 2 col
         table.setWidthPercentage(65);
         table.setTotalWidth(width);
         float yTable = yBackground - 70;
@@ -303,15 +319,16 @@ public class BookingRestController {
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
         table.addCell(createTitleCell("Vé xem phim", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
 
-        table.addCell(createCell("Movie: " + iBookingDTO.getNameMovieFilm(),font));
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String formattedDateTime = ticket.getStartTime().format(formatter);
-        table.addCell(createCell("Show Time: " + iBookingDTO.getScheduleTime(), font));
-        table.addCell(createCell("Customer: " + iBookingDTO.getNameCustomer(), font));
-        table.addCell(createCell("Seat Number: " + iBookingDTO.getSeatNumber(), font));
-        table.addCell(createCell("Ticket Price:" + iBookingDTO.getTicketPrice(), font));
-        table.addCell(createCell("Room Number: " + iBookingDTO.getCinemaHall(), font));
+        table.addCell(createCell("                           ---------------------------------------------------------",font));
+        table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), boldFont));
+        table.addCell(createCell("         Ngày chếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), boldFont));
+        table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), boldFont));
+        table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), boldFont));
+        table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", boldFont));
+        table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), boldFont));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell(createCell("=====================================================",font));
+
 
         document.add(table);
     }
