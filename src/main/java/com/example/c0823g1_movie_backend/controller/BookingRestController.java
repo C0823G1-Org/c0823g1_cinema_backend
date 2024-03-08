@@ -444,6 +444,7 @@ public class BookingRestController {
 
     @PostMapping("/success")
     public ResponseEntity<Object> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
+        ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
