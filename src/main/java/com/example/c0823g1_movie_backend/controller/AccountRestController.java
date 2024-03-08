@@ -298,7 +298,7 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */ 
     @PostMapping("/register")
-    public ResponseEntity<?> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
+    public ResponseEntity<Object> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
         Map<String,String> listError = new HashMap<>();
         if (bindingResult.hasFieldErrors()){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -334,11 +334,14 @@ public class AccountRestController {
             BeanUtils.copyProperties(accountDTO,account);
             account.setPassword(encode);
             Account account1 = iAccountService.getLastUser();
+            if (account1 != null){
+                int memberCode = Integer.parseInt(account1.getMemberCode());
+                account.setMemberCode(String.valueOf(memberCode + 1));
+            }else {
+                account.setMemberCode("1");
+            }
             account.setPoint(0);
-            int memberCode = Integer.parseInt(account1.getMemberCode());
-            account.setMemberCode(String.valueOf(memberCode + 1));
-            iAccountService.register(account, 2L);
-            System.out.println("Success");
+            iAccountService.register(account, 3L);
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
 
@@ -370,7 +373,7 @@ public class AccountRestController {
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */
     @PatchMapping("/changeInfoUser/{id}")
-    public ResponseEntity<?> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO , BindingResult bindingResult,@PathVariable Long id){
+    public ResponseEntity<Object> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO , BindingResult bindingResult,@PathVariable Long id){
         Map<String,String> listError = new HashMap<>();
         Account account3 = iAccountService.findAccountById(id);
         Account account = iAccountService.findAccountByEmail(changeAccountDTO.getEmail());
@@ -447,7 +450,7 @@ public class AccountRestController {
      * HttpStatus.OK if the current password is the same as the current password in the input field and the new password is the same as the new password confirmation
      */
     @PatchMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult,Principal principal){
+    public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult,Principal principal){
         Map<String,String> listErrors = new HashMap<>();
         List<Account> accounts = new ArrayList<>();
 //        changePasswordDto.setAccounts(accounts);

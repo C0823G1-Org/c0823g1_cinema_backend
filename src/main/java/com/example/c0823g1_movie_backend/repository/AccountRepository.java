@@ -198,7 +198,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "WHERE " +
             "a.is_deleted = 0 " +
             "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
-            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC ",
             nativeQuery = true)
     Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
@@ -217,7 +217,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "UPDATE account SET address = :#{#account.address}, birthday = :#{#account.birthday}, email = :#{#account.email}, id_number = :#{#account.idNumber}, phone_number = :#{#account.phoneNumber} WHERE id = :id")
+    @Query(nativeQuery = true, value = "UPDATE account SET address = :#{#account.address}, birthday = :#{#account.birthday}, gender = :#{#account.gender} , email = :#{#account.email}, id_number = :#{#account.idNumber}, phone_number = :#{#account.phoneNumber} WHERE id = :id")
     void updateAccount(@Param("account") Account account, @Param("id") Long id);
     @Transactional
     @Modifying

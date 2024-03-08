@@ -1,6 +1,10 @@
 package com.example.c0823g1_movie_backend.controller;
 
 import com.example.c0823g1_movie_backend.dto.*;
+import com.example.c0823g1_movie_backend.model.*;
+import com.example.c0823g1_movie_backend.service.*;
+import jakarta.validation.Valid;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
@@ -14,11 +18,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -27,6 +32,19 @@ import java.util.List;
 public class MovieRestController {
     @Autowired
     private IMovieService movieService;
+    @Autowired
+    private IGenreService genreService;
+    @Autowired
+    private IVersionService versionService;
+    @Autowired
+    private IScheduleTimeService scheduleTimeService;
+    @Autowired
+    private IHallService hallService;
+    /*    Create by: BaoLVN
+     *     Date created : 29/02/2024
+     *     Function: Get a list of movies with many views
+     *     @return HttpStatus.NO_CONTENT not available if no listing is found/ HttpStatus.OK and list movie found
+     * */
 
     /**
      * Created by DuyDD
@@ -91,22 +109,60 @@ public class MovieRestController {
     /**
      * Created by: LamNT
      * Date created: 29/02/2024
-     * Function: save new movie to database
+     * Function: save new movie and schedule to database
      *
-     * @return HTTPStatus.OK movie update succeed
+     * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
      */
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody MovieRequestBodyDTO movieRequestBodyDTO) {
-        Movie newMovie = new Movie();
-        List<Schedule> newSchedules = new ArrayList<>();
-        BeanUtils.copyProperties(movieRequestBodyDTO.getMovieDTO(), newMovie);
-        for (ScheduleDTO scheduleDTO : movieRequestBodyDTO.getScheduleDTO()) {
-            Schedule newSchedule = new Schedule();
-            BeanUtils.copyProperties(scheduleDTO, newSchedule);
-            newSchedule.setMovie(newMovie);
-            newSchedules.add(newSchedule);
+    public ResponseEntity<?> create(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        MovieDTO newMovie = movieRequestBodyDTO.getMovieDTO();
+        Set<ScheduleDTO> newScheduleDTOS = movieRequestBodyDTO.getScheduleDTO();
+        List<Long> versions = newMovie.getVersion();
+        List<Long> genres = newMovie.getGenre();
+        movieService.createMovie(newMovie, newScheduleDTOS,versions,genres);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 03/03/2024
+     * Function: update movie and schedule in database
+     *
+     * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
+     */
+    @PatchMapping("/edit")
+    public ResponseEntity<?> edit(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        MovieDTO movie = movieRequestBodyDTO.getMovieDTO();
+        Set<ScheduleDTO> scheduleDTO = movieRequestBodyDTO.getScheduleDTO();
+        boolean result = movieService.editMovie(movie, scheduleDTO);
+        if (result) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 04/03/2024
+     * Function: return all the attributes that get data from database
+     *
+     * @return HTTPStatus.OK
+     */
+    @GetMapping("/attributes")
+    public ResponseEntity<MovieAttributeDTO> getAllAttributes() {
+        List<Genre> genres = genreService.getAll();
+        List<Version> versions = versionService.getAll();
+        List<ScheduleTime> scheduleTimes = scheduleTimeService.getAll();
+        List<Hall> halls = hallService.getAll();
+        return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes, halls), HttpStatus.OK);
     }
 
     /**
@@ -175,5 +231,13 @@ public class MovieRestController {
         }
         movieService.deleteMovieById(id);
         return new ResponseEntity<>(movie, HttpStatus.OK);
+    }
+    @GetMapping("/current1")
+    public ResponseEntity<List<IMovieDTO>> getAllMovieCurrentTo3Day() {
+        List<IMovieDTO> list = movieService.getAllMovieCurrentTo3Day();
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
