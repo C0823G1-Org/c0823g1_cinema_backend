@@ -68,8 +68,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             + "m.description as description,"
             + "m.id as movieId,"
             + "m.poster as poster,\n"
+            + "m.id as movieId, \n"
             + "m.is_deleted as isDelete \n"
-            + "from movie m\n"
+            + "from movie m \n"
             + "where m.name like :title and m.is_deleted = false ", nativeQuery = true)
     Page<IMovieDTO> searchMovie(@Param("title") String value, Pageable pageable);
 
