@@ -54,8 +54,8 @@ public class MovieService implements IMovieService {
      * Function: Get a list of movies that have the highest revenue
      */
     @Override
-    public Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable) {
-        return movieRepository.findTop20MoviesByRevenue(pageable);
+    public Page<MovieStatisticDTO> getMovieStatistic(String name,Pageable pageable) {
+        return movieRepository.findTop20MoviesByRevenue("%"+ name.trim() +"%",pageable);
     }
 
     @Override

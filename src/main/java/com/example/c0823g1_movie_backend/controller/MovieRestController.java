@@ -55,8 +55,20 @@ public class MovieRestController {
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    private ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
-        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(pageable);
+    public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
+        if (movieList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
+    @GetMapping("/statistics/top20")
+    public ResponseEntity<Page<MovieStatisticDTO>> movieStatisticsTop20(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

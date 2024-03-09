@@ -42,10 +42,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "t.is_deleted = 0 AND s.is_deleted = 0 " +
             "GROUP BY s.movie_id) t ON t.movie_id = m.id " +
             "WHERE " +
-            "m.is_deleted = 0 " +
-            "ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC ",
+            "m.is_deleted = 0 and m.name like :name" +
+            " ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC",
             nativeQuery = true)
-    Page<MovieStatisticDTO> findTop20MoviesByRevenue(Pageable pageable);
+    Page<MovieStatisticDTO> findTop20MoviesByRevenue(@Param("name") String name,Pageable pageable);
 
     @Query(value = "select count(b.account_id) as accountId,\n" +
             "\tm.name as name,\n" +
