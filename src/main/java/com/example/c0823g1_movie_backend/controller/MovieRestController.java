@@ -57,7 +57,7 @@ public class MovieRestController {
     @GetMapping("/statistics")
     public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                    @RequestParam(name ="name",defaultValue = "") String name) {
-        Pageable pageable = PageRequest.of(page, 3);
+        Pageable pageable = PageRequest.of(page, 6);
         Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
