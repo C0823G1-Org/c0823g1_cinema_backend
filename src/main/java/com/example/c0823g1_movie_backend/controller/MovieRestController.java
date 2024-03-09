@@ -4,9 +4,7 @@ import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.*;
 import com.example.c0823g1_movie_backend.service.*;
 import jakarta.validation.Valid;
-import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -122,7 +122,7 @@ public class MovieRestController {
         Set<ScheduleDTO> newScheduleDTOS = movieRequestBodyDTO.getScheduleDTO();
         List<Long> versions = newMovie.getVersion();
         List<Long> genres = newMovie.getGenre();
-        movieService.createMovie(newMovie, newScheduleDTOS,versions,genres);
+        movieService.createMovie(newMovie, newScheduleDTOS, versions, genres);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -140,7 +140,9 @@ public class MovieRestController {
         }
         MovieDTO movie = movieRequestBodyDTO.getMovieDTO();
         Set<ScheduleDTO> scheduleDTO = movieRequestBodyDTO.getScheduleDTO();
-        boolean result = movieService.editMovie(movie, scheduleDTO);
+        List<Long> versions = movie.getVersion();
+        List<Long> genres = movie.getGenre();
+        boolean result = movieService.editMovie(movie, scheduleDTO, versions, genres);
         if (result) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -203,10 +205,10 @@ public class MovieRestController {
      */
     @GetMapping("/list")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "") String publisher,
-                                                           @RequestParam(defaultValue = "") String name,
-                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                                            @RequestParam(defaultValue = "") String publisher,
+                                                            @RequestParam(defaultValue = "") String name,
+                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
@@ -231,5 +233,28 @@ public class MovieRestController {
         }
         movieService.deleteMovieById(id);
         return new ResponseEntity<>(movie, HttpStatus.OK);
+    }
+
+    @GetMapping("/info/{id}")
+    public ResponseEntity<MovieDTO> findMovieInfoById(@PathVariable Long id) {
+        Movie movie = movieService.findById(id);
+        if (movie == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        MovieDTO movieDTO = new MovieDTO();
+        BeanUtils.copyProperties(movie, movieDTO);
+        List<Long> genres = genreService.getGenreByMovieId(id);
+        List<Long> versions = versionService.getVersionByMovieId(id);
+        List<String> genreArray = new ArrayList<>();
+        for (Long genre : genres) {
+            genreArray.add(String.valueOf(genre));
+        }
+        List<String> versionArray = new ArrayList<>();
+        for (Long version : versions) {
+            versionArray.add(String.valueOf(version));
+        }
+        movieDTO.setGenresString(genreArray);
+        movieDTO.setVersionsString(versionArray);
+        return new ResponseEntity<>(movieDTO, HttpStatus.OK);
     }
 }

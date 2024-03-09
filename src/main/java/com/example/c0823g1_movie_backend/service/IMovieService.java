@@ -37,5 +37,5 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable);
 
-    boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO);
+    boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO, List<Long> versions, List<Long> genres);
 }
