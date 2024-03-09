@@ -408,14 +408,13 @@ public class BookingRestController {
         Long bookingId = iBookingService.getBooking();
         List<Ticket> checkExist;
         for (Integer seatN : ticketDTO.getSeatList()) {
-            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
-            if (checkExist.isEmpty()) {
-                ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+//            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+//            if (checkExist.isEmpty()) {
+            ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+//            } else {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
         }
-//        iBookingService.sendMail(ticketDTO.getAccountId(),ticketDTO.getScheduleId(),seatString,id);
 
         Long accountId = ticketDTO.getAccountId();
         Movie movie = movieService.findMovieById(schedule.get().getMovie().getId());
@@ -458,20 +457,52 @@ public class BookingRestController {
 
     @PostMapping("/success")
     public ResponseEntity<Object> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
-        ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
+
+
+
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        for (Integer seatN : checkoutDTO.getSeatNumber()){
+                ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
+
+
         }
         String seat = "";
         for (String s : checkoutDTO.getSeat()) {
             seat += s + " ";
         }
+
         iBookingService.sendMail(checkoutDTO.getAccountId(), checkoutDTO.getScheduleId(), seat, checkoutDTO.getBookingId(), checkoutDTO.getTotalAmount());
         int accumulatedPoints = (int) Math.floor((checkoutDTO.getTotalAmount() * 3) / 100);
 
         iBookingService.addAccumulatedPoints(checkoutDTO.getAccountId(), accumulatedPoints);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/checkexist")
+    public ResponseEntity<Object> checkExist(@RequestBody CheckoutDTO checkoutDTO) {
+        List<Ticket> checkExist;
+        boolean flag = true;
+        for (Integer seatN : checkoutDTO.getSeatNumber()){
+            checkExist = ticketService.checkExist(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
+            if (checkExist.isEmpty()){
+                System.out.println("trong");
+                flag = false;
+            }
+        }
+        System.out.println("khong trong");
+        if (!flag){
+            iBookingService.removeBooking(checkoutDTO.getBookingId());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+            return new ResponseEntity<>(HttpStatus.OK);
+
+
+
     }
 
 }
