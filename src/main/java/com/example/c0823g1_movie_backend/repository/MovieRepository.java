@@ -45,7 +45,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "m.is_deleted = 0 and m.name like :name" +
             " ORDER BY t.tong_so_ve DESC, t.tong_so_ve * m.ticket_price DESC",
             nativeQuery = true)
-    Page<MovieStatisticDTO> findTop20MoviesByRevenue(@Param("name") String name,Pageable pageable);
+    Page<MovieStatisticDTO> findTop20MoviesByRevenue(@Param("name") String name, Pageable pageable);
 
     @Query(value = "select count(b.account_id) as accountId,\n" +
             "\tm.name as name,\n" +
@@ -119,6 +119,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             ", ticket_price=:#{#editedMovie.ticketPrice}, trailer=:#{#editedMovie.trailer} " +
             "where id=:#{#editedMovie.id}", nativeQuery = true)
     void editMovie(MovieDTO editedMovie);
+
     @Query(value = "SELECT COUNT(m.id) as countId, MAX(m.id) as movieId, m.name, MAX(m.description) as description, MAX(m.poster) as poster, MAX(sc.date) as date\n" +
             "FROM movie m\n" +
             "JOIN schedule sc ON m.id = sc.movie_id\n" +
@@ -126,4 +127,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "GROUP BY m.id, m.name\n" +
             "ORDER BY MAX(sc.date);\n", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrentTo3Day();
+
+    @Query(value = "select id from movie where name=:#{#movieDTO.name} and start_date=:#{#movieDTO.startDate}", nativeQuery = true)
+    List<Long> checkIfDuplicated(@Param("movieDTO") MovieDTO movieDTO);
 }
