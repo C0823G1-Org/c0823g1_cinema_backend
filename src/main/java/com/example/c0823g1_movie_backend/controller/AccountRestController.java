@@ -19,7 +19,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -38,8 +38,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-
-import java.security.Principal;
 import java.util.*;
 
 @RestController
@@ -288,6 +286,13 @@ public class AccountRestController {
     private void createAccountGG(Account account) {
         if (!iAccountService.checkLoginByGg(account)) {
             account.setAccountName(account.getEmail());
+            Account account1 = iAccountService.getLastUser();
+            if (account1 != null){
+                int memberCode = Integer.parseInt(account1.getMemberCode());
+                account.setMemberCode(String.valueOf(memberCode + 1));
+            }else {
+                account.setMemberCode("1");
+            }
             iAccountService.register(account);
         }
     }
@@ -315,20 +320,6 @@ public class AccountRestController {
             if (listError.size() > 0){
                 return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
             }
-//            String to = accountDTO.getEmail();
-//            String subject = "[C0823G1-Cinema]-Phản hồi yêu cầu cấp lại mật khẩu tài khoản";
-//            String templateName = "email-register";
-//            org.thymeleaf.context.Context context = new  org.thymeleaf.context.Context();
-//            String randomCode = RandomStringUtils.random(6,true,true);
-//            System.out.println(randomCode);
-//            context.setVariable("fullName",accountDTO.getFullName());
-//            context.setVariable("account",accountDTO.getAccountName());
-//            context.setVariable("password",accountDTO.getPassword());
-//            context.setVariable("randomCode",randomCode);
-//            iAccountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
-//            if (!accountDTO.getVerificationCode().equals(randomCode)){
-//                listError.add("Mã Xác Nhận không đúng");
-//            }
             String encode = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
             BeanUtils.copyProperties(accountDTO,account);
@@ -340,6 +331,7 @@ public class AccountRestController {
             }else {
                 account.setMemberCode("1");
             }
+            account.setProfilePicture("https://scontent.fdad1-2.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c15.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=1&ccb=1-7&_nc_sid=810bd0&_nc_eui2=AeGnqHaTZnBUjSEcY1-FBvApik--Qfnh2B6KT75B-eHYHk-NP5Nes0Pnh533_NuJyZObt2QYtQlJmnvnxUfFEIi5&_nc_ohc=sjxi-v0F2pYAX9hlWn4&_nc_ht=scontent.fdad1-2.fna&edm=AP4hL3IEAAAA&oh=00_AfDCVvaXvpBk5plCuuZwlUiyRH8a3tpqidZMft5DkfM1SQ&oe=660E7019");
             account.setPoint(0);
             iAccountService.register(account, 3L);
             return new ResponseEntity<>(account, HttpStatus.OK);
@@ -351,14 +343,6 @@ public class AccountRestController {
      * Function: Show Detail User Account
      * @Return HttpStatus.NO_CONTENT if userName of User is Null , @Return HttpStatus.OK if userName of User is not Null
      */
-//    @GetMapping("/detailUser")
-//    public ResponseEntity<Account> detailAccountUser(Principal principal){
-//        if (principal.getName() == null){
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        Account account1 = iAccountService.getAllInfoUser(principal.getName());
-//        return new ResponseEntity<>(account1,HttpStatus.OK);
-//    }
     @GetMapping("/detailUser/{id}")
     public ResponseEntity<Account> detailAccountUser(@PathVariable long id){
         Account account1 = iAccountService.findAccountById(id);
@@ -410,6 +394,13 @@ public class AccountRestController {
             } else {
                 account.setAccountName(account.getEmail());
             }
+            Account account1 = iAccountService.getLastUser();
+            if (account1 != null){
+                int memberCode = Integer.parseInt(account1.getMemberCode());
+                account.setMemberCode(String.valueOf(memberCode + 1));
+            }else {
+                account.setMemberCode("1");
+            }
             iAccountService.register(account);
         }
     }
@@ -450,10 +441,10 @@ public class AccountRestController {
      * HttpStatus.OK if the current password is the same as the current password in the input field and the new password is the same as the new password confirmation
      */
     @PatchMapping("/changePassword")
-    public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult,Principal principal){
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
+    public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult){
         Map<String,String> listErrors = new HashMap<>();
         List<Account> accounts = new ArrayList<>();
-//        changePasswordDto.setAccounts(accounts);
         changePasswordDto.validate(changePasswordDto,bindingResult);
         if (bindingResult.hasErrors()){
             for (FieldError error : bindingResult.getFieldErrors()){
@@ -461,7 +452,7 @@ public class AccountRestController {
             }
             return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
         }
-       Account account = iAccountService.findAccountByAccountName("hieu123456");
+       Account account = iAccountService.findAccountById(changePasswordDto.getId());
         String passwordToEncode = passwordEncoder.encode(changePasswordDto.getNewPassword());
         String passwordToCompare = passwordEncoder.encode(changePasswordDto.getCurrentPassword());
         if (passwordEncoder.matches(changePasswordDto.getCurrentPassword(),account.getPassword())){

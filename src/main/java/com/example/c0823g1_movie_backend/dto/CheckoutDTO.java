@@ -9,6 +9,16 @@ public class CheckoutDTO {
     private Long totalAmount;
     private Long bookingId;
 
+    public List<Integer> getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(List<Integer> seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    private List<Integer> seatNumber;
+
     public Long getBookingId() {
         return bookingId;
     }

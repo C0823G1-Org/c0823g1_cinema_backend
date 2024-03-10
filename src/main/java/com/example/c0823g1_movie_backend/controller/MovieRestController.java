@@ -4,7 +4,9 @@ import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.*;
 import com.example.c0823g1_movie_backend.service.*;
 import jakarta.validation.Valid;
+import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,8 +57,20 @@ public class MovieRestController {
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    private ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
-        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(pageable);
+    public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
+        if (movieList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
+    @GetMapping("/statistics/top20")
+    public ResponseEntity<Page<MovieStatisticDTO>> movieStatisticsTop20(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -204,12 +219,13 @@ public class MovieRestController {
      * @return HTTPStatus.OK if have list movie and HTTPStatus.NO_CONTENT if list movie null
      */
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "") String publisher,
-                                                            @RequestParam(defaultValue = "") String name,
-                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("start_date").descending()
+                                                           @RequestParam(defaultValue = "") String publisher,
+                                                           @RequestParam(defaultValue = "") String name,
+                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
         if (moviePage.isEmpty()) {
@@ -225,7 +241,8 @@ public class MovieRestController {
      *
      * @return HTTPStatus.OK if movie delete and HTTPStatus.NOT_FOUND if  movie not found
      */
-    @PatchMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
         Movie movie = movieService.findMovieById(id);
         if (movie == null) {
@@ -256,5 +273,13 @@ public class MovieRestController {
         movieDTO.setGenresString(genreArray);
         movieDTO.setVersionsString(versionArray);
         return new ResponseEntity<>(movieDTO, HttpStatus.OK);
+    }
+    @GetMapping("/current1")
+    public ResponseEntity<List<IMovieDTO>> getAllMovieCurrentTo3Day() {
+        List<IMovieDTO> list = movieService.getAllMovieCurrentTo3Day();
+        if (list == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

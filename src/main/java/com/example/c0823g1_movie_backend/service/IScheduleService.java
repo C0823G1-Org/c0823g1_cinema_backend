@@ -25,7 +25,7 @@ public interface IScheduleService extends IGeneralService<com.example.c0823g1_mo
 
     boolean editSchedule(ScheduleDTO schedule);
     Optional<Schedule> getScheduleById(Long scheduleId);
-    List<ScheduleDTO> findDateByMovieId(Long movieId);
+    List<IScheduleDTO> findDateByMovieId(Long movieId);
     List<IScheduleTimeDTO> findScheduleTimeByMovieAndDate(Long movieId, LocalDate date);
     Schedule getScheduleByMovieIdAndDateAndScheduleTimeId(Long movieId,LocalDate date,Long scheduleTimeId);
     List<Schedule> getScheduleByMovieId( Long movieId);

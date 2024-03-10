@@ -36,6 +36,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "where account.account_name = :accountName and account.facebook_id is null and account.google_id is null", nativeQuery = true)
     Optional<IAccountDTO> findByAccountNameDTO(@Param("accountName") String accountName);
 
+
     @Query(value = "select account.id as id,\n" +
             " account.account_name as accountName, \n" +
             " account.address as address, \n" +
@@ -198,22 +199,24 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             "WHERE " +
             "a.is_deleted = 0 " +
             "GROUP BY a.id, a.account_name, t.ticket_count, t.total_ticket_price " +
-            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC",
+            "ORDER BY t.ticket_count DESC, t.total_ticket_price DESC ",
             nativeQuery = true)
     Page<AccountStatisticDTO> getTop50Account(Pageable pageable);
 
-    @Query(value = "select * from account where id = :id",nativeQuery = true)
+    @Query(value = "select * from account where id = :id and is_deleted = false",nativeQuery = true)
     Account findAccountById(@Param("id") Long id);
 
-    @Query(value = "select * from account",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.is_deleted = 0 ",nativeQuery = true)
     List<Account> getAllAccount();
 
-    @Query(value = "select a.* from account a where a.email = :email limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.email = :email and a.is_deleted = 0  limit 1",nativeQuery = true)
     Account findAccountByEmail(@Param("email") String email);
-    @Query(value = "select a.* from account a where a.phone_number = :phone limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.phone_number = :phone and  a.is_deleted = 0  limit 1",nativeQuery = true)
     Account findAccountByPhone(@Param("phone") String phone);
-    @Query(value = "select a.* from account a where a.account_name = :accountName limit 1",nativeQuery = true)
+    @Query(value = "select a.* from account a where a.account_name = :accountName and a.is_deleted = 0  limit 1",nativeQuery = true)
     Account findAccountByAccountName(@Param("accountName") String accountName);
+    @Query(value = "select a.* from account a where a.password = :password and a.is_deleted = 0 limit 1",nativeQuery = true)
+    Account findAccountByPassword(@Param("password") String password);
 
     @Transactional
     @Modifying

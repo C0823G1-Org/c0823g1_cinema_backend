@@ -18,8 +18,8 @@ public class TicketService implements ITicketService{
     }
 
     @Override
-    public List<Ticket> checkExist(Integer seat, Long scheduleId) {
-        return ticketRepository.checkExist(seat,scheduleId);
+    public List<Ticket> checkExist(Long bookingId, Long scheduleId,Integer seat) {
+        return ticketRepository.checkExist(bookingId,scheduleId,seat);
     }
 
     @Override
@@ -29,5 +29,10 @@ public class TicketService implements ITicketService{
     @Override
     public List<Ticket> findAllTicketByScheduleId(Long scheduleId) {
         return ticketRepository.findAllTicketByScheduleId(scheduleId);
+    }
+
+    @Override
+    public void updateTicket(Long bookingId, Long scheduleId, Integer seatNumber) {
+        ticketRepository.updateTicket(bookingId,scheduleId,seatNumber);
     }
 }

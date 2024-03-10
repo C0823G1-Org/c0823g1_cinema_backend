@@ -20,8 +20,8 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     void saveTicket(@Param("seat") Integer seat, @Param("booking") Long bookId,@Param("schedule") Long scheduleId);
 
 
-    @Query(value = "select * from ticket where seat_number = :seat and schedule_id = :scheduleId", nativeQuery = true)
-    List<Ticket> checkExist(@Param("seat") Integer seat, @Param("scheduleId") Long scheduleId);
+    @Query(value = "select * from ticket where booking_id = :bookingId and seat_number = :seat and schedule_id = :scheduleId", nativeQuery = true)
+    List<Ticket> checkExist(@Param("bookingId") Long bookingId, @Param("scheduleId") Long scheduleId,@Param("seat") Integer seat);
 
 
     @Modifying
@@ -30,4 +30,8 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
 
     @Query(value = "select * from ticket where schedule_id =:scheduleId ", nativeQuery = true)
     List<Ticket> findAllTicketByScheduleId(@Param("scheduleId") Long scheduleId);
+
+    @Modifying
+    @Query(value = "delete from ticket where booking_id != :bookingId and schedule_id = :scheduleId and seat_number = :seatNumber", nativeQuery = true)
+    void updateTicket(@Param("bookingId") Long bookingId, @Param("scheduleId") Long scheduleId, @Param("seatNumber") Integer seatNumber);
 }
