@@ -141,4 +141,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Modifying
     @Query(value = "UPDATE booking SET print_status = 1 where id  =:id", nativeQuery = true)
     void setPrintStatus(@Param("id") long id);
+
+
+    @Query(value = "select max(id) from booking where  account_id = :id",nativeQuery = true)
+    Long getBookingById(@Param("id") Long accountId);
 }
