@@ -133,5 +133,10 @@ public class BookingService implements IBookingService {
         return  bookingRepository.getBookingById(accountId);
     }
 
+    @Override
+    public void deleteById(Long aa) {
+        bookingRepository.deleteById(aa);
+    }
+
 
 }

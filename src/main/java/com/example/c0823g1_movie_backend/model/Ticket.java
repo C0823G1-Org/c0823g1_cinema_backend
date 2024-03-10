@@ -17,6 +17,9 @@ public class Ticket {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean status;
+
     public Ticket() {
     }
 
@@ -58,6 +61,14 @@ public class Ticket {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }
 

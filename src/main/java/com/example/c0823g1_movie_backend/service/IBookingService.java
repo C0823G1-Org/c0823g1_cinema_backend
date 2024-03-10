@@ -36,5 +36,7 @@ public interface IBookingService {
 
     void setPrintStatus(Long id);
 
+    void deleteById(Long aa);
+
     Long getBookingById(Long accountId);
 }
