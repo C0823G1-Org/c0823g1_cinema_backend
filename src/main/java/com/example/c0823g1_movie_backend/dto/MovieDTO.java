@@ -47,6 +47,8 @@ public class MovieDTO {
     private Integer ticketPrice;
     private List<Long> genre;
     private List<Long> version;
+    private List<String> genresString;
+    private List<String> versionsString;
 
     public MovieDTO(String name, LocalDate startDate, String actor, String director, String publisher, Integer duration, String trailer, String country, String description, String poster, Integer ticketPrice, List<Long> genre, List<Long> version) {
         this.name = name;

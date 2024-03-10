@@ -21,6 +21,7 @@ public class ScheduleDTO {
     @NotNull(message = "Sảnh chiếu không được để rỗng")
     private Long hall;
     private Long movie;
+    private Boolean isDeleted = false;
 
     public ScheduleDTO(LocalDate date, Long scheduleTime, Long hall) {
         this.date = date;

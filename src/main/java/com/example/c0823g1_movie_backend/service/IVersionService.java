@@ -8,4 +8,6 @@ public interface IVersionService {
     List<Version> getAll();
 
     void addMovieHasVersion(Long newMovieId, Long versionId);
+
+    List<Long> getVersionByMovieId(Long id);
 }

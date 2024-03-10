@@ -28,15 +28,15 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     Movie findById(Long id);
 
-    void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres);
+    Long createMovie(MovieDTO movie, List<Long> versions, List<Long> genres);
 
     Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 
     Movie findMovieById(long id);
 
-    Page<MovieStatisticDTO> getMovieStatistic(Pageable pageable);
+    Page<MovieStatisticDTO> getMovieStatistic(String name,Pageable pageable);
 
-    boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO);
     List<IMovieDTO> getAllMovieCurrentTo3Day();
+    boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO, List<Long> versions, List<Long> genres);
 }

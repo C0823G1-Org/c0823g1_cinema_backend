@@ -28,7 +28,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     @Query(value = "delete from ticket where (booking_id = :bookingId and schedule_id = :scheduleId)", nativeQuery = true)
     void removeTicket(@Param("bookingId") Long bookingId, @Param("scheduleId") Long scheduleId);
 
-    @Query(value = "select * from ticket where schedule_id =:scheduleId and is_deleted=0 ", nativeQuery = true)
+    @Query(value = "select * from ticket where schedule_id =:scheduleId ", nativeQuery = true)
     List<Ticket> findAllTicketByScheduleId(@Param("scheduleId") Long scheduleId);
 
     @Modifying

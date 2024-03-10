@@ -27,4 +27,9 @@ public class GenreService implements IGenreService {
         genreRepository.addMovieHasGenre(newMovieId,genreId);
     }
 
+    @Override
+    public List<Long> getGenreByMovieId(Long id) {
+        return genreRepository.getGenreByMovieId(id);
+    }
+
 }
