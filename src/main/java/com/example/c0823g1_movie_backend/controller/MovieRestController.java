@@ -55,7 +55,7 @@ public class MovieRestController {
      * @return HttpStatus.NO_CONTENT if there are no movie/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
-    public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 2) Pageable pageable) {
+    public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@PageableDefault(value = 10) Pageable pageable) {
         Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
