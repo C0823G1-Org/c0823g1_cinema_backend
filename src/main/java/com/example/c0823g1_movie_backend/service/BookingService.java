@@ -128,5 +128,10 @@ public class BookingService implements IBookingService {
         bookingRepository.setPrintStatus(id);
     }
 
+    @Override
+    public void deleteById(Long aa) {
+        bookingRepository.deleteById(aa);
+    }
+
 
 }

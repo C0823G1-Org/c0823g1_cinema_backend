@@ -124,6 +124,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "JOIN schedule sc ON m.id = sc.movie_id\n" +
             "WHERE sc.`date` BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY)\n" +
             "GROUP BY m.id, m.name\n" +
-            "ORDER BY MAX(sc.date);\n", nativeQuery = true)
+            "ORDER BY MAX(sc.date)\n" +
+            "Limit 10", nativeQuery = true)
     List<IMovieDTO> getAllMovieCurrentTo3Day();
 }

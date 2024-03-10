@@ -73,7 +73,6 @@ public class BookingRestController {
     private MailConfig mailConfig;
 
     @GetMapping("getListBooking/{id}/{dateStart}/{dateEnd}/{page}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
     public ResponseEntity<Page<HistoryBookingDTO>> getListBooking(@PathVariable int page,
                                                                   @PathVariable Long id,
                                                                   @PathVariable LocalDateTime dateStart,
@@ -352,6 +351,7 @@ public class BookingRestController {
      */
     @PostMapping("/confirm")
     public ResponseEntity<BookingDTO> checkout(@RequestBody TicketDTO ticketDTO) {
+        System.out.println(ticketDTO);
 
         if (ticketDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -406,14 +406,15 @@ public class BookingRestController {
         LocalDateTime bookingDate = LocalDateTime.now();
         iBookingService.saveBooking(account.getId(), bookingDate);
         Long bookingId = iBookingService.getBooking();
-        List<Ticket> checkExist;
+        Optional<ITicketDTO> iTicketDTO;
         for (Integer seatN : ticketDTO.getSeatList()) {
-//            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
-//            if (checkExist.isEmpty()) {
+            iTicketDTO = ticketService.findBySeatAndScheduleId(seatN, ticketDTO.getScheduleId());
+            if (iTicketDTO.isPresent()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        for (Integer seatN : ticketDTO.getSeatList()) {
             ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
-//            } else {
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
         }
 
         Long accountId = ticketDTO.getAccountId();
@@ -432,8 +433,6 @@ public class BookingRestController {
         BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
         System.out.println(bookingDTO);
         return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-
-
     }
 
 
@@ -467,9 +466,7 @@ public class BookingRestController {
 
 
         for (Integer seatN : checkoutDTO.getSeatNumber()){
-                ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
-
-
+                ticketService.updateTicket(checkoutDTO.getBookingId());
         }
         String seat = "";
         for (String s : checkoutDTO.getSeat()) {
@@ -487,6 +484,16 @@ public class BookingRestController {
     public ResponseEntity<Object> checkExist(@RequestBody CheckoutDTO checkoutDTO) {
         List<Ticket> checkExist;
         boolean flag = true;
+        Optional<ITicketDTO> iTicketDTO;
+        for (Integer seatN : checkoutDTO.getSeatNumber()){
+            iTicketDTO = ticketService.findAllTicketByBookingId(seatN, checkoutDTO.getBookingId());
+            if (!iTicketDTO.isPresent()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            if (!iTicketDTO.get().getStatus()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
         for (Integer seatN : checkoutDTO.getSeatNumber()){
             checkExist = ticketService.checkExist(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
             if (checkExist.isEmpty()){

@@ -1,11 +1,13 @@
 package com.example.c0823g1_movie_backend.service;
 
+import com.example.c0823g1_movie_backend.dto.ITicketDTO;
 import com.example.c0823g1_movie_backend.model.Ticket;
 import com.example.c0823g1_movie_backend.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TicketService implements ITicketService{
@@ -32,7 +34,27 @@ public class TicketService implements ITicketService{
     }
 
     @Override
-    public void updateTicket(Long bookingId, Long scheduleId, Integer seatNumber) {
-        ticketRepository.updateTicket(bookingId,scheduleId,seatNumber);
+    public void updateTicket(Long bookingId) {
+        ticketRepository.updateTicket(bookingId);
+    }
+
+    @Override
+    public List<ITicketDTO> findAllByStatus() {
+        return ticketRepository.findAllByStatus();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        ticketRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<ITicketDTO> findBySeatAndScheduleId(Integer seatN, Long scheduleId) {
+        return ticketRepository.findBySeatAndScheduleId(seatN,scheduleId);
+    }
+
+    @Override
+    public Optional<ITicketDTO> findAllTicketByBookingId(Integer seatN, Long bookingId) {
+        return ticketRepository.findBySeatAndBookingId(seatN, bookingId);
     }
 }
