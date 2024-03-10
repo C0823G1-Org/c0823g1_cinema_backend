@@ -34,11 +34,6 @@ public class TicketService implements ITicketService{
     }
 
     @Override
-    public void updateTicket(Long bookingId) {
-        ticketRepository.updateTicket(bookingId);
-    }
-
-    @Override
     public List<ITicketDTO> findAllByStatus() {
         return ticketRepository.findAllByStatus();
     }
@@ -66,5 +61,10 @@ public class TicketService implements ITicketService{
     @Override
     public void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN) {
         ticketRepository.updateTicketStatus(bookingId,scheduleId,seatN);
+    }
+
+    @Override
+    public void updateTicket(Long bookingId, Long scheduleId, Integer seatN) {
+        ticketRepository.updateTicket(bookingId,scheduleId,seatN);
     }
 }

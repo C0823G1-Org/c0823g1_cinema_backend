@@ -85,11 +85,11 @@ public class BookingRestController {
 
     @GetMapping(value = {"/", "/list"})
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
-    public ResponseEntity<Object> listBookingTicket( @PageableDefault(size = 6) Pageable pageable ) {
+    public ResponseEntity<Object> listBookingTicket(@PageableDefault(size = 6) Pageable pageable) {
         LocalDateTime time = LocalDateTime.now();
         Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         ApiResponse response = new ApiResponse<>();
-        if (listBookingTicket.isEmpty()){
+        if (listBookingTicket.isEmpty()) {
             response.setFlag("NOT_FOUND");
             response.setData(listBookingTicket);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -116,7 +116,7 @@ public class BookingRestController {
             @RequestParam(value = "searchInput", required = false) String search,
             @RequestParam(value = "date", required = false) LocalDate localDate,
             @PageableDefault(size = 6) Pageable pageable) {
-        if (search != null){
+        if (search != null) {
             search = search.trim();
         }
 
@@ -143,7 +143,7 @@ public class BookingRestController {
         }
     }
 
-    private ResponseEntity<Object> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow,Pageable pageable) {
+    private ResponseEntity<Object> getResponseEntity(Page<IBookingDTO> listBookingTicket, LocalDateTime timeNow, Pageable pageable) {
         ApiResponse<Page<IBookingDTO>> response = new ApiResponse<>();
         if (listBookingTicket.isEmpty()) {
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
@@ -165,21 +165,21 @@ public class BookingRestController {
 
     @GetMapping("/exportDetail")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE')")
-    public ResponseEntity<Object> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 6) Pageable pageable){
-        try{
+    public ResponseEntity<Object> bookingTicketDetail(@RequestParam("idBooking") String id, @PageableDefault(size = 6) Pageable pageable) {
+        try {
             ApiResponse response = new ApiResponse<>();
             Long bookingId = parseLong(id);
             IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(bookingId);
             LocalDateTime time = LocalDateTime.now();
-            Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+            Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
 
-            if (iBookingDTO == null){
+            if (iBookingDTO == null) {
                 response.setData(listBookingTicket);
                 response.setFlag(BAD_REQUEST);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
 
-                if (iBookingDTO.getPrintStatus()){
+                if (iBookingDTO.getPrintStatus()) {
                     response.setData(listBookingTicket);
                     response.setFlag(BAD_REQUEST);
                     return new ResponseEntity<>(response, HttpStatus.OK);
@@ -191,7 +191,7 @@ public class BookingRestController {
                 }
             }
 
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return new ResponseEntity<>("Invalid idBooking format", HttpStatus.BAD_REQUEST);
         }
     }
@@ -204,7 +204,7 @@ public class BookingRestController {
         if (idBigInt.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
             throw new NumberFormatException("Invalid idBooking format. Number exceeds Long.MAX_VALUE.");
         }
-        Long idChange =  idBigInt.longValue();
+        Long idChange = idBigInt.longValue();
         if (idChange <= 0L) {
             throw new NumberFormatException("Invalid idBooking format. Number must not be negative.");
         }
@@ -222,23 +222,23 @@ public class BookingRestController {
     public ResponseEntity<Object> bookingTicketExportPDF(@RequestParam("idBooking") String idInput, @PageableDefault(size = 5) Pageable pageable) throws IOException, DocumentException {
         Long id = parseLong(idInput);
         LocalDateTime time = LocalDateTime.now();
-        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable,time);
+        Page<IBookingDTO> listBookingTicket = iBookingService.findAllBookingTicket(pageable, time);
         ApiResponse response = new ApiResponse<>();
         IBookingDTO iBookingDTO = iBookingService.findBookingTicketById(id);
         response.setData(listBookingTicket);
 
-        if (iBookingDTO == null){
+        if (iBookingDTO == null) {
             response.setFlag(BAD_REQUEST);
-            return new ResponseEntity<>( response,HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            if (iBookingDTO.getPrintStatus()){
+            if (iBookingDTO.getPrintStatus()) {
                 response.setFlag(NO_CONTENT);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 List<IBookingDTO> listBookingTicketDetail = iBookingService.listBookingTicketDetail(id);
-                if (listBookingTicketDetail.isEmpty()){
+                if (listBookingTicketDetail.isEmpty()) {
                     response.setFlag(NO_CONTENT);
-                    return new ResponseEntity<>( response,HttpStatus.OK);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
                     response.setFlag(OK);
                     String fileName = "C:\\pdfPrint\\ticket" + id + ".pdf";
@@ -249,9 +249,9 @@ public class BookingRestController {
                     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 
                     document.open();
-                    for (IBookingDTO temp : listBookingTicketDetail){
+                    for (IBookingDTO temp : listBookingTicketDetail) {
                         // in
-                        try{
+                        try {
                             document.newPage();
                             addBackgroundAndContent(writer, document, temp);
 
@@ -273,7 +273,7 @@ public class BookingRestController {
                         headers.setContentDispositionFormData("attachment", "ticket.pdf");
                         response.setBase64(Base64.encodeBase64String(pdfContent));
                         response.setFlag(OK);
-                        return new ResponseEntity<>(response,HttpStatus.OK);
+                        return new ResponseEntity<>(response, HttpStatus.OK);
                     }
 
                 }
@@ -286,7 +286,7 @@ public class BookingRestController {
      * Function: Support for printing pdf files with the function of adding content and background images.
      */
 
-    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO ) throws IOException, DocumentException {
+    private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
         Image background = Image.getInstance("C:\\pdfPrint\\ticketImg.jpg");
         float documentWidth = document.getPageSize().getWidth();
@@ -296,17 +296,17 @@ public class BookingRestController {
         background.scaleToFit(width, height);
         float x = (documentWidth - background.getScaledWidth()) / 2;
         float yBackground = (documentHeight - background.getScaledHeight() + 250 + 20) / 2;
-        background.setAbsolutePosition(0,0);
+        background.setAbsolutePosition(0, 0);
         Rectangle rectBackground = new Rectangle(
-                documentWidth ,
+                documentWidth,
                 documentHeight
         );
         rectBackground.setBorder(Rectangle.BOX);
         rectBackground.setBorderWidth(1);
         canvas.rectangle(rectBackground);
         canvas.addImage(background);
-        BaseFont baseFont = BaseFont.createFont("C:\\pdfPrint\\arial-unicode-ms.ttf",BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        Font font = new Font(baseFont,14);
+        BaseFont baseFont = BaseFont.createFont("C:\\pdfPrint\\arial-unicode-ms.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font font = new Font(baseFont, 14);
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(65);
         table.setTotalWidth(width);
@@ -315,7 +315,7 @@ public class BookingRestController {
         table.writeSelectedRows(0, 0, x, yTable, writer.getDirectContent());
         table.addCell(createTitleCell(FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK)));
 
-        table.addCell(createCell("                           ---------------------------------------------------------",font));
+        table.addCell(createCell("                           ---------------------------------------------------------", font));
         table.addCell(createCell("         Phim:  " + iBookingDTO.getNameMovieFilm(), font));
         table.addCell(createCell("         Ngày chiếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), font));
         table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), font));
@@ -323,23 +323,24 @@ public class BookingRestController {
         table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", font));
         table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-        table.addCell(createCell("=====================================================",font));
+        table.addCell(createCell("=====================================================", font));
 
 
         document.add(table);
     }
+
     private PdfPCell createCell(String content, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setBorder(Rectangle.NO_BORDER);
         return cell;
     }
+
     private PdfPCell createTitleCell(Font font) {
         PdfPCell cell = new PdfPCell(new Phrase("Vé xem phim", font));
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;
     }
-
 
 
     /*
@@ -351,7 +352,6 @@ public class BookingRestController {
      */
     @PostMapping("/confirm")
     public ResponseEntity<BookingDTO> checkout(@RequestBody TicketDTO ticketDTO) {
-        System.out.println(ticketDTO);
 
         if (ticketDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -406,15 +406,14 @@ public class BookingRestController {
         LocalDateTime bookingDate = LocalDateTime.now();
         iBookingService.saveBooking(account.getId(), bookingDate);
         Long bookingId = iBookingService.getBooking();
-        Optional<ITicketDTO> iTicketDTO;
+        List<Ticket> checkExist;
         for (Integer seatN : ticketDTO.getSeatList()) {
-            iTicketDTO = ticketService.findBySeatAndScheduleId(seatN, ticketDTO.getScheduleId());
-            if (iTicketDTO.isPresent()){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-        for (Integer seatN : ticketDTO.getSeatList()) {
+//            checkExist = ticketService.checkExist(seatN, ticketDTO.getScheduleId());
+//            if (checkExist.isEmpty()) {
             ticketService.saveTicket(seatN, bookingId, ticketDTO.getScheduleId());
+//            } else {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
         }
 
         Long accountId = ticketDTO.getAccountId();
@@ -433,14 +432,14 @@ public class BookingRestController {
         BookingDTO bookingDTO = new BookingDTO(image, movieName, screen, movieDate, timeStart, seat, price, sum, email, accountId, scheduleId, seatNumber, bookingId);
         System.out.println(bookingDTO);
         return new ResponseEntity<>(bookingDTO, HttpStatus.OK);
-    }
 
+
+    }
 
 
     @PostMapping("/fail")
     public ResponseEntity<Long> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
         System.out.println("fail");
-
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -449,12 +448,12 @@ public class BookingRestController {
         if (schedule.get().getMovie() == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-            Long movieId = schedule.get().getMovie().getId();
+        Long movieId = schedule.get().getMovie().getId();
         ticketService.removeTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
-
         iBookingService.removeBooking(checkoutDTO.getBookingId());
         return new ResponseEntity<>(movieId, HttpStatus.OK);
     }
+
 
     @PostMapping("/success")
     public ResponseEntity<Object> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
@@ -466,9 +465,9 @@ public class BookingRestController {
         }
 
 
-        for (Integer seatN : checkoutDTO.getSeatNumber()){
-                ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
-                ticketService.updateTicketStatus(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
+        for (Integer seatN : checkoutDTO.getSeatNumber()) {
+            ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(), seatN);
+            ticketService.updateTicketStatus(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(), seatN);
 
         }
         String seat = "";
@@ -483,20 +482,11 @@ public class BookingRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @PostMapping("/checkexist")
     public ResponseEntity<Object> checkExist(@RequestBody CheckoutDTO checkoutDTO) {
         List<Ticket> checkExist;
         boolean flag = true;
-        Optional<ITicketDTO> iTicketDTO;
-        for (Integer seatN : checkoutDTO.getSeatNumber()){
-            iTicketDTO = ticketService.findAllTicketByBookingId(seatN, checkoutDTO.getBookingId());
-            if (!iTicketDTO.isPresent()){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            if (!iTicketDTO.get().getStatus()){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
         for (Integer seatN : checkoutDTO.getSeatNumber()){
             checkExist = ticketService.checkExist(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
             if (checkExist.isEmpty()){
@@ -509,10 +499,7 @@ public class BookingRestController {
             iBookingService.removeBooking(checkoutDTO.getBookingId());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-            return new ResponseEntity<>(HttpStatus.OK);
-
-
-
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/back")

@@ -17,9 +17,6 @@ public interface ITicketService {
 
     List<Ticket> findAllTicketByScheduleId(Long scheduleId);
 
-    void updateTicket(Long bookingId);
-
-
     List<ITicketDTO> findAllByStatus();
 
     void deleteById(Long id);
@@ -27,9 +24,10 @@ public interface ITicketService {
     Optional<ITicketDTO> findBySeatAndScheduleId(Integer seatN, Long scheduleId);
 
     Optional<ITicketDTO> findAllTicketByBookingId(Integer seatN, Long bookingId);
-    void updateTicket(Long bookingId, Long scheduleId, Integer seatNumber);
+
+    void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN);
 
     void removeTicketByBookingId(Long bookingId);
 
-    void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN);
+    void updateTicket(Long bookingId, Long scheduleId, Integer seatN);
 }

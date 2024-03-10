@@ -27,7 +27,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                 JOIN ticket ON booking.id = ticket.booking_id
                 JOIN schedule ON ticket.schedule_id = schedule.id
                 JOIN movie ON schedule.movie_id = movie.id
-                WHERE booking.account_id = :id and booking.date_booking between :dateStart and :dateEnd and ticket.status = false
+                WHERE booking.account_id = :id and booking.date_booking between :dateStart and :dateEnd and ticket.is_deleted = false
                 GROUP BY booking.date_booking, movie.name, movie.ticket_price
                  order by booking.date_booking desc
             """, nativeQuery = true)
@@ -144,7 +144,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Modifying
     @Query(value = "UPDATE booking SET print_status = 1 where id  =:id", nativeQuery = true)
     void setPrintStatus(@Param("id") long id);
-
 
     @Query(value = "select max(id) from booking where  account_id = :id",nativeQuery = true)
     Long getBookingById(@Param("id") Long accountId);
