@@ -58,19 +58,20 @@ public class MovieRestController {
      */
     @GetMapping("/statistics")
     public ResponseEntity<Page<MovieStatisticDTO>> movieStatistics(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+                                                                   @RequestParam(name = "name", defaultValue = "") String name) {
         Pageable pageable = PageRequest.of(page, 6);
-        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name, pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
     @GetMapping("/statistics/top20")
     public ResponseEntity<Page<MovieStatisticDTO>> movieStatisticsTop20(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                                   @RequestParam(name ="name",defaultValue = "") String name) {
+                                                                        @RequestParam(name = "name", defaultValue = "") String name) {
         Pageable pageable = PageRequest.of(page, 20);
-        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name,pageable);
+        Page<MovieStatisticDTO> movieList = movieService.getMovieStatistic(name, pageable);
         if (movieList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -129,16 +130,14 @@ public class MovieRestController {
      * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
      */
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+    public ResponseEntity<Long> create(@RequestBody @Valid MovieDTO newMovie, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        MovieDTO newMovie = movieRequestBodyDTO.getMovieDTO();
-        Set<ScheduleDTO> newScheduleDTOS = movieRequestBodyDTO.getScheduleDTO();
         List<Long> versions = newMovie.getVersion();
         List<Long> genres = newMovie.getGenre();
-        movieService.createMovie(newMovie, newScheduleDTOS, versions, genres);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Long newId = movieService.createMovie(newMovie, versions, genres);
+        return new ResponseEntity<>(newId,HttpStatus.OK);
     }
 
     /**
@@ -221,10 +220,10 @@ public class MovieRestController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Page<IMovieListDTO>> findAllMovie(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "") String publisher,
-                                                           @RequestParam(defaultValue = "") String name,
-                                                           @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                           @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                                            @RequestParam(defaultValue = "") String publisher,
+                                                            @RequestParam(defaultValue = "") String name,
+                                                            @RequestParam(defaultValue = "2001-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                            @RequestParam(defaultValue = "2100-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, 6, Sort.by("start_date").descending()
                 .and(Sort.by("name").ascending()));
         Page<IMovieListDTO> moviePage = movieService.searchMovieByNameAndPublisher(name, publisher, startDate, endDate, pageable);
@@ -274,6 +273,7 @@ public class MovieRestController {
         movieDTO.setVersionsString(versionArray);
         return new ResponseEntity<>(movieDTO, HttpStatus.OK);
     }
+
     @GetMapping("/current1")
     public ResponseEntity<List<IMovieDTO>> getAllMovieCurrentTo3Day() {
         List<IMovieDTO> list = movieService.getAllMovieCurrentTo3Day();

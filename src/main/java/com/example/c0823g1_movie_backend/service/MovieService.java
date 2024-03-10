@@ -60,8 +60,8 @@ public class MovieService implements IMovieService {
      * Function: Get a list of movies that have the highest revenue
      */
     @Override
-    public Page<MovieStatisticDTO> getMovieStatistic(String name,Pageable pageable) {
-        return movieRepository.findTop20MoviesByRevenue("%"+ name.trim() +"%",pageable);
+    public Page<MovieStatisticDTO> getMovieStatistic(String name, Pageable pageable) {
+        return movieRepository.findTop20MoviesByRevenue("%" + name.trim() + "%", pageable);
     }
 
     @Override
@@ -97,13 +97,9 @@ public class MovieService implements IMovieService {
         return true;
     }
 
-    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres) {
+    public Long createMovie(MovieDTO movie, List<Long> versions, List<Long> genres) {
         movieRepository.create(movie);
         Long newMovieId = movieRepository.returnLastInsertId();
-        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
-            scheduleDTO.setMovie(newMovieId);
-            scheduleService.createSchedule(scheduleDTO);
-        }
         for (Long versionId : versions) {
             versionService.addMovieHasVersion(newMovieId, versionId);
         }
@@ -111,6 +107,7 @@ public class MovieService implements IMovieService {
             genreService.addMovieHasGenre(newMovieId, genreId);
         }
         System.out.println(newMovieId);
+        return newMovieId;
     }
 
     @Override

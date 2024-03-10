@@ -28,7 +28,7 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     Movie findById(Long id);
 
-    void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres);
+    Long createMovie(MovieDTO movie, List<Long> versions, List<Long> genres);
 
     Page<IMovieListDTO> searchMovieByNameAndPublisher(String name, String publisher, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
