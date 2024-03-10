@@ -1,5 +1,6 @@
 package com.example.c0823g1_movie_backend.repository;
 
+import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
