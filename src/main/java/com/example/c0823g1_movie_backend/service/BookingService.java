@@ -128,5 +128,10 @@ public class BookingService implements IBookingService {
         bookingRepository.setPrintStatus(id);
     }
 
+    @Override
+    public Long getBookingById(Long accountId) {
+        return  bookingRepository.getBookingById(accountId);
+    }
+
 
 }

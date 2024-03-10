@@ -35,4 +35,6 @@ public interface IBookingService {
     Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
 
     void setPrintStatus(Long id);
+
+    Long getBookingById(Long accountId);
 }

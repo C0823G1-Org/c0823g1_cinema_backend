@@ -35,4 +35,14 @@ public class TicketService implements ITicketService{
     public void updateTicket(Long bookingId, Long scheduleId, Integer seatNumber) {
         ticketRepository.updateTicket(bookingId,scheduleId,seatNumber);
     }
+
+    @Override
+    public void removeTicketByBookingId(Long bookingId) {
+        ticketRepository.removeTicketByBookingId(bookingId);
+    }
+
+    @Override
+    public void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN) {
+        ticketRepository.updateTicketStatus(bookingId,scheduleId,seatN);
+    }
 }

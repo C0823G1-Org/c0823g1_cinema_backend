@@ -440,6 +440,8 @@ public class BookingRestController {
 
     @PostMapping("/fail")
     public ResponseEntity<Long> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
+        System.out.println("fail");
+
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -459,7 +461,6 @@ public class BookingRestController {
     public ResponseEntity<Object> handleCheckoutSuccess(@RequestBody CheckoutDTO checkoutDTO) {
 
 
-
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -468,7 +469,7 @@ public class BookingRestController {
 
         for (Integer seatN : checkoutDTO.getSeatNumber()){
                 ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
-
+                ticketService.updateTicketStatus(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
 
         }
         String seat = "";
@@ -505,4 +506,15 @@ public class BookingRestController {
 
     }
 
+    @PostMapping("/back")
+    public ResponseEntity<Object> backByBrowser(@RequestBody TicketDTO ticketDTO) {
+        System.out.println("xoa day roi");
+        Long bookingId = iBookingService.getBookingById(ticketDTO.getAccountId());
+        System.out.println(bookingId);
+        ticketService.removeTicketByBookingId(bookingId);
+
+        iBookingService.removeBooking(bookingId);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 }
