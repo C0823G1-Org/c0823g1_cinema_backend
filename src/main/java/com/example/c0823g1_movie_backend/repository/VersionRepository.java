@@ -18,4 +18,7 @@ public interface VersionRepository extends JpaRepository<Version, Long> {
     @Modifying
     @Query(value = "insert into movie_has_version(movie_id, version_id) values (:newMovieId,:versionId)", nativeQuery = true)
     void addMovieHasVersion(Long newMovieId, Long versionId);
+
+    @Query(value = "select version_id from movie_has_version where movie_id=:id", nativeQuery = true)
+    List<Long> getVersionByMovieId(Long id);
 }

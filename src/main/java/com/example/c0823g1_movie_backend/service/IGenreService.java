@@ -10,4 +10,6 @@ public interface IGenreService {
     List<Genre> getAll();
 
     void addMovieHasGenre(Long newMovieId, Long genreId);
+
+    List<Long> getGenreByMovieId(Long id);
 }

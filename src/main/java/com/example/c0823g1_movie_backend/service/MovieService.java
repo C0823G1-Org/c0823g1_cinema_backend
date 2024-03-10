@@ -2,6 +2,8 @@ package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
+import com.example.c0823g1_movie_backend.repository.MovieHasGenreRepository;
+import com.example.c0823g1_movie_backend.repository.MovieHasVersionRepository;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,10 @@ public class MovieService implements IMovieService {
     private IVersionService versionService;
     @Autowired
     private IGenreService genreService;
+    @Autowired
+    private MovieHasGenreRepository movieHasGenreRepository;
+    @Autowired
+    private MovieHasVersionRepository movieHasVersionRepository;
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -54,36 +60,46 @@ public class MovieService implements IMovieService {
      * Function: Get a list of movies that have the highest revenue
      */
     @Override
-    public Page<MovieStatisticDTO> getMovieStatistic(String name,Pageable pageable) {
-        return movieRepository.findTop20MoviesByRevenue("%"+ name.trim() +"%",pageable);
+    public Page<MovieStatisticDTO> getMovieStatistic(String name, Pageable pageable) {
+        return movieRepository.findTop20MoviesByRevenue("%" + name.trim() + "%", pageable);
     }
 
     @Override
-    public boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO) {
+    public boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO, List<Long> versions, List<Long> genres) {
         Movie currentMovie = findMovieById(movie.getId());
-        if (currentMovie != null) {
-            for (ScheduleDTO schedule : scheduleDTO) {
-                if (schedule.getId() != null) {
-                    if (!scheduleService.editSchedule(schedule)) {
-                        return false;
-                    }
-                } else {
-                    scheduleService.createSchedule(schedule);
-                }
-            }
-            movieRepository.editMovie(movie);
-            return true;
+        if (currentMovie == null) return false;
+        movieRepository.editMovie(movie);
+
+        //replace with new genres and versions
+        movieHasGenreRepository.deleteAllByMovieId(currentMovie.getId());
+        movieHasVersionRepository.deleteAllByMovieId(currentMovie.getId());
+        for (Long versionId : versions) {
+            versionService.addMovieHasVersion(currentMovie.getId(), versionId);
         }
-        return false;
+        for (Long genreId : genres) {
+            genreService.addMovieHasGenre(currentMovie.getId(), genreId);
+        }
+
+        //remove current schedules
+        scheduleService.deleteScheduleByMovieId(currentMovie.getId());
+
+        //update movie schedule
+        for (ScheduleDTO schedule : scheduleDTO) {
+            schedule.setMovie(movie.getId());
+            if (schedule.getId() != null) {
+                if (schedule.getId() < 0) continue;
+                scheduleService.editSchedule(schedule);
+            } else {
+                scheduleService.createSchedule(schedule);
+            }
+        }
+
+        return true;
     }
 
-    public void createMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTOS, List<Long> versions, List<Long> genres) {
+    public Long createMovie(MovieDTO movie, List<Long> versions, List<Long> genres) {
         movieRepository.create(movie);
         Long newMovieId = movieRepository.returnLastInsertId();
-        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
-            scheduleDTO.setMovie(newMovieId);
-            scheduleService.createSchedule(scheduleDTO);
-        }
         for (Long versionId : versions) {
             versionService.addMovieHasVersion(newMovieId, versionId);
         }
@@ -91,11 +107,12 @@ public class MovieService implements IMovieService {
             genreService.addMovieHasGenre(newMovieId, genreId);
         }
         System.out.println(newMovieId);
+        return newMovieId;
     }
 
     @Override
     public Movie findById(Long id) {
-        return movieRepository.findByIdMovie(id).get();
+        return movieRepository.findByIdMovie(id).orElse(null);
     }
 
     @Override

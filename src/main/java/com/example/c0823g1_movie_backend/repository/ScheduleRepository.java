@@ -1,15 +1,10 @@
 package com.example.c0823g1_movie_backend.repository;
 
+import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
 import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
-import com.example.c0823g1_movie_backend.model.Hall;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
-import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
-import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.model.Schedule;
-import com.example.c0823g1_movie_backend.model.ScheduleTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
-import java.util.List;
-
 import java.util.List;
 
 @Repository
@@ -48,6 +41,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                                                           @Param("date") LocalDate date,
                                                           @Param("scheduleTimeId") Long scheduleTimeId);
 
+    @Query(value = "select h.id from hall h join schedule on hall_id=(select hall_id from schedule " +
+                   "where id =:scheduleId) group by h.id", nativeQuery = true)
+    HallDTO getHallByScheduleId(@Param("scheduleId") Long scheduleId);
 
 
 
@@ -56,15 +52,23 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Modifying
     @Query(value = "insert into schedule(date, hall_id, movie_id, schedule_time_id) " +
-            "values (:#{#schedule.date},:#{#schedule.hall},:#{#schedule.movie},:#{#schedule.scheduleTime})", nativeQuery = true)
+                   "values (:#{#schedule.date},:#{#schedule.hall},:#{#schedule.movie},:#{#schedule.scheduleTime})", nativeQuery = true)
     void create(ScheduleDTO schedule);
 
     @Modifying
     @Query(value = "update schedule " +
-            "set date=:#{#schedule.date}, hall_id=:#{#schedule.hall}, movie_id=:#{#schedule.movie}, schedule_time_id=:#{#schedule.scheduleTime} " +
-            "where id=:#{#schedule.id}", nativeQuery = true)
-    void editSchedule(ScheduleDTO schedule);
-    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY) and is_deleted=0 ORDER BY schedule.date", nativeQuery = true)
+                   "set is_deleted= false " +
+                   "where id=:scheduleId", nativeQuery = true)
+    void updateScheduleStatus(Long scheduleId);
+
+    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date >= CURRENT_DATE and is_deleted=0 order by schedule_time_id", nativeQuery = true)
     List<Schedule> getScheduleByMovieId(@Param("movieId") Long movieId);
 
+    @Modifying
+    @Query(value = "update schedule " +
+                   "set is_deleted = true " +
+                   "where movie_id=:id", nativeQuery = true)
+    void deleteByMovieId(Long id);
+@Query(value = "select MAX(id) from schedule_time" ,nativeQuery = true)
+    long getscheduleTimeMaxId();
 }
