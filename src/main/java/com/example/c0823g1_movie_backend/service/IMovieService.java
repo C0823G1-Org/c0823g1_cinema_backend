@@ -39,4 +39,6 @@ public interface IMovieService extends IGeneralService<Movie> {
 
     List<IMovieDTO> getAllMovieCurrentTo3Day();
     boolean editMovie(MovieDTO movie, Set<ScheduleDTO> scheduleDTO, List<Long> versions, List<Long> genres);
+
+    List<Long> checkIfDuplicated(MovieDTO movieDTO);
 }

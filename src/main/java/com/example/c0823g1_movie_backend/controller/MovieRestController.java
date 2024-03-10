@@ -4,17 +4,12 @@ import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.*;
 import com.example.c0823g1_movie_backend.service.*;
 import jakarta.validation.Valid;
-import com.example.c0823g1_movie_backend.dto.*;
-import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.Schedule;
-import com.example.c0823g1_movie_backend.service.IMovieService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -137,7 +131,7 @@ public class MovieRestController {
         List<Long> versions = newMovie.getVersion();
         List<Long> genres = newMovie.getGenre();
         Long newId = movieService.createMovie(newMovie, versions, genres);
-        return new ResponseEntity<>(newId,HttpStatus.OK);
+        return new ResponseEntity<>(newId, HttpStatus.OK);
     }
 
     /**
@@ -179,6 +173,20 @@ public class MovieRestController {
         List<ScheduleTime> scheduleTimes = scheduleTimeService.getAll();
         List<Hall> halls = hallService.getAll();
         return new ResponseEntity<>(new MovieAttributeDTO(genres, versions, scheduleTimes, halls), HttpStatus.OK);
+    }
+
+    /**
+     * Created by: LamNT
+     * Date created: 10/03/2024
+     * Function: return true if there is duplicated movie, false if not
+     *
+     * @return HTTPStatus.OK
+     */
+    @PostMapping("/check")
+    ResponseEntity<Boolean> checkIfDuplicated(@RequestBody MovieDTO movieDTO) {
+        List<Long> movie = movieService.checkIfDuplicated(movieDTO);
+        boolean result = !movie.isEmpty();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**

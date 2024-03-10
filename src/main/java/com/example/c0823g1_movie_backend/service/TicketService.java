@@ -57,4 +57,14 @@ public class TicketService implements ITicketService{
     public Optional<ITicketDTO> findAllTicketByBookingId(Integer seatN, Long bookingId) {
         return ticketRepository.findBySeatAndBookingId(seatN, bookingId);
     }
+
+    @Override
+    public void removeTicketByBookingId(Long bookingId) {
+        ticketRepository.removeTicketByBookingId(bookingId);
+    }
+
+    @Override
+    public void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN) {
+        ticketRepository.updateTicketStatus(bookingId,scheduleId,seatN);
+    }
 }

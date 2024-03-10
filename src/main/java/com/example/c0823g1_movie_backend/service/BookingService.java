@@ -129,6 +129,11 @@ public class BookingService implements IBookingService {
     }
 
     @Override
+    public Long getBookingById(Long accountId) {
+        return  bookingRepository.getBookingById(accountId);
+    }
+
+    @Override
     public void deleteById(Long aa) {
         bookingRepository.deleteById(aa);
     }

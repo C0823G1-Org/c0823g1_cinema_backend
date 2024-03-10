@@ -27,4 +27,9 @@ public interface ITicketService {
     Optional<ITicketDTO> findBySeatAndScheduleId(Integer seatN, Long scheduleId);
 
     Optional<ITicketDTO> findAllTicketByBookingId(Integer seatN, Long bookingId);
+    void updateTicket(Long bookingId, Long scheduleId, Integer seatNumber);
+
+    void removeTicketByBookingId(Long bookingId);
+
+    void updateTicketStatus(Long bookingId, Long scheduleId, Integer seatN);
 }
