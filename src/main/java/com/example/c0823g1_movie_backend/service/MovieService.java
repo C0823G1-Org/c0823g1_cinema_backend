@@ -97,6 +97,11 @@ public class MovieService implements IMovieService {
         return true;
     }
 
+    @Override
+    public List<Long> checkIfDuplicated(MovieDTO movieDTO) {
+        return movieRepository.checkIfDuplicated(movieDTO);
+    }
+
     public Long createMovie(MovieDTO movie, List<Long> versions, List<Long> genres) {
         movieRepository.create(movie);
         Long newMovieId = movieRepository.returnLastInsertId();
