@@ -63,7 +63,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                    "where id=:scheduleId", nativeQuery = true)
     void updateScheduleStatus(Long scheduleId);
 
-    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date >= CURRENT_DATE order by schedule_time_id", nativeQuery = true)
+    @Query(value = "SELECT * FROM schedule WHERE movie_id = :movieId AND date >= CURRENT_DATE and is_deleted=0 order by schedule_time_id", nativeQuery = true)
     List<Schedule> getScheduleByMovieId(@Param("movieId") Long movieId);
 
     @Modifying
@@ -71,4 +71,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                    "set is_deleted = true " +
                    "where movie_id=:id", nativeQuery = true)
     void deleteByMovieId(Long id);
+@Query(value = "select MAX(id) from schedule_time" ,nativeQuery = true)
+    long getscheduleTimeMaxId();
 }

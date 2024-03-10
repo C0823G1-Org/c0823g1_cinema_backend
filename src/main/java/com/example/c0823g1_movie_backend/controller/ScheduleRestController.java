@@ -38,8 +38,8 @@ public class ScheduleRestController {
 
     @GetMapping("/hall/{id}")
     public ResponseEntity<List<Schedule>> getListScheduleByHallId(@PathVariable("id") Long id) {
-        List<Schedule> scheduleDTOList = scheduleService.getScheduleByHallId(id);
-        return new ResponseEntity<>(scheduleDTOList, HttpStatus.OK);
+        List<Schedule> scheduleList = scheduleService.getScheduleByHallId(id);
+        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
     }
 
     @GetMapping("/movie")

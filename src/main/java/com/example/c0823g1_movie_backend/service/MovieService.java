@@ -2,8 +2,6 @@ package com.example.c0823g1_movie_backend.service;
 
 import com.example.c0823g1_movie_backend.dto.*;
 import com.example.c0823g1_movie_backend.model.Movie;
-import com.example.c0823g1_movie_backend.model.MovieHasGenre;
-import com.example.c0823g1_movie_backend.model.MovieHasVersion;
 import com.example.c0823g1_movie_backend.repository.MovieHasGenreRepository;
 import com.example.c0823g1_movie_backend.repository.MovieHasVersionRepository;
 import com.example.c0823g1_movie_backend.repository.MovieRepository;
@@ -87,6 +85,7 @@ public class MovieService implements IMovieService {
 
         //update movie schedule
         for (ScheduleDTO schedule : scheduleDTO) {
+            schedule.setMovie(movie.getId());
             if (schedule.getId() != null) {
                 if (schedule.getId() < 0) continue;
                 scheduleService.editSchedule(schedule);
