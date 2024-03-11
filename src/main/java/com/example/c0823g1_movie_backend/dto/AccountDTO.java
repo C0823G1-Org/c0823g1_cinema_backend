@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class AccountDTO {
     Integer id;
     @NotBlank(message = "Tài Khoản không được để rỗng")
-    @Size(min = 6,max = 20,message = "Tài Khoản có độ dài từ 6-20 kí tự")
+    @Size(min = 6,max = 35,message = "Tài Khoản có độ dài từ 6-35 kí tự")
     @Pattern(regexp = "^[a-z0-9_-]+$",message = "Tài Khoản Vui Lòng Nhập Đúng Định Dạng")
     String accountName;
     @NotBlank(message = "Địa chỉ không được để rỗng")

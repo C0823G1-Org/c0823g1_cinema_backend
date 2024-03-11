@@ -96,4 +96,9 @@ public class ScheduleService implements IScheduleService {
         scheduleRepository.deleteByMovieId(id);
     }
 
+    @Override
+    public List<Schedule> getSchedule3DayByMovieId(Long movieId) {
+        return scheduleRepository.getSchedule3DayByMovieId(movieId);
+    }
+
 }

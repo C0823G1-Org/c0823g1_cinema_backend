@@ -114,4 +114,13 @@ public class ScheduleRestController {
 //        }
 //        return new ResponseEntity<>(hall, HttpStatus.OK);
 //    }
+    @GetMapping("/movie3")
+    public ResponseEntity<List<Schedule>> getSchedule3DayByMovieId(@RequestParam Long movieId) {
+        List<Schedule> schedule = scheduleService.getSchedule3DayByMovieId(movieId);
+        if (schedule.isEmpty()) {
+            return new ResponseEntity<>(schedule, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
+    }
+
 }

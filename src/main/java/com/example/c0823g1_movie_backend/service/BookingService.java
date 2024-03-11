@@ -81,7 +81,7 @@ public class BookingService implements IBookingService {
 
         if (account.isPresent()) {
             String to = account.get().getEmail();
-            String subject = "[C0823G1-Cinema]-Đặt vé thành công";
+            String subject = "[C0823G1-Cinema]-Đặt vé thành công";
             String templateName = "ticket-gmail";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("name", schedule.getMovie().getName());
@@ -91,13 +91,16 @@ public class BookingService implements IBookingService {
 
 
             // Định dạng tiền tệ với NumberFormat và Locale của Việt Nam
-            NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            NumberFormat numberFormat = NumberFormat.
+                    getCurrencyInstance
+                            (new Locale("vi", "VN"));
             String ticketPrice = numberFormat.format(total);
             context.setVariable("price",ticketPrice );
             context.setVariable("screen", schedule.getHall().getName());
             context.setVariable("movie", schedule.getMovie().getName());
             context.setVariable("image", schedule.getMovie().getPoster());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.
+                    ofPattern("dd/MM/yyyy");
             context.setVariable("date", schedule.getDate().format(formatter));
             context.setVariable("time", schedule.getScheduleTime().getScheduleTime());
             context.setVariable("qr", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+

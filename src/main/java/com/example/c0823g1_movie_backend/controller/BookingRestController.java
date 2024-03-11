@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
@@ -288,6 +289,8 @@ public class BookingRestController {
 
     private void addBackgroundAndContent(PdfWriter writer, Document document, IBookingDTO iBookingDTO) throws IOException, DocumentException {
         PdfContentByte canvas = writer.getDirectContentUnder();
+        DecimalFormat decimalFormat = new DecimalFormat("###,### VND");
+        String formattedString = decimalFormat.format(iBookingDTO.getTicketPrice());
         Image background = Image.getInstance("C:\\pdfPrint\\ticketImg.jpg");
         float documentWidth = document.getPageSize().getWidth();
         float documentHeight = document.getPageSize().getHeight();
@@ -320,7 +323,7 @@ public class BookingRestController {
         table.addCell(createCell("         Ngày chiếu:  " + iBookingDTO.getScheduleDate() + " " + iBookingDTO.getScheduleTime(), font));
         table.addCell(createCell("         Khách hàng:  " + iBookingDTO.getNameCustomer(), font));
         table.addCell(createCell("         Ghế:  " + iBookingDTO.getSeatNumber(), font));
-        table.addCell(createCell("         Giá:  " + iBookingDTO.getTicketPrice() + " VND", font));
+        table.addCell(createCell("         Giá:  " + formattedString, font));
         table.addCell(createCell("         Phòng:  " + iBookingDTO.getCinemaHall(), font));
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell(createCell("=====================================================", font));
@@ -440,6 +443,7 @@ public class BookingRestController {
     @PostMapping("/fail")
     public ResponseEntity<Long> handleCheckoutFail(@RequestBody CheckoutDTO checkoutDTO) {
         System.out.println("fail");
+
         if (checkoutDTO.getBookingId() == null || checkoutDTO.getAccountId() == null || checkoutDTO.getScheduleId() == null
                 || checkoutDTO.getSeat().isEmpty() || checkoutDTO.getSeat() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -450,6 +454,7 @@ public class BookingRestController {
         }
         Long movieId = schedule.get().getMovie().getId();
         ticketService.removeTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId());
+
         iBookingService.removeBooking(checkoutDTO.getBookingId());
         return new ResponseEntity<>(movieId, HttpStatus.OK);
     }
@@ -465,9 +470,9 @@ public class BookingRestController {
         }
 
 
-        for (Integer seatN : checkoutDTO.getSeatNumber()) {
-            ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(), seatN);
-            ticketService.updateTicketStatus(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(), seatN);
+        for (Integer seatN : checkoutDTO.getSeatNumber()){
+            ticketService.updateTicket(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
+            ticketService.updateTicketStatus(checkoutDTO.getBookingId(), checkoutDTO.getScheduleId(),seatN);
 
         }
         String seat = "";
@@ -481,6 +486,7 @@ public class BookingRestController {
         iBookingService.addAccumulatedPoints(checkoutDTO.getAccountId(), accumulatedPoints);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 
     @PostMapping("/checkexist")
@@ -500,6 +506,9 @@ public class BookingRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+
+
+
     }
 
     @PostMapping("/back")
