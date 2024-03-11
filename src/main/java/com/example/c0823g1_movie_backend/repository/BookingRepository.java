@@ -20,29 +20,34 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = """
-        select movie.name as nameMovie, booking.date_booking as dateBooking, movie.ticket_price * ticket.seat_number as price 
-        from booking 
-        join ticket on booking.id = ticket.booking_id 
-        join schedule on ticket.schedule_id = schedule.id 
-        join movie on schedule.movie_id = movie.id 
-        where booking.account_id = :id 
-        and booking.date_booking between :dateStart and :dateEnd
-        """, nativeQuery = true)
+                    SELECT movie.name AS nameMovie,\s
+                       booking.date_booking AS dateBooking,\s
+                       movie.ticket_price * COUNT(booking.date_booking) AS price
+                FROM booking
+                JOIN ticket ON booking.id = ticket.booking_id
+                JOIN schedule ON ticket.schedule_id = schedule.id
+                JOIN movie ON schedule.movie_id = movie.id
+                WHERE booking.account_id = :id and booking.date_booking between :dateStart and :dateEnd and ticket.is_deleted = false
+                GROUP BY booking.date_booking, movie.name, movie.ticket_price
+                 order by booking.date_booking desc
+            """, nativeQuery = true)
     Page<HistoryBookingDTO> getHistory(@Param("id") Long id, @Param("dateStart") LocalDateTime dateStart, @Param("dateEnd") LocalDateTime dateEnd, Pageable pageable);
-    
+
     @Query(value =
             " SELECT booking.id as bookingCode , account.id as accountId, account.full_name as nameCustomer,\n" +
-            " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
-            " booking.date_booking as dateBooking ,MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
+                    " account.id_number as idNumber , account.phone_number as phoneNumber,\n" +
+                    " booking.date_booking as dateBooking ,MAX(sc.schedule_time) as scheduleTime , MAX(movie.name) as nameMovieFilm\n" +
                     ", booking.print_status as printStatus\n"+
-            " FROM booking\n" +
-            "  left join account on booking.account_id  = account.id\n" +
-            "  left join ticket on booking.id = ticket.booking_id \n" +
-            "  left join schedule on ticket.schedule_id = schedule.id\n" +
-            "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
-            "  left join movie on movie.id = schedule.movie_id\n" +
+                    " FROM booking\n" +
+                    "  left join account on booking.account_id  = account.id\n" +
+                    "  left join ticket on booking.id = ticket.booking_id \n" +
+                    "  left join schedule on ticket.schedule_id = schedule.id\n" +
+                    "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
+                    "  left join movie on movie.id = schedule.movie_id\n" +
                     "where (booking.print_status = 0) and (ticket.is_deleted = 0) \n" +
-            "  group by booking.id", nativeQuery = true)
+                    "  group by booking.id\n " +
+                    "ORDER BY\n" +
+                    "    booking.date_booking DESC", nativeQuery = true)
     Page<IBookingDTO> findAllBookingTicket(Pageable pageable,LocalDateTime time);
 
 
@@ -141,4 +146,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Modifying
     @Query(value = "UPDATE booking SET print_status = 1 where id  =:id", nativeQuery = true)
     void setPrintStatus(@Param("id") long id);
+
+    @Query(value = "select max(id) from booking where  account_id = :id",nativeQuery = true)
+    Long getBookingById(@Param("id") Long accountId);
 }

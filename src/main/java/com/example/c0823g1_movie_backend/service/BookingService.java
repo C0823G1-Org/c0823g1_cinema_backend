@@ -3,8 +3,6 @@ package com.example.c0823g1_movie_backend.service;
 import com.example.c0823g1_movie_backend.dto.HistoryBookingDTO;
 import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.dto.IBookingDTO;
-import com.example.c0823g1_movie_backend.model.Booking;
-import com.example.c0823g1_movie_backend.model.Movie;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.repository.AccountRepository;
 import com.example.c0823g1_movie_backend.repository.BookingRepository;
@@ -14,15 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 
-import java.time.ZoneId;
-import java.util.Date;
 
 import java.util.List;
 import java.util.Locale;
@@ -87,7 +81,7 @@ public class BookingService implements IBookingService {
 
         if (account.isPresent()) {
             String to = account.get().getEmail();
-            String subject = "[C0823G1-Cinema]-Đặt vé thành công";
+            String subject = "[C0823G1-Cinema]-Đặt vé thành công";
             String templateName = "ticket-gmail";
             org.thymeleaf.context.Context context = new org.thymeleaf.context.Context();
             context.setVariable("name", schedule.getMovie().getName());
@@ -97,15 +91,25 @@ public class BookingService implements IBookingService {
 
 
             // Định dạng tiền tệ với NumberFormat và Locale của Việt Nam
-            NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            NumberFormat numberFormat = NumberFormat.
+                    getCurrencyInstance
+                            (new Locale("vi", "VN"));
             String ticketPrice = numberFormat.format(total);
             context.setVariable("price",ticketPrice );
             context.setVariable("screen", schedule.getHall().getName());
             context.setVariable("movie", schedule.getMovie().getName());
             context.setVariable("image", schedule.getMovie().getPoster());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.
+                    ofPattern("dd/MM/yyyy");
             context.setVariable("date", schedule.getDate().format(formatter));
             context.setVariable("time", schedule.getScheduleTime().getScheduleTime());
+            context.setVariable("qr", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+
+                    id+"?movie="+schedule.getMovie().getName()+
+                    "?screen="+schedule.getHall().getName()+
+                    "?date="+schedule.getDate().format(formatter)+
+                    "?time="+schedule.getScheduleTime().getScheduleTime()+
+                    "?price="+ticketPrice+
+                    "?seat="+seat);
             accountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
         }
     }
@@ -132,6 +136,16 @@ public class BookingService implements IBookingService {
     @Override
     public void setPrintStatus(Long id) {
         bookingRepository.setPrintStatus(id);
+    }
+
+    @Override
+    public Long getBookingById(Long accountId) {
+        return  bookingRepository.getBookingById(accountId);
+    }
+
+    @Override
+    public void deleteById(Long aa) {
+        bookingRepository.deleteById(aa);
     }
 
 

@@ -38,18 +38,10 @@ public class ScheduleRestController {
 
     @GetMapping("/hall/{id}")
     public ResponseEntity<List<Schedule>> getListScheduleByHallId(@PathVariable("id") Long id) {
-        List<Schedule> scheduleDTOList = scheduleService.getScheduleByHallId(id);
-        return new ResponseEntity<>(scheduleDTOList, HttpStatus.OK);
-//    @GetMapping("/hall/{id}")
-//    public ResponseEntity<?> getScheduleByHallId(@PathVariable("id") Long id) {
-//        List<ScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    public ResponseEntity<List<IScheduleDTO>> getScheduleByHallId(@PathVariable("id") Long id) {
-//        List<IScheduleDTO> scheduleList = scheduleService.getScheduleByHallId(id);
-//        System.out.println(scheduleList.get(0).getDate());
-//        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
-//    }
+        List<Schedule> scheduleList = scheduleService.getScheduleByHallId(id);
+        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
     }
+
     @GetMapping("/movie")
     public ResponseEntity<List<Schedule>> getScheduleByMovieId(@RequestParam Long movieId) {
         List<Schedule> schedule = scheduleService.getScheduleByMovieId(movieId);
@@ -122,4 +114,13 @@ public class ScheduleRestController {
 //        }
 //        return new ResponseEntity<>(hall, HttpStatus.OK);
 //    }
+    @GetMapping("/movie3")
+    public ResponseEntity<List<Schedule>> getSchedule3DayByMovieId(@RequestParam Long movieId) {
+        List<Schedule> schedule = scheduleService.getSchedule3DayByMovieId(movieId);
+        if (schedule.isEmpty()) {
+            return new ResponseEntity<>(schedule, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
+    }
+
 }

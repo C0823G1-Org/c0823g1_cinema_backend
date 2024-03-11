@@ -27,7 +27,13 @@ public class Schedule {
     public Schedule() {
     }
 
-
+    public Schedule(Long id, LocalDate date, ScheduleTime scheduleTime, Hall hall, Movie movie) {
+        this.id = id;
+        this.date = date;
+        this.scheduleTime = scheduleTime;
+        this.hall = hall;
+        this.movie = movie;
+    }
 
     public Long getId() {
         return id;
