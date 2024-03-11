@@ -46,7 +46,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query(value = "update ticket set is_deleted=0 where booking_id = :bookingId and schedule_id = :scheduleId and seat_number = :seatNumber", nativeQuery = true)
     void updateTicketStatus(@Param("bookingId") Long bookingId, @Param("scheduleId") Long scheduleId, @Param("seatNumber") Integer seatNumber);
 
-
     @Query(value = "select ticket.id as id,\n" +
             "ticket.is_deleted as isDeleted,\n" +
             "ticket.booking_id as bookingId,\n" +

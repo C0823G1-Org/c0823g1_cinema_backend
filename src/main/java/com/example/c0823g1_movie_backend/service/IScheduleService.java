@@ -31,4 +31,5 @@ public interface IScheduleService extends IGeneralService<com.example.c0823g1_mo
     List<Schedule> getScheduleByMovieId( Long movieId);
 
     void deleteScheduleByMovieId(Long id);
+    List<Schedule> getSchedule3DayByMovieId( Long movieId);
 }

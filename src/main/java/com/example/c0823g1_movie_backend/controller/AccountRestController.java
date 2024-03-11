@@ -365,6 +365,7 @@ public class AccountRestController {
      */
     @PatchMapping("/changeInfoUser/{id}")
     public ResponseEntity<Object> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO, BindingResult bindingResult, @PathVariable Long id) {
+
         Map<String, String> listError = new HashMap<>();
         Account account3 = iAccountService.findAccountById(id);
         Account account = iAccountService.findAccountByEmail(changeAccountDTO.getEmail());
