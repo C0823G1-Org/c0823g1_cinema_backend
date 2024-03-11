@@ -27,16 +27,20 @@ import java.util.Set;
 @CrossOrigin("*")
 @RequestMapping("/movie")
 public class MovieRestController {
+    private final IMovieService movieService;
+    private final IGenreService genreService;
+    private final IVersionService versionService;
+    private final IScheduleTimeService scheduleTimeService;
+    private final IHallService hallService;
+
     @Autowired
-    private IMovieService movieService;
-    @Autowired
-    private IGenreService genreService;
-    @Autowired
-    private IVersionService versionService;
-    @Autowired
-    private IScheduleTimeService scheduleTimeService;
-    @Autowired
-    private IHallService hallService;
+    public MovieRestController(IMovieService movieService, IGenreService genreService, IVersionService versionService, IScheduleTimeService scheduleTimeService, IHallService hallService) {
+        this.movieService = movieService;
+        this.genreService = genreService;
+        this.versionService = versionService;
+        this.scheduleTimeService = scheduleTimeService;
+        this.hallService = hallService;
+    }
     /*    Create by: BaoLVN
      *     Date created : 29/02/2024
      *     Function: Get a list of movies with many views
@@ -142,7 +146,7 @@ public class MovieRestController {
      * @return HTTPStatus.OK movie update succeed, HttpStatus.BAD_REQUEST if movie or schedule not valid
      */
     @PatchMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
+    public ResponseEntity<Void> edit(@RequestBody @Valid MovieRequestBodyDTO movieRequestBodyDTO, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -156,7 +160,6 @@ public class MovieRestController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /**

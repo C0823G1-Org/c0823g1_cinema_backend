@@ -16,18 +16,22 @@ import java.util.Set;
 
 @Service
 public class MovieService implements IMovieService {
+    private final MovieRepository movieRepository;
+    private final IScheduleService scheduleService;
+    private final IVersionService versionService;
+    private final IGenreService genreService;
+    private final MovieHasGenreRepository movieHasGenreRepository;
+    private final MovieHasVersionRepository movieHasVersionRepository;
+
     @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private IScheduleService scheduleService;
-    @Autowired
-    private IVersionService versionService;
-    @Autowired
-    private IGenreService genreService;
-    @Autowired
-    private MovieHasGenreRepository movieHasGenreRepository;
-    @Autowired
-    private MovieHasVersionRepository movieHasVersionRepository;
+    public MovieService(MovieRepository movieRepository, IScheduleService scheduleService, IVersionService versionService, IGenreService genreService, MovieHasGenreRepository movieHasGenreRepository, MovieHasVersionRepository movieHasVersionRepository) {
+        this.movieRepository = movieRepository;
+        this.scheduleService = scheduleService;
+        this.versionService = versionService;
+        this.genreService = genreService;
+        this.movieHasGenreRepository = movieHasGenreRepository;
+        this.movieHasVersionRepository = movieHasVersionRepository;
+    }
 
     @Override
     public List<IMovieDTO> getAllMovieHot() {
@@ -111,7 +115,6 @@ public class MovieService implements IMovieService {
         for (Long genreId : genres) {
             genreService.addMovieHasGenre(newMovieId, genreId);
         }
-        System.out.println(newMovieId);
         return newMovieId;
     }
 

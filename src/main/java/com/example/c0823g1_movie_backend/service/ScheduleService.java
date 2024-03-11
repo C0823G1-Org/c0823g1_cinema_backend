@@ -16,9 +16,15 @@ import java.util.Optional;
 
 @Service
 public class ScheduleService implements IScheduleService {
+
+    private final ScheduleRepository scheduleRepository;
+
     @Autowired
-    ScheduleRepository scheduleRepository;
-    private final int SCHEDULE_TIME_INTERVAL = 150;
+    public ScheduleService(ScheduleRepository scheduleRepository) {
+        this.scheduleRepository = scheduleRepository;
+    }
+
+    private static final int SCHEDULE_TIME_INTERVAL = 150;
 
     @Override
     public Schedule save(Schedule schedule) {

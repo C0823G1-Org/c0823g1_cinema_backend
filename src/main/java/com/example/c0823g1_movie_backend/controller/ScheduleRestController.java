@@ -1,12 +1,7 @@
 package com.example.c0823g1_movie_backend.controller;
 
-import com.example.c0823g1_movie_backend.dto.HallDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
 import com.example.c0823g1_movie_backend.dto.IScheduleDTO;
-import com.example.c0823g1_movie_backend.dto.IScheduleTimeDTO;
-import com.example.c0823g1_movie_backend.dto.ScheduleDTO;
-import com.example.c0823g1_movie_backend.model.Schedule;
-import com.example.c0823g1_movie_backend.model.Hall;
 import com.example.c0823g1_movie_backend.model.Schedule;
 import com.example.c0823g1_movie_backend.service.IHallService;
 import com.example.c0823g1_movie_backend.service.IScheduleService;
@@ -22,11 +17,15 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/schedule")
 public class ScheduleRestController {
-    @Autowired
     IScheduleService scheduleService;
 
-    @Autowired
     IHallService hallService;
+
+    @Autowired
+    public ScheduleRestController(IScheduleService scheduleService, IHallService hallService) {
+        this.scheduleService = scheduleService;
+        this.hallService = hallService;
+    }
 
     /**
      * Created by: LamNT
@@ -98,20 +97,4 @@ public class ScheduleRestController {
         }
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
-
-    /**
-     * Create by HuuPT
-     * Date create: 29/02/2024
-     * Function: to find an object hall by schedule id
-     * Return: HttpStatus.BAD_REQUEST if hall not found/ HttpStatus.OK and an object hall
-     */
-//    @GetMapping("/hall")
-//    public ResponseEntity<Hall> getHallByScheduleId(@RequestParam Long scheduleId) {
-//        HallDTO hallDTO = scheduleService.getHallByScheduleId(scheduleId);
-//        Hall hall = hallService.getHallById(hallDTO.getId());
-//        if (hall == null) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<>(hall, HttpStatus.OK);
-//    }
 }
