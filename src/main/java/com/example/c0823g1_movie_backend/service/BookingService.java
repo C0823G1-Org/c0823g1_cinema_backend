@@ -100,6 +100,13 @@ public class BookingService implements IBookingService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             context.setVariable("date", schedule.getDate().format(formatter));
             context.setVariable("time", schedule.getScheduleTime().getScheduleTime());
+            context.setVariable("qr", "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+
+                    id+"?movie="+schedule.getMovie().getName()+
+                    "?screen="+schedule.getHall().getName()+
+                    "?date="+schedule.getDate().format(formatter)+
+                    "?time="+schedule.getScheduleTime().getScheduleTime()+
+                    "?price="+ticketPrice+
+                    "?seat="+seat);
             accountService.sendEmailWithHtmlTemplate(to,subject,templateName,context);
         }
     }

@@ -133,12 +133,12 @@
 <div class="ticket">
 <!--    <div class="holes-top"></div>-->
     <div class="title">
-        <p class="cinema">C08-CINEMA</p>
+        <p class="cinema">C08-CINEMA <span style="margin-left: 10%"><img th:src="${qr}" th:alt="qr"></span></p>
         <p class="movie-title" th:text="${name}"></p>
     </div>
     <div class="poster">
         <img class="img" th:src="${image}"
-             alt="Movie: Only God Forgives" />
+             th:alt="${name}" />
     </div>
     <div class="info">
         <table class="tableTicket">
