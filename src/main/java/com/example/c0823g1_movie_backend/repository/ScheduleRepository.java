@@ -21,7 +21,7 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "select * from schedule where date between curdate() and curdate() + interval 7 day and hall_id=:id and is_deleted=0", nativeQuery = true)
     List<Schedule> getScheduleByHallId(@Param("id") Long id);
-    @Query(value = "SELECT date AS dateTime FROM schedule WHERE movie_id = :movieId AND date BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY) and is_deleted=0 GROUP BY dateTime ORDER BY dateTime", nativeQuery = true)
+    @Query(value = "SELECT date AS dateTime FROM schedule WHERE movie_id = :movieId AND is_deleted = 0 and date >= CURRENT_DATE() GROUP BY dateTime ORDER BY dateTime", nativeQuery = true)
     List<IScheduleDTO> findDateByMovieId(@Param("movieId") Long movieId);
 
     @Query(value = "select st.id, st.schedule_time as scheduleTime\n" +

@@ -7,9 +7,7 @@ import com.example.c0823g1_movie_backend.dto.IAccountDTO;
 import com.example.c0823g1_movie_backend.model.Account;
 import com.example.c0823g1_movie_backend.model.ChangePasswordDto;
 import com.example.c0823g1_movie_backend.model.LoginSuccess;
-import com.example.c0823g1_movie_backend.service.IAccountService;
-import com.example.c0823g1_movie_backend.service.IRoleService;
-import com.example.c0823g1_movie_backend.service.JwtService;
+import com.example.c0823g1_movie_backend.service.*;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -38,6 +36,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -52,8 +52,13 @@ public class AccountRestController {
     private IRoleService iRoleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ITicketService iTicketService;
+    @Autowired
+    private IBookingService iBookingService;
 
     private static final String KEY_API_GOOGLE_APP = "AIzaSyC_s2yYtCEqi0h5NenIr7zd_qZITfKoKlI";
+
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information (accountName and password) and check account information
@@ -287,10 +292,10 @@ public class AccountRestController {
         if (!iAccountService.checkLoginByGg(account)) {
             account.setAccountName(account.getEmail());
             Account account1 = iAccountService.getLastUser();
-            if (account1 != null){
+            if (account1 != null) {
                 int memberCode = Integer.parseInt(account1.getMemberCode());
                 account.setMemberCode(String.valueOf(memberCode + 1));
-            }else {
+            } else {
                 account.setMemberCode("1");
             }
             iAccountService.register(account);
@@ -301,34 +306,34 @@ public class AccountRestController {
      * Date created: 29/02/2024
      * Function: Register New account
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
-     */ 
+     */
     @PostMapping("/register")
-    public ResponseEntity<Object> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO , BindingResult bindingResult){
-        Map<String,String> listError = new HashMap<>();
-        if (bindingResult.hasFieldErrors()){
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) != null){
-                      listError.put("email","Email Đã Tồn Tại");
+    public ResponseEntity<Object> createAccount(HttpServletRequest request, @RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult) {
+        Map<String, String> listError = new HashMap<>();
+        if (bindingResult.hasFieldErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            if (iAccountService.findAccountByEmail(accountDTO.getEmail()) != null) {
+                listError.put("email", "Email Đã Tồn Tại");
             }
-            if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) != null){
-                listError.put("phoneNumber","Số Điện Thoại Đã Tồn Tại");
+            if (iAccountService.findAccountByPhone(accountDTO.getPhoneNumber()) != null) {
+                listError.put("phoneNumber", "Số Điện Thoại Đã Tồn Tại");
             }
-            if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) != null){
-                listError.put("accountName","Tài Khoản Đã Tồn Tại");
+            if (iAccountService.findAccountByAccountName(accountDTO.getAccountName()) != null) {
+                listError.put("accountName", "Tài Khoản Đã Tồn Tại");
             }
-            if (listError.size() > 0){
-                return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
+            if (listError.size() > 0) {
+                return new ResponseEntity<>(listError, HttpStatus.BAD_REQUEST);
             }
             String encode = passwordEncoder.encode(accountDTO.getPassword());
             Account account = new Account();
-            BeanUtils.copyProperties(accountDTO,account);
+            BeanUtils.copyProperties(accountDTO, account);
             account.setPassword(encode);
             Account account1 = iAccountService.getLastUser();
-            if (account1 != null){
+            if (account1 != null) {
                 int memberCode = Integer.parseInt(account1.getMemberCode());
                 account.setMemberCode(String.valueOf(memberCode + 1));
-            }else {
+            } else {
                 account.setMemberCode("1");
             }
             account.setProfilePicture("https://scontent.fdad1-2.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c15.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=1&ccb=1-7&_nc_sid=810bd0&_nc_eui2=AeGnqHaTZnBUjSEcY1-FBvApik--Qfnh2B6KT75B-eHYHk-NP5Nes0Pnh533_NuJyZObt2QYtQlJmnvnxUfFEIi5&_nc_ohc=sjxi-v0F2pYAX9hlWn4&_nc_ht=scontent.fdad1-2.fna&edm=AP4hL3IEAAAA&oh=00_AfDCVvaXvpBk5plCuuZwlUiyRH8a3tpqidZMft5DkfM1SQ&oe=660E7019");
@@ -338,50 +343,53 @@ public class AccountRestController {
         }
 
     }
+
     /* Create by: TuanTA
      * Date created: 29/02/2024
      * Function: Show Detail User Account
      * @Return HttpStatus.NO_CONTENT if userName of User is Null , @Return HttpStatus.OK if userName of User is not Null
      */
     @GetMapping("/detailUser/{id}")
-    public ResponseEntity<Account> detailAccountUser(@PathVariable long id){
+    public ResponseEntity<Account> detailAccountUser(@PathVariable long id) {
         Account account1 = iAccountService.findAccountById(id);
-        if (account1 == null){
+        if (account1 == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(account1,HttpStatus.OK);
+        return new ResponseEntity<>(account1, HttpStatus.OK);
     }
+
     /* Create by: TuanTA
      * Date created: 29/02/2024
      * Function: Change Infor Of User Account
      * @Return HttpStatus.BAD_REQUEST If the account creation information is wrong with the format / HttpStatus.OK If the data fields are correct
      */
     @PatchMapping("/changeInfoUser/{id}")
-    public ResponseEntity<Object> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO , BindingResult bindingResult,@PathVariable Long id){
-        Map<String,String> listError = new HashMap<>();
+    public ResponseEntity<Object> changeInfoUserAccount(@Valid @RequestBody ChangeAccountDTO changeAccountDTO, BindingResult bindingResult, @PathVariable Long id) {
+        Map<String, String> listError = new HashMap<>();
         Account account3 = iAccountService.findAccountById(id);
         Account account = iAccountService.findAccountByEmail(changeAccountDTO.getEmail());
         Account account1 = iAccountService.findAccountByPhone(changeAccountDTO.getPhoneNumber());
-        if (bindingResult.hasFieldErrors()){
+        if (bindingResult.hasFieldErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            if (iAccountService.findAccountByEmail(changeAccountDTO.getEmail()) != null && !(account3.getEmail().equals(account.getEmail()))){
-                listError.put("email","Email Đã Tồn Tại");
+        } else {
+            if (iAccountService.findAccountByEmail(changeAccountDTO.getEmail()) != null && !(account3.getEmail().equals(account.getEmail()))) {
+                listError.put("email", "Email Đã Tồn Tại");
             }
-            if (iAccountService.findAccountByPhone(changeAccountDTO.getPhoneNumber()) != null && !(account3.getPhoneNumber().equals(account1.getPhoneNumber()))){
-                listError.put("phoneNumber","Số Điện Thoại Đã Tồn Tại");
+            if (iAccountService.findAccountByPhone(changeAccountDTO.getPhoneNumber()) != null && !(account3.getPhoneNumber().equals(account1.getPhoneNumber()))) {
+                listError.put("phoneNumber", "Số Điện Thoại Đã Tồn Tại");
             }
-            if (listError.size() > 0){
-                return new ResponseEntity<>(listError,HttpStatus.BAD_REQUEST);
+            if (listError.size() > 0) {
+                return new ResponseEntity<>(listError, HttpStatus.BAD_REQUEST);
             }
 
             Account account2 = new Account();
-            BeanUtils.copyProperties(changeAccountDTO,account2);
-            iAccountService.updateAccount(account2,account2.getId());
-            return new ResponseEntity<>(account2,HttpStatus.OK);
+            BeanUtils.copyProperties(changeAccountDTO, account2);
+            iAccountService.updateAccount(account2, account2.getId());
+            return new ResponseEntity<>(account2, HttpStatus.OK);
         }
 
     }
+
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: Receive account information and check account information
@@ -395,19 +403,21 @@ public class AccountRestController {
                 account.setAccountName(account.getEmail());
             }
             Account account1 = iAccountService.getLastUser();
-            if (account1 != null){
+            if (account1 != null) {
                 int memberCode = Integer.parseInt(account1.getMemberCode());
                 account.setMemberCode(String.valueOf(memberCode + 1));
-            }else {
+            } else {
                 account.setMemberCode("1");
             }
             iAccountService.register(account);
         }
     }
+
     /**
      * Created by DuyDD
      * Date Created: 29/02/2024
      * Function: Get a list of accounts that have the highest amount of money spent
+     *
      * @return HttpStatus.NO_CONTENT if there are no account/ HttpStatus.OK if there are
      */
     @GetMapping("/statistics")
@@ -418,6 +428,7 @@ public class AccountRestController {
         }
         return new ResponseEntity<>(accountList, HttpStatus.OK);
     }
+
     /* Create by: BaoNDT
      * Date created: 29/02/2024
      * Function: generated random new password
@@ -442,27 +453,45 @@ public class AccountRestController {
      */
     @PatchMapping("/changePassword")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EMPLOYEE','ROLE_CUSTOMER')")
-    public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,BindingResult bindingResult){
-        Map<String,String> listErrors = new HashMap<>();
+    public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto, BindingResult bindingResult) {
+        Map<String, String> listErrors = new HashMap<>();
         List<Account> accounts = new ArrayList<>();
-        changePasswordDto.validate(changePasswordDto,bindingResult);
-        if (bindingResult.hasErrors()){
-            for (FieldError error : bindingResult.getFieldErrors()){
-                listErrors.put(error.getField(),error.getDefaultMessage());
+        changePasswordDto.validate(changePasswordDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                listErrors.put(error.getField(), error.getDefaultMessage());
             }
-            return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(listErrors, HttpStatus.BAD_REQUEST);
         }
-       Account account = iAccountService.findAccountById(changePasswordDto.getId());
+        Account account = iAccountService.findAccountById(changePasswordDto.getId());
         String passwordToEncode = passwordEncoder.encode(changePasswordDto.getNewPassword());
         String passwordToCompare = passwordEncoder.encode(changePasswordDto.getCurrentPassword());
-        if (passwordEncoder.matches(changePasswordDto.getCurrentPassword(),account.getPassword())){
+        if (passwordEncoder.matches(changePasswordDto.getCurrentPassword(), account.getPassword())) {
             account.setPassword(passwordToEncode);
-            iAccountService.updatePassword(account.getPassword(),account.getAccountName());
-            return new ResponseEntity<>("Đổi Mật Khẩu Thành Công",HttpStatus.OK);
-        }else {
-            listErrors.put("currentPassword","Mật Khẩu Hiện Tại Không Đúng");
-            return new ResponseEntity<>(listErrors,HttpStatus.BAD_REQUEST);
+            iAccountService.updatePassword(account.getPassword(), account.getAccountName());
+            return new ResponseEntity<>("Đổi Mật Khẩu Thành Công", HttpStatus.OK);
+        } else {
+            listErrors.put("currentPassword", "Mật Khẩu Hiện Tại Không Đúng");
+            return new ResponseEntity<>(listErrors, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/reset-ticket")
+    public void resetTicket() {
+        List<ITicketDTO> iAccountDTOS = iTicketService.findAllByStatus();
+        Set<Long> bookingIds = new HashSet<>();
+        LocalDateTime now = LocalDateTime.now();
+        for (ITicketDTO iAccountDTO : iAccountDTOS) {
+            LocalDateTime date = iAccountDTO.getDateBooking().plusMinutes(5);
+            if (now.isAfter(date)) {
+                bookingIds.add(iAccountDTO.getBookingId());
+                iTicketService.deleteById(iAccountDTO.getId());
+            }
+        }
+        for (Long bookingId : bookingIds) {
+            iBookingService.deleteById(bookingId);
+        }
+
     }
 
 }

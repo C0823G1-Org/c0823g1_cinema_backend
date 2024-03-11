@@ -9,7 +9,7 @@ public interface IMovieDTO {
     String getDescription();
     String getPoster();
     LocalDate getStartDate();
-    boolean getIsDelete();
+    Boolean getIsDelete();
 
 
 }
