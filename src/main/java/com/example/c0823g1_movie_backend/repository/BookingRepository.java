@@ -44,7 +44,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     "  left join schedule on ticket.schedule_id = schedule.id\n" +
                     "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
                     "  left join movie on movie.id = schedule.movie_id\n" +
-                    "where (booking.print_status = 0) and (ticket.is_deleted = 0) \n" +
+                    "where (booking.print_status = 0) and (ticket.is_deleted = 0) and booking.date_booking >= :time - INTERVAL 1 DAY  \n" +
                     "  group by booking.id\n " +
                     "ORDER BY\n" +
                     "    booking.date_booking DESC", nativeQuery = true)
@@ -62,7 +62,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
                     "  left join movie on movie.id = schedule.movie_id\n" +
                     " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and (booking.date_booking >= %:dateNow% - INTERVAL 7 DAY) and (booking.print_status = 0) and (ticket.is_deleted = 0)" +
-                    "  group by booking.id", nativeQuery = true)
+                    "  group by booking.id\n" +
+                    "ORDER BY\n" +
+                    "    booking.date_booking DESC", nativeQuery = true)
     Page<IBookingDTO> searchBookingTicketWithParameterSearch(@Param("search") String search,@Param("dateNow")LocalDateTime dateNow,Pageable pageable);
 
     @Query(value = "SELECT booking.id as bookingCode ,booking.print_status as printStatus, account.id as accountId, account.full_name as nameCustomer,\n" +
@@ -125,7 +127,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                 "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
                 "  left join movie on movie.id = schedule.movie_id\n" +
                 " where ( account.full_name like %:search%  or account.phone_number like %:search% or account.id_number like %:search% or booking.id like %:search% ) and ( booking.date_booking >= %:dateSearch%) and (booking.print_status = 0) and (ticket.is_deleted = 0)\n " +
-                "  group by booking.id", nativeQuery = true)
+                "  group by booking.id\n" +
+                "ORDER BY\n" +
+                "    booking.date_booking DESC", nativeQuery = true)
     Page<IBookingDTO> searchBookingTicketWithParameterSearchAndDate(@Param("search") String search, @Param("dateSearch") LocalDateTime dateNow, Pageable pageable);
 
     @Query(value =
@@ -139,7 +143,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     "  left join schedule_time as sc on schedule.schedule_time_id = sc.id\n" +
                     "  left join movie on movie.id = schedule.movie_id\n" +
                     " where  (booking.date_booking >= %:dateSearch%) and (booking.print_status = 0) and (ticket.is_deleted = 0)\n" +
-                    "  group by booking.id", nativeQuery = true)
+                    "  group by booking.id\n" +
+                    "ORDER BY\n" +
+                    "    booking.date_booking DESC", nativeQuery = true)
     Page<IBookingDTO> searchBookingTicketWithParameterDate(LocalDateTime dateSearch, Pageable pageable);
 
     @Transactional

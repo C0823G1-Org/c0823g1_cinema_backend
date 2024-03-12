@@ -120,10 +120,10 @@ public class BookingRestController {
         if (search != null) {
             search = search.trim();
         }
-
+        ApiResponse response = new ApiResponse<>();
         LocalDateTime timeNow = LocalDateTime.now();
         if (search == null && localDate == null) {
-            ApiResponse response = new ApiResponse<>();
+
             Page<IBookingDTO> listBookingTicketNotFound = iBookingService.findAllBookingTicket(pageable, timeNow);
             response.setData(listBookingTicketNotFound);
             response.setFlag(FOUND);
